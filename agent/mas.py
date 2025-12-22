@@ -75,12 +75,21 @@ class Orchestrator:
         if hasattr(response, "content"):
             return response.content
         return str(response)
+    
+    def _location_get_variables(self):
+        print("location_get_variables")
+        return {
+            "compare_version":self.raw_data['compare_version'],
+            "package":self.raw_data['package'],
+            "solution_function":self.raw_data['solution_function'],
+            "ast_structure":self.raw_data['ast_structure']
+        }
 
     def location_library(self):
         print("location_library")
         # 这里的 task 就是 prompt 中的==========User Input==========部分的输入，而且task是字符串类型，因为LLM只能读这个
-        task = json.dumps(self.raw_data, ensure_ascii=False)
-        resp = self.agents["location_library"].step(task)
+        task = self._location_get_variables()
+        resp = self.agents["location_library"].step(str(task)) # str(task)
 
         tokens = self._extract_tokens(resp)
         self.token_stats["location_library"] += tokens
