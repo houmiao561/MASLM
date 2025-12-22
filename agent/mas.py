@@ -11,7 +11,7 @@ def create_agent(system_prompt: str):
         model_platform=ModelPlatformType.OPENAI,
         model_type="deepseek-ai/DeepSeek-V3",
         model_config_dict={
-            "temperature": 0.0,
+            "temperature": 0.7,
             "max_tokens": 2048,
         },
     )
@@ -96,6 +96,19 @@ class Orchestrator:
             "reason_type":self.raw_data['reason_type'],
             "confidence":self.raw_data['confidence']
         }
+    
+    def _fix_function_get_variables(self):
+        print("fix_function_get_variables")
+        return {
+            "compare_version":self.raw_data['compare_version'],
+            "package":self.raw_data['package'],
+            "solution_function":self.raw_data['solution_function'],
+            "ast_structure":self.raw_data['ast_structure'],
+            "ai_api_wrong":self.raw_data['ai_api_wrong'],
+            "reason_type":self.raw_data['reason_type'],
+            "confidence":self.raw_data['confidence'],
+            "ai_api_answer_change":self.raw_data['ai_api_answer_change']
+        }
 
     def location_library(self):
         print("location_library")
@@ -130,8 +143,9 @@ class Orchestrator:
         
     def fix_function(self):
         print("fix_function")
-        task = json.dumps(self.raw_data, ensure_ascii=False)
-        resp = self.agents["fix_function"].step(task)
+        task = self._fix_function_get_variables()
+        # task = json.dumps(self.raw_data, ensure_ascii=False)
+        resp = self.agents["fix_function"].step(str(task)) # str(task)
 
         tokens = self._extract_tokens(resp)
         self.token_stats["fix_function"] += tokens
