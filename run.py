@@ -15,29 +15,33 @@ if __name__ == "__main__":
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/fix_function.txt")
 
 
-    # AST 预处理
-    CODE = json_read_file("input_dataset/test_case.json")
-    ast_result = extract_ast_structure(CODE)
-    sample = {**CODE, **ast_result} # 拼接
-    append_to_jsonl("output_dataset/ast_result.jsonl", sample)
+    # 多轮次处理
+    data = jsonl_read_file("input_dataset/test_case.jsonl")
+    for index, CODE in enumerate(data):
+        print(f"Processing COOOOOODE {index}...")
+        # AST 预处理
+        ast_result = extract_ast_structure(CODE)
+        sample = {**CODE, **ast_result} # 拼接
+        append_to_jsonl("output_dataset/ast_result.jsonl", sample)
 
 
-    # MAS启动
-    agents = {
-        "location_library": create_agent(LOCATION_AGENT_PROMPT), 
-        "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT),
-        "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
-    }
-    orch = Orchestrator(agents, sample)
-    # MAS具体执行三个Agent
-    location_result = orch.location_library()
-    answer_change_result = orch.answer_change()
-    fix_function_result = orch.fix_function()
+        # MAS启动
+        agents = {
+            "location_library": create_agent(LOCATION_AGENT_PROMPT), 
+            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT),
+            "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
+        }
+        orch = Orchestrator(agents, sample)
+        # MAS具体执行三个Agent
+        location_result = orch.location_library()
+        answer_change_result = orch.answer_change()
+        fix_function_result = orch.fix_function()
 
 
-    # 结果写入并print
-    append_to_jsonl("output_dataset/final_result.jsonl", fix_function_result)
-    print("\n========== TOKEN USAGE SUMMARY ==========")
-    for k, v in orch.token_stats.items():
-        print(f"{k}: {v}")
-    print("========================================\n")
+        # 结果写入并print
+        append_to_jsonl("output_dataset/final_result.jsonl", fix_function_result)
+        print("\n========== TOKEN USAGE SUMMARY ==========")
+        for k, v in orch.token_stats.items():
+            print(f"{k}: {v}")
+        print("========================================\n")
+
