@@ -84,6 +84,18 @@ class Orchestrator:
             "solution_function":self.raw_data['solution_function'],
             "ast_structure":self.raw_data['ast_structure']
         }
+    
+    def _answer_get_variables(self):
+        print("answer_get_variables")
+        return {
+            "compare_version":self.raw_data['compare_version'],
+            "package":self.raw_data['package'],
+            "solution_function":self.raw_data['solution_function'],
+            "ast_structure":self.raw_data['ast_structure'],
+            "ai_api_wrong":self.raw_data['ai_api_wrong'],
+            "reason_type":self.raw_data['reason_type'],
+            "confidence":self.raw_data['confidence']
+        }
 
     def location_library(self):
         print("location_library")
@@ -104,8 +116,8 @@ class Orchestrator:
     
     def answer_change(self):
         print("answer_change")
-        task = json.dumps(self.raw_data, ensure_ascii=False)
-        resp = self.agents["answer_change"].step(task)
+        task = self._answer_get_variables()
+        resp = self.agents["answer_change"].step(str(task)) # str(task)
 
         tokens = self._extract_tokens(resp)
         self.token_stats["answer_change"] += tokens
@@ -113,7 +125,7 @@ class Orchestrator:
 
         content = self._get_content(resp) 
         result = self._extract_json(content)
-        self.raw_data["ai_api_answer_change"] = result["ai_api_answer_change"]
+        self.raw_data["ai_api_answer_change"] = result["ai_api_answer_change"] 
         return self.raw_data
         
     def fix_function(self):
