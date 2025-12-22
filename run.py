@@ -1,0 +1,43 @@
+import os
+import sys
+from ast_pre.ast_pre import extract_ast_structure
+from utils import *
+from agent.mas import Orchestrator, create_agent
+
+if __name__ == "__main__":
+    os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
+    os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
+
+
+    # 读取json文件
+    LOCATION_AGENT_PROMPT = txt_read_file("prompt/location.txt")
+    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/answer.txt")
+    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/fix_function.txt")
+
+
+    # AST 预处理
+    CODE = json_read_file("input_dataset/test_case.json")
+    ast_result = extract_ast_structure(CODE)
+    sample = {**CODE, **ast_result} # 拼接
+    append_to_jsonl("output_dataset/ast_result.jsonl", sample)
+
+
+    # MAS启动
+    agents = {
+        "location_library": create_agent(LOCATION_AGENT_PROMPT), 
+        "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT),
+        "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
+    }
+    orch = Orchestrator(agents, sample)
+    # MAS具体执行三个Agent
+    location_result = orch.location_library()
+    answer_change_result = orch.answer_change()
+    fix_function_result = orch.fix_function()
+
+
+    # 结果写入并print
+    append_to_jsonl("output_dataset/final_result.jsonl", fix_function_result)
+    print("\n========== TOKEN USAGE SUMMARY ==========")
+    for k, v in orch.token_stats.items():
+        print(f"{k}: {v}")
+    print("========================================\n")
