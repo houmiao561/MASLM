@@ -3,19 +3,9 @@ import sys
 from ast_pre.ast_pre import extract_ast_structure
 from utils import *
 from agent.mas import Orchestrator, create_agent
+from agent.judge import OrchestratorJudger
 
-if __name__ == "__main__":
-    os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
-    os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
-
-
-    # 读取json文件
-    LOCATION_AGENT_PROMPT = txt_read_file("prompt/location.txt")
-    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/answer.txt")
-    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/fix_function.txt")
-
-
-    # 多轮次处理
+def maslm():
     data = jsonl_read_file("input_dataset/test_case.jsonl")
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
@@ -44,4 +34,40 @@ if __name__ == "__main__":
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
         print("========================================\n")
+
+def judge_bench():
+    data = jsonl_read_file("output_dataset/final_result.jsonl")
+    for index, CODE in enumerate(data):
+        print(f"JUDGE COOOOOODE {index}...")
+        # MAS启动
+        agents = {
+            "judger": create_agent(JUDGE_AGENT_PROMPT), 
+        }
+        orch = OrchestratorJudger(agents, CODE)
+        # MAS具体执行三个Agent
+        
+        judge_result = orch.judgeFunction()
+        print(judge_result)
+
+        # 结果写入并print
+        append_to_jsonl("output_dataset/judge_easy_python_result.jsonl", judge_result)
+        print("\n========== TOKEN USAGE SUMMARY ==========")
+        for k, v in orch.token_stats.items():
+            print(f"{k}: {v}")
+        print("========================================\n")
+
+if __name__ == "__main__":
+    os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
+    os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
+
+
+    # 读取json文件
+    LOCATION_AGENT_PROMPT = txt_read_file("prompt/location.txt")
+    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/answer.txt")
+    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/fix_function.txt")
+    JUDGE_AGENT_PROMPT = txt_read_file("prompt/judger.txt")
+
+    # maslm()
+    judge_bench()
+    
 
