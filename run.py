@@ -12,8 +12,6 @@ def maslm():
         # AST 预处理
         ast_result = extract_ast_structure(CODE)
         sample = {**CODE, **ast_result} # 拼接
-        append_to_jsonl("output_dataset/ast_result.jsonl", sample)
-
 
         # MAS启动
         agents = {
@@ -22,21 +20,21 @@ def maslm():
             "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
         }
         orch = Orchestrator(agents, sample)
-        # MAS具体执行三个Agent
+        # MAS具体执行三个Agent,前两个不执行没法执行第三个
         location_result = orch.location_library()
         answer_change_result = orch.answer_change()
         fix_function_result = orch.fix_function()
 
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/final_result.jsonl", fix_function_result)
+        append_to_jsonl("output_dataset/easy_python/create_result.jsonl", fix_function_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
         print("========================================\n")
 
 def judge_bench():
-    data = jsonl_read_file("output_dataset/final_result.jsonl")
+    data = jsonl_read_file("output_dataset/easy_python/create_result.jsonl")
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
@@ -50,7 +48,7 @@ def judge_bench():
         print(judge_result)
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/judge_easy_python_result.jsonl", judge_result)
+        append_to_jsonl("output_dataset/easy_python/judge_result.jsonl", judge_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
@@ -62,12 +60,24 @@ if __name__ == "__main__":
 
 
     # 读取json文件
-    LOCATION_AGENT_PROMPT = txt_read_file("prompt/location.txt")
-    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/answer.txt")
-    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/fix_function.txt")
-    JUDGE_AGENT_PROMPT = txt_read_file("prompt/judger.txt")
+    LOCATION_AGENT_PROMPT = txt_read_file("prompt/easy_python/location.txt")
+    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
+    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
+    JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
 
-    # maslm()
+    maslm()
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
+    print("JUDGE")
     judge_bench()
     
 
