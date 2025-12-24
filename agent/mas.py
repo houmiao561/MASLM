@@ -93,8 +93,7 @@ class Orchestrator:
             "solution_function":self.raw_data['solution_function'],
             "ast_structure":self.raw_data['ast_structure'],
             "ai_api_wrong":self.raw_data['ai_api_wrong'],
-            "reason_type":self.raw_data['reason_type'],
-            "confidence":self.raw_data['confidence']
+            "line_number":self.raw_data['line_number']   
         }
     
     def _fix_function_get_variables(self):
@@ -105,8 +104,8 @@ class Orchestrator:
             "solution_function":self.raw_data['solution_function'],
             "ast_structure":self.raw_data['ast_structure'],
             "ai_api_wrong":self.raw_data['ai_api_wrong'],
+            "line_number":self.raw_data['line_number'],
             "reason_type":self.raw_data['reason_type'],
-            "confidence":self.raw_data['confidence'],
             "ai_api_answer_change":self.raw_data['ai_api_answer_change']
         }
 
@@ -123,8 +122,7 @@ class Orchestrator:
         content = self._get_content(resp) # content 是 str 类型
         result = self._extract_json(content)
         self.raw_data["ai_api_wrong"] = result["ai_api_wrong"]
-        self.raw_data["reason_type"] = result["reason_type"]
-        self.raw_data["confidence"] = result["confidence"]
+        self.raw_data["line_number"] = result["line_number"]
         return self.raw_data
     
     def answer_change(self):
@@ -139,6 +137,7 @@ class Orchestrator:
         content = self._get_content(resp) 
         result = self._extract_json(content)
         self.raw_data["ai_api_answer_change"] = result["ai_api_answer_change"] 
+        self.raw_data["reason_type"] = result["reason_type"]
         return self.raw_data
         
     def fix_function(self):
