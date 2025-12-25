@@ -12,7 +12,7 @@ def create_agent(system_prompt: str):
         model_type="deepseek-ai/DeepSeek-V3",
         model_config_dict={
             "temperature": 0.7,
-            "max_tokens": 2048,
+            "max_tokens": 4096,
         },
     )
 
