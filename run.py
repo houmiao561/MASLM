@@ -8,7 +8,7 @@ from agent.judge import OrchestratorJudger
 
 def maslm():
     FINAL_TOKEN = 0
-    data = jsonl_read_file("input_dataset/test_case.jsonl")
+    data = jsonl_read_file("input_dataset/easy_code.jsonl")
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -33,8 +33,8 @@ def maslm():
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
-            FINAL_TOKEN += v
         print("========================================\n")
+        FINAL_TOKEN += orch.token_stats["total"]
 
     print("\n========== TOKEN USAGE SUMMARY ==========")
     print(f"FINAL_TOKEN: {FINAL_TOKEN}")
