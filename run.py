@@ -1,11 +1,13 @@
 import os
 import sys
+import time
 from ast_pre.ast_pre import extract_ast_structure
 from utils import *
 from agent.mas import Orchestrator, create_agent
 from agent.judge import OrchestratorJudger
 
 def maslm():
+    FINAL_TOKEN = 0
     data = jsonl_read_file("input_dataset/test_case.jsonl")
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
@@ -31,7 +33,12 @@ def maslm():
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
+            FINAL_TOKEN += v
         print("========================================\n")
+
+    print("\n========== TOKEN USAGE SUMMARY ==========")
+    print(f"FINAL_TOKEN: {FINAL_TOKEN}")
+    print("========================================\n")
 
 def judge_bench():
     data = jsonl_read_file("output_dataset/easy_python/create_result.jsonl")
@@ -65,19 +72,23 @@ if __name__ == "__main__":
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
 
+    # 开始计时
+    start_time = time.time()
     maslm()
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    print("JUDGE")
-    judge_bench()
-    
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # print("JUDGE")
+    # judge_bench()
 
+    # 结束计时
+    end_time = time.time()
+    print(f"Total time: {end_time - start_time} seconds")
