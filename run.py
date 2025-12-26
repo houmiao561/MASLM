@@ -67,6 +67,40 @@ def judge_bench():
     print(f"FINAL_TOKEN: {FINAL_TOKEN}")
     print("========================================\n")
 
+def compute_avg(jsonl_path):
+    # data = jsonl_read_file("output_dataset/easy_python/judge_result.jsonl")
+    # data = jsonl_read_file(jsonl_path)
+    total = 0
+    locate_sum = 0
+    update_sum = 0
+
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+
+            data = json.loads(line)
+
+            locate = int(data.get("judge_locate_answer", 0))
+            update = int(data.get("judge_update_answer", 0))
+
+            locate_sum += locate
+            update_sum += update
+            total += 1
+
+    if total == 0:
+        raise ValueError("Empty jsonl file")
+
+    task1_avg = locate_sum / total
+    task2_avg = update_sum / total
+
+    return {
+        "total_samples": total,
+        "task1_avg": round(task1_avg * 100, 2),
+        "task2_avg": round(task2_avg * 100, 2),
+    }
+
 if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
@@ -79,7 +113,7 @@ if __name__ == "__main__":
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
 
     # 开始计时
-    start_time = time.time()
+    # start_time = time.time()
     # maslm()
     # print("JUDGE")
     # print("JUDGE")
@@ -93,8 +127,13 @@ if __name__ == "__main__":
     # print("JUDGE")
     # print("JUDGE")
     # print("JUDGE")
-    judge_bench()
+    # judge_bench()
 
     # 结束计时
-    end_time = time.time()
-    print(f"Total time: {end_time - start_time} seconds")
+    # end_time = time.time()
+    # print(f"Total time: {end_time - start_time} seconds")
+
+
+
+    result = compute_avg("output_dataset/easy_python/judge_result.jsonl")
+    print(result)
