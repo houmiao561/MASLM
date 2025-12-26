@@ -41,6 +41,7 @@ def maslm():
     print("========================================\n")
 
 def judge_bench():
+    FINAL_TOKEN = 0
     data = jsonl_read_file("output_dataset/easy_python/create_result.jsonl")
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
@@ -60,6 +61,11 @@ def judge_bench():
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
         print("========================================\n")
+        FINAL_TOKEN += orch.token_stats["total"]
+
+    print("\n========== TOKEN USAGE SUMMARY ==========")
+    print(f"FINAL_TOKEN: {FINAL_TOKEN}")
+    print("========================================\n")
 
 if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
@@ -74,7 +80,7 @@ if __name__ == "__main__":
 
     # 开始计时
     start_time = time.time()
-    maslm()
+    # maslm()
     # print("JUDGE")
     # print("JUDGE")
     # print("JUDGE")
@@ -87,7 +93,7 @@ if __name__ == "__main__":
     # print("JUDGE")
     # print("JUDGE")
     # print("JUDGE")
-    # judge_bench()
+    judge_bench()
 
     # 结束计时
     end_time = time.time()
