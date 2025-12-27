@@ -101,16 +101,50 @@ def compute_avg(jsonl_path):
         "task2_avg": round(task2_avg * 100, 2),
     }
 
+def maslm_hard_python():
+    FINAL_TOKEN = 0
+    data = jsonl_read_file("input_dataset/test_case.jsonl")
+    for index, CODE in enumerate(data):
+        print(f"Processing COOOOOODE {index}...")
+        # AST 预处理
+        ast_result = extract_ast_structure(CODE)
+        sample = {**CODE, **ast_result} # 拼接
+
+        # MAS启动
+        agents = {
+            "location_library": create_agent(LOCATION_AGENT_PROMPT), 
+            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT),
+            "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
+        }
+    #     orch = Orchestrator(agents, sample)
+    #     # MAS具体执行三个Agent,前两个不执行没法执行第三个
+    #     location_result = orch.location_library()
+    #     answer_change_result = orch.answer_change()
+    #     fix_function_result = orch.fix_function()
+
+
+    #     # 结果写入并print
+    #     append_to_jsonl("output_dataset/easy_python/create_result.jsonl", fix_function_result)
+    #     print("\n========== TOKEN USAGE SUMMARY ==========")
+    #     for k, v in orch.token_stats.items():
+    #         print(f"{k}: {v}")
+    #     print("========================================\n")
+    #     FINAL_TOKEN += orch.token_stats["total"]
+
+    # print("\n========== TOKEN USAGE SUMMARY ==========")
+    # print(f"FINAL_TOKEN: {FINAL_TOKEN}")
+    # print("========================================\n")
+
 if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
 
     # 读取json文件
-    LOCATION_AGENT_PROMPT = txt_read_file("prompt/easy_python/location.txt")
-    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
-    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
-    JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
+    # LOCATION_AGENT_PROMPT = txt_read_file("prompt/easy_python/location.txt")
+    # ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
+    # FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
+    # JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
 
     # 开始计时
     # start_time = time.time()
@@ -135,5 +169,13 @@ if __name__ == "__main__":
 
 
 
-    result = compute_avg("output_dataset/easy_python/judge_result.jsonl")
-    print(result)
+    # result = compute_avg("output_dataset/easy_python/judge_result.jsonl")
+    # print(result)
+
+    LOCATION_AGENT_PROMPT = txt_read_file("prompt/hard_python/location.txt")
+    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/hard_python/answer.txt")
+    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/hard_python/fix_function.txt")
+
+
+    maslm_hard_python()
+
