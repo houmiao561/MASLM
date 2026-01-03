@@ -8,7 +8,7 @@ from agent.judge import OrchestratorJudger
 
 def maslm():
     FINAL_TOKEN = 0
-    data = jsonl_read_file("input_dataset/easy_code.jsonl")
+    data = jsonl_read_file("input_dataset/test_case.jsonl")
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -140,15 +140,14 @@ if __name__ == "__main__":
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
 
-    # 读取json文件
-    # LOCATION_AGENT_PROMPT = txt_read_file("prompt/easy_python/location.txt")
-    # ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
-    # FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
-    # JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
+    LOCATION_AGENT_PROMPT = txt_read_file("prompt/easy_python/location.txt")
+    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
+    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
+    JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
 
     # 开始计时
     # start_time = time.time()
-    # maslm()
+    maslm()
     # print("JUDGE")
     # print("JUDGE")
     # print("JUDGE")
@@ -172,10 +171,21 @@ if __name__ == "__main__":
     # result = compute_avg("output_dataset/easy_python/judge_result.jsonl")
     # print(result)
 
-    LOCATION_AGENT_PROMPT = txt_read_file("prompt/hard_python/location.txt")
-    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/hard_python/answer.txt")
-    FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/hard_python/fix_function.txt")
 
 
-    maslm_hard_python()
+
+
+
+    """
+    =========================================
+    hard版本打草稿
+    但是并未运行
+    =========================================
+    """
+    # LOCATION_AGENT_PROMPT = txt_read_file("prompt/hard_python/location.txt")
+    # ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/hard_python/answer.txt")
+    # FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/hard_python/fix_function.txt")
+
+
+    # maslm_hard_python()
 
