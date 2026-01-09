@@ -1,1 +1,126 @@
-[]
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "search_alibaba_tongxiao",
+      "description": "Query the Alibaba Tongxiao search API and return search results.\nA powerful search API optimized for Chinese language queries with\nfeatures:\n- Enhanced Chinese language understanding\n- Industry-specific filtering (finance, law, medical, etc.)\n- Structured data with markdown formatting\n- Result reranking for relevance\n- Time-based filtering",
+      "strict": true,
+      "parameters": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query string (length >= 1 and <= 100)."
+          },
+          "time_range": {
+            "enum": ["OneDay", "OneWeek", "OneMonth", "OneYear", "NoLimit"],
+            "type": "string"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "enum": [
+                  "finance",
+                  "law",
+                  "medical",
+                  "internet",
+                  "tax",
+                  "news_province",
+                  "news_center"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number for results pagination.\n(default: :obj:`1`)"
+          },
+          "return_main_text": {
+            "type": "boolean",
+            "description": "Whether to include the main text of the\nwebpage in results. (default: :obj:`True`)"
+          },
+          "return_markdown_text": {
+            "type": "boolean",
+            "description": "Whether to include markdown formatted\ncontent in results. (default: :obj:`True`)"
+          },
+          "enable_rerank": {
+            "type": "boolean",
+            "description": "Whether to enable result reranking. If\nresponse time is critical, setting this to False can reduce\nresponse time by approximately 140ms. (default: :obj:`True`)"
+          }
+        },
+        "required": [
+          "query",
+          "time_range",
+          "industry",
+          "page",
+          "return_main_text",
+          "return_markdown_text",
+          "enable_rerank"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "tools": {
+      "search_wiki": "camel.toolkits.function_tool.FunctionTool",
+      "search_linkup": "camel.toolkits.function_tool.FunctionTool",
+      "search_google": "camel.toolkits.function_tool.FunctionTool",
+      "search_duckduckgo": "camel.toolkits.function_tool.FunctionTool",
+      "query_wolfram_alpha": "camel.toolkits.function_tool.FunctionTool",
+      "tavily_search": "camel.toolkits.function_tool.FunctionTool",
+      "search_brave": "camel.toolkits.function_tool.FunctionTool",
+      "search_bocha": "camel.toolkits.function_tool.FunctionTool",
+      "search_baidu": "camel.toolkits.function_tool.FunctionTool",
+      "search_bing": "camel.toolkits.function_tool.FunctionTool",
+      "search_exa": "camel.toolkits.function_tool.FunctionTool",
+      "search_alibaba_tongxiao": "camel.toolkits.function_tool.FunctionTool"
+    },
+    "msgs": [
+      {
+        "role_name": "Assistant",
+        "role_type": "assistant",
+        "meta_dict": {},
+        "content": "Alan Mathison Turing (1912–1954) was an influential English mathematician, computer scientist, and logician. He is renowned for formalizing the concepts of algorithms and computation with the Turing machine, a foundational model for general-purpose computers. Often regarded as the father of theoretical computer science, Turing also made significant contributions to cryptography and artificial intelligence. He graduated from King's College, Cambridge, and earned a doctorate from Princeton University in 1938.",
+        "video_bytes": null,
+        "image_list": null,
+        "image_detail": "auto",
+        "video_detail": "low",
+        "parsed": null
+      }
+    ],
+    "terminated": false,
+    "info": {
+      "id": "019ba1ba232630de8352cb03bf80782b",
+      "usage": {
+        "completion_tokens": 91,
+        "prompt_tokens": 4578,
+        "total_tokens": 4669,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "termination_reasons": ["stop"],
+      "num_tokens": 722,
+      "tool_calls": [
+        {
+          "tool_name": "search_wiki",
+          "args": {
+            "entity": "Alan Turing"
+          },
+          "result": "Alan Mathison Turing (; 23 June 1912 – 7 June 1954) was an English mathematician, computer scientist, logician, cryptanalyst, philosopher and theoretical biologist. He was highly influential in the development of theoretical computer science, providing a formalisation of the concepts of algorithm and computation with the Turing machine, which can be considered a model of a general-purpose computer. Turing is widely considered to be the father of theoretical computer science.\nBorn in London, Turing was raised in southern England. He graduated from King's College, Cambridge, and in 1938, earned a doctorate degree from Princeton University.",
+          "tool_call_id": "019ba1ba1bc42c964b63261d4de55d5d"
+        }
+      ],
+      "external_tool_call_requests": null
+    }
+  }
+]

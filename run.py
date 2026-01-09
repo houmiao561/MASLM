@@ -5,6 +5,7 @@ from ast_pre.ast_pre import extract_ast_structure
 from utils import *
 from agent.mas import Orchestrator, create_agent
 from agent.judge import OrchestratorJudger
+from agent.mcp_tools import ANSWER_MCP_TOOLS
 
 def maslm():
     FINAL_TOKEN = 0
@@ -21,7 +22,12 @@ def maslm():
             "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT),
             "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
         }
+        response = agents["location_library"].step("Search Wikipedia for Alan Turing and give me a brief summary.")
+        print(response)
+        sys.exit(0)
         orch = Orchestrator(agents, sample)
+        
+
         # MAS具体执行三个Agent,前两个不执行没法执行第三个
         location_result = orch.location_library()
         answer_change_result = orch.answer_change()

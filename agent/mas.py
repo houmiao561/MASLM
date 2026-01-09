@@ -4,9 +4,18 @@ import sys
 from camel.models import ModelFactory
 from camel.types import ModelPlatformType
 from camel.agents.chat_agent import ChatAgent
+from camel.toolkits import SearchToolkit
 from utils import *
 
-def create_agent(system_prompt: str):
+def create_agent( system_prompt: str ):
+    search_toolkit = SearchToolkit()
+    tools = search_toolkit.get_tools()
+
+    # 忘记 tools 的结构可以把下面的代码放开查看
+    # for i, tool in enumerate(tools):
+    #     # print(f"Tool {i}: {tool.openai_tool_schema}")
+    #     print(tool.openai_tool_schema["function"]["name"])
+
     model = ModelFactory.create(
         model_platform=ModelPlatformType.OPENAI,
         model_type="deepseek-ai/DeepSeek-V3",
@@ -19,7 +28,12 @@ def create_agent(system_prompt: str):
     agent = ChatAgent(
         system_message=system_prompt,
         model=model,
+        tools=tools,
     )
+    # print("agent.tools")
+    # print(dir(agent))
+    # print(agent.tool_dict)
+    # sys.exit(0)
     return agent
 
 class Orchestrator:
