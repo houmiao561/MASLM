@@ -15,6 +15,9 @@ def create_agent( system_prompt: str ):
     # for i, tool in enumerate(tools):
     #     # print(f"Tool {i}: {tool.openai_tool_schema}")
     #     print(tool.openai_tool_schema["function"]["name"])
+    #     print(tool.openai_tool_schema["function"]["description"])
+    #     print()
+    # sys.exit(0)
 
     model = ModelFactory.create(
         model_platform=ModelPlatformType.OPENAI,

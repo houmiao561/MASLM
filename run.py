@@ -22,9 +22,44 @@ def maslm():
             "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT),
             "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
         }
-        response = agents["location_library"].step("Search Wikipedia for Alan Turing and give me a brief summary.")
+        response = agents["location_library"].step("Use search_bing with query='周杰伦', then summarize the results.")
         print(response)
+        print()
+        print(response.info)
         sys.exit(0)
+        
+        # msgs=[
+        #     BaseMessage(
+        #         role_name='Assistant', 
+        #         role_type=<RoleType.ASSISTANT: 'assistant'>, 
+        #         meta_dict={}, 
+        #         content='Alan Turing was an influential English mathematician and computer scientist, born on June 23, 1912. He is often regarded as the father of theoretical computer science due to his foundational work on algorithms and computation, notably conceptualizing the Turing machine—a model for general-purpose computers. Turing also played a pivotal role in cryptanalysis during World War II. He passed away on June 7, 1954.', 
+        #         video_bytes=None, image_list=None, image_detail='auto', video_detail='low', parsed=None)] 
+        # terminated=False 
+        # info={'id': '019ba1e28d72d2c193af7d7052c09fa7', 'usage': {'completion_tokens': 82, 'prompt_tokens': 4692, 'total_tokens': 4774, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 0, 'rejected_prediction_tokens': None}, 'prompt_tokens_details': None}, 'termination_reasons': ['stop'], 'num_tokens': 818, 
+        #     'tool_calls': [
+        #         ToolCallingRecord(
+        #               tool_name='search_google', 
+        #               args={'query': 'Alan Turing', 'num_result_pages': 1}, 
+        #               result={'error': "Error executing tool 'search_google': Execution of function search_google failed with arguments () and {'query': 'Alan Turing', 'num_result_pages': 1}. Error: Missing or empty required API keys in environment variables: GOOGLE_API_KEY, SEARCH_ENGINE_ID.\nYou can obtain the API key from the official website"}, 
+        #               tool_call_id='019ba1e269b9019922885a13538bfac8'
+        #         ), 
+        #         ToolCallingRecord(
+        #             tool_name='search_wiki', 
+        #             args={'entity': 'Alan Turing'}, 
+        #             result="Alan Mathison Turing (; 23 June 1912 – 7 June 1954) was an English mathematician, computer scientist, logician, cryptanalyst, philosopher and theoretical biologist. He was highly influential in the development of theoretical computer science, providing a formalisation of the concepts of algorithm and computation with the Turing machine, which can be considered a model of a general-purpose computer. Turing is widely considered to be the father of theoretical computer science.\nBorn in London, Turing was raised in southern England. He graduated from King's College, Cambridge, and in 1938, earned a doctorate degree from Princeton University.", 
+        #             tool_call_id='019ba1e286053e704983e99c561918a1'
+        #         )
+        #     ], 
+        #     'external_tool_call_requests': None
+        # }
+        
+        # msgs=[
+        #     BaseMessage(role_name='Assistant', role_type=<RoleType.ASSISTANT: 'assistant'>, meta_dict={}, 
+        #                 content='I couldn\'t find any relevant results for "Alan Turing" on Baidu at this time. Let me know if you\'d like me to try another search engine or provide information from another source.', video_bytes=None, image_list=None, image_detail='auto', video_detail='low', parsed=None)] 
+        # terminated=False info={'id': '019ba1e7f1984709fa3d1429eec948e3', 'usage': {'completion_tokens': 39, 'prompt_tokens': 4465, 'total_tokens': 4504, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 0, 'rejected_prediction_tokens': None}, 'prompt_tokens_details': None}, 'termination_reasons': ['stop'], 'num_tokens': 599, 
+        #                        'tool_calls': [ToolCallingRecord(tool_name='search_baidu', args={'query': 'Alan Turing', 'max_results': 5}, result={'results': []}, tool_call_id='019ba1e7f01e73434d962f08e2f2d9ae')], 'external_tool_call_requests': None}
+        
         orch = Orchestrator(agents, sample)
         
 
