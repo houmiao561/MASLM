@@ -33,6 +33,7 @@ def maslm():
 
         # MAS具体执行三个Agent,前两个不执行没法执行第三个
         testmcp = orch.testmcp()
+        
         sys.exit(0)
         location_result = orch.location_library()
         answer_change_result = orch.answer_change()

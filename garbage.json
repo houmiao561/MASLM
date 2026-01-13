@@ -1,126 +1,164 @@
 [
   {
-    "type": "function",
-    "function": {
-      "name": "search_alibaba_tongxiao",
-      "description": "Query the Alibaba Tongxiao search API and return search results.\nA powerful search API optimized for Chinese language queries with\nfeatures:\n- Enhanced Chinese language understanding\n- Industry-specific filtering (finance, law, medical, etc.)\n- Structured data with markdown formatting\n- Result reranking for relevance\n- Time-based filtering",
-      "strict": true,
-      "parameters": {
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "The search query string (length >= 1 and <= 100)."
-          },
-          "time_range": {
-            "enum": ["OneDay", "OneWeek", "OneMonth", "OneYear", "NoLimit"],
-            "type": "string"
-          },
-          "industry": {
-            "anyOf": [
-              {
-                "enum": [
-                  "finance",
-                  "law",
-                  "medical",
-                  "internet",
-                  "tax",
-                  "news_province",
-                  "news_center"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "page": {
-            "type": "integer",
-            "description": "Page number for results pagination.\n(default: :obj:`1`)"
-          },
-          "return_main_text": {
-            "type": "boolean",
-            "description": "Whether to include the main text of the\nwebpage in results. (default: :obj:`True`)"
-          },
-          "return_markdown_text": {
-            "type": "boolean",
-            "description": "Whether to include markdown formatted\ncontent in results. (default: :obj:`True`)"
-          },
-          "enable_rerank": {
-            "type": "boolean",
-            "description": "Whether to enable result reranking. If\nresponse time is critical, setting this to False can reduce\nresponse time by approximately 140ms. (default: :obj:`True`)"
-          }
+    "library": "numpy",
+    "version_context": "2.0.0",
+    "migration_items": [
+      {
+        "title": "Relocate numpy.compare_chararrays to numpy.char.compare_chararrays",
+        "change_type": "API_RELOCATION",
+        "audience": "PYTHON_USER",
+        "migration_required": true,
+        "severity": "BREAKING",
+        "old_api": "numpy.compare_chararrays",
+        "new_api": "numpy.char.compare_chararrays",
+        "description": "The function `np.compare_chararrays` has been removed from the main NumPy namespace and relocated to the `np.char` submodule.",
+        "recommended_action": "Replace `np.compare_chararrays` with `np.char.compare_chararrays`.",
+        "code_example": {
+          "before": "result = np.compare_chararrays(['a', 'b'], ['a', 'c'], '==')",
+          "after": "result = np.char.compare_chararrays(['a', 'b'], ['a', 'c'], '==')"
         },
-        "required": [
-          "query",
-          "time_range",
-          "industry",
-          "page",
-          "return_main_text",
-          "return_markdown_text",
-          "enable_rerank"
-        ],
-        "type": "object",
-        "additionalProperties": false
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst"
+      },
+      {
+        "title": "Use numpy.strings namespace for string operations",
+        "change_type": "API_REMOVAL",
+        "audience": "PYTHON_USER",
+        "migration_required": true,
+        "severity": "WARNING",
+        "old_api": "numpy.char",
+        "new_api": "numpy.strings",
+        "description": "NumPy 2.0 introduces a new `numpy.strings` namespace with string operations implemented as ufuncs. The old `numpy.char` namespace is still available but recommended to migrate to `numpy.strings`.",
+        "recommended_action": "Migrate string operations from `numpy.char` to `numpy.strings`.",
+        "code_example": {
+          "before": "np.char.upper(['hello', 'world'])",
+          "after": "np.strings.upper(['hello', 'world'])"
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Migrate np.asfarray to np.asarray with float dtype (Python)",
+        "change_type": "API_REMOVAL",
+        "audience": "PYTHON_USER",
+        "migration_required": true,
+        "severity": "BREAKING",
+        "old_api": "numpy.asfarray",
+        "new_api": "numpy.asarray",
+        "description": "Instead of `np.asfarray`, use `np.asarray` with float dtype.",
+        "recommended_action": "Replace `np.asfarray` with `np.asarray`.",
+        "code_example": {
+          "before": null,
+          "after": null
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Implement **array** method with copy parameter handling",
+        "change_type": "BEHAVIOR_CHANGE",
+        "audience": "PYTHON_USER",
+        "migration_required": true,
+        "severity": "WARNING",
+        "old_api": null,
+        "new_api": null,
+        "description": "Add dtype=None and copy=None keywords to **array** method signatures in array-like objects for NumPy 2.0 compatibility.",
+        "recommended_action": "Update `__array__` method signatures to include dtype=None and copy=None.",
+        "code_example": {
+          "before": null,
+          "after": "def __array__(self, dtype=None, copy=None): ..."
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Check NumPy runtime version in C-API",
+        "change_type": "BEHAVIOR_CHANGE",
+        "audience": "C_EXTENSION_AUTHOR",
+        "migration_required": true,
+        "severity": "WARNING",
+        "old_api": null,
+        "new_api": null,
+        "description": "Use runtime version checking to implement different behavior between NumPy 1.x and 2.0 when compiling C extension code.",
+        "recommended_action": "Use `PyArray_RUNTIME_VERSION` macro for conditional logic.",
+        "code_example": {
+          "before": null,
+          "after": "if (PyArray_RUNTIME_VERSION >= NPY_2_0_API_VERSION) { ... } else { ... }"
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Include ndarrayobject.h for dtype accessor functions",
+        "change_type": "BEHAVIOR_CHANGE",
+        "audience": "C_EXTENSION_AUTHOR",
+        "migration_required": true,
+        "severity": "WARNING",
+        "old_api": null,
+        "new_api": null,
+        "description": "Include ndarrayobject.h (or similar) instead of only ndarraytypes.h to access dtype flag checking functions and array item operations.",
+        "recommended_action": "Include `numpy/ndarrayobject.h` in C extensions.",
+        "code_example": {
+          "before": null,
+          "after": "#include \"numpy/ndarrayobject.h\""
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Migrate np.alltrue to np.all (Python)",
+        "change_type": "API_REMOVAL",
+        "audience": "PYTHON_USER",
+        "migration_required": true,
+        "severity": "BREAKING",
+        "old_api": "numpy.alltrue",
+        "new_api": "numpy.all",
+        "description": "Replace `np.alltrue` with `np.all` for checking if all elements in an array evaluate to true.",
+        "recommended_action": "Replace `np.alltrue` with `np.all`.",
+        "code_example": {
+          "before": "result_old = np.alltrue(arr)",
+          "after": "result_new = np.all(arr)"
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Replace np.array with np.asarray for copy-if-needed behavior",
+        "change_type": "BEHAVIOR_CHANGE",
+        "audience": "PYTHON_USER",
+        "migration_required": true,
+        "severity": "WARNING",
+        "old_api": "numpy.array",
+        "new_api": "numpy.asarray",
+        "description": "Migrate legacy code that uses `np.array(..., copy=False)` to `np.asarray(...)` for improved compatibility and performance.",
+        "recommended_action": "Replace `np.array(..., copy=False)` with `np.asarray(...)`.",
+        "code_example": {
+          "before": "result = np.array(data, copy=False)",
+          "after": "result = np.asarray(data)"
+        },
+        "source": "https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst"
+      },
+      {
+        "title": "Function PyDataType_GetArrFuncs to Fetch Legacy ArrFuncs",
+        "change_type": "C_API_REFERENCE",
+        "audience": "C_EXTENSION_AUTHOR",
+        "migration_required": true,
+        "severity": "WARNING",
+        "old_api": null,
+        "new_api": "PyDataType_GetArrFuncs"
       }
-    }
+    ]
   },
   {
-    "tools": {
-      "search_wiki": "camel.toolkits.function_tool.FunctionTool",
-      "search_linkup": "camel.toolkits.function_tool.FunctionTool",
-      "search_google": "camel.toolkits.function_tool.FunctionTool",
-      "search_duckduckgo": "camel.toolkits.function_tool.FunctionTool",
-      "query_wolfram_alpha": "camel.toolkits.function_tool.FunctionTool",
-      "tavily_search": "camel.toolkits.function_tool.FunctionTool",
-      "search_brave": "camel.toolkits.function_tool.FunctionTool",
-      "search_bocha": "camel.toolkits.function_tool.FunctionTool",
-      "search_baidu": "camel.toolkits.function_tool.FunctionTool",
-      "search_bing": "camel.toolkits.function_tool.FunctionTool",
-      "search_exa": "camel.toolkits.function_tool.FunctionTool",
-      "search_alibaba_tongxiao": "camel.toolkits.function_tool.FunctionTool"
-    },
-    "msgs": [
-      {
-        "role_name": "Assistant",
-        "role_type": "assistant",
-        "meta_dict": {},
-        "content": "Alan Mathison Turing (1912–1954) was an influential English mathematician, computer scientist, and logician. He is renowned for formalizing the concepts of algorithms and computation with the Turing machine, a foundational model for general-purpose computers. Often regarded as the father of theoretical computer science, Turing also made significant contributions to cryptography and artificial intelligence. He graduated from King's College, Cambridge, and earned a doctorate from Princeton University in 1938.",
-        "video_bytes": null,
-        "image_list": null,
-        "image_detail": "auto",
-        "video_detail": "low",
-        "parsed": null
-      }
-    ],
-    "terminated": false,
-    "info": {
-      "id": "019ba1ba232630de8352cb03bf80782b",
-      "usage": {
-        "completion_tokens": 91,
-        "prompt_tokens": 4578,
-        "total_tokens": 4669,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": null,
-          "audio_tokens": null,
-          "reasoning_tokens": 0,
-          "rejected_prediction_tokens": null
-        },
-        "prompt_tokens_details": null
-      },
-      "termination_reasons": ["stop"],
-      "num_tokens": 722,
-      "tool_calls": [
-        {
-          "tool_name": "search_wiki",
-          "args": {
-            "entity": "Alan Turing"
-          },
-          "result": "Alan Mathison Turing (; 23 June 1912 – 7 June 1954) was an English mathematician, computer scientist, logician, cryptanalyst, philosopher and theoretical biologist. He was highly influential in the development of theoretical computer science, providing a formalisation of the concepts of algorithm and computation with the Turing machine, which can be considered a model of a general-purpose computer. Turing is widely considered to be the father of theoretical computer science.\nBorn in London, Turing was raised in southern England. He graduated from King's College, Cambridge, and in 1938, earned a doctorate degree from Princeton University.",
-          "tool_call_id": "019ba1ba1bc42c964b63261d4de55d5d"
-        }
-      ],
-      "external_tool_call_requests": null
-    }
+    "solution_function": "def find_largest_equal_substring(arr1, arr2):\n    import numpy\n    max_len = 0\n    max_substring = ''\n    for i in range(len(arr1)):\n        for j in range(len(arr2)):\n            length = 0\n            while (i + length < len(arr1) and j + length < len(arr2) and \n                   numpy.compare_chararrays(arr1[i + length], arr2[j + length], '==', True)):\n                length += 1\n            if length > max_len:\n                max_len = length\n                max_substring = arr1[i:i + length]\n    return max_substring",
+    "solution_signature": "def find_largest_equal_substring(arr1: list, arr2: list) -> str",
+    "problem": "Please use python code to help me with a function that identifies and returns the largest contiguous substring present in both of two given lists of strings. Each list contains strings and the function should return the substring as a single string. The comparison should be case-sensitive. The numpy library is available for use.",
+    "package": "numpy",
+    "import": "import numpy",
+    "signature": "numpy.compare_chararrays(char1, char2, cmp, assume_equal)",
+    "doc_string": "numpy.compare_chararrays was used to compare two arrays of strings element-wise, returning an array of comparison results.",
+    "update": "numpy.compare_chararrays has been removed from the main namespace; you should use numpy.char.compare_chararrays instead for string array comparisons.",
+    "update_type": "Deprecated",
+    "compare_signature": "numpy.char.compare_chararrays(char1, char2, cmp, assume_equal)",
+    "origin_version": "1.26",
+    "compare_version": "2.0",
+    "api_id": "Ljf4kC458O",
+    "code_id": "rJ49uXKKxT",
+    "case": "case1:[\"apple\", \"banana\", \"cherry\"], [\"durian\", \"grape\", \"kiwi\"],\ncase2:[\"watermelon\", \"peach\", \"banana\"], [\"peach\", \"watermelon\", \"banana\", \"cherries\"],\ncase3:[\"hello\", \"world\", \"example\", \"substring\"], [\"example\", \"substring\", \"hello\", \"world\"]",
+    "solution_function_script": "```python\nimport numpy \n\ndef find_largest_equal_substring(arr1, arr2):\n    import numpy\n    max_len = 0\n    max_substring = ''\n    for i in range(len(arr1)):\n        for j in range(len(arr2)):\n            length = 0\n            while (i + length < len(arr1) and j + length < len(arr2) and \n                   numpy.compare_chararrays(arr1[i + length], arr2[j + length], '==', True)):\n                length += 1\n            if length > max_len:\n                max_len = length\n                max_substring = arr1[i:i + length]\n    return max_substring\n\n# Input data\ntest_data = [\n    ([\"apple\", \"banana\", \"cherry\"], [\"durian\", \"grape\", \"kiwi\"]),\n    ([\"watermelon\", \"peach\", \"banana\"], [\"peach\", \"watermelon\", \"banana\", \"cherries\"]),\n    ([\"hello\", \"world\", \"example\", \"substring\"], [\"example\", \"substring\", \"hello\", \"world\"])\n]\n\nfor arr1, arr2 in test_data:\n    try:\n        result = find_largest_equal_substring(arr1, arr2)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "\n['watermelon']\n['hello', 'world']\n"
   }
 ]
