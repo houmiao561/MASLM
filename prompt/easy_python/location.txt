@@ -29,6 +29,9 @@ You must NOT infer or assume any additional context.
 4. Determine whether any such API call is LIKELY to be problematic under
    the given compare_version.
 5. Select the SINGLE most suspicious API call, if any.
+6. If an API is selected, generate a short natural-language diagnostic
+   question describing WHY this API may be unavailable or incompatible
+   in the given compare_version.
 
 You are NOT required to prove incompatibility with certainty.
 Conservative, high-reliability localization is preferred.
@@ -40,7 +43,7 @@ Conservative, high-reliability localization is preferred.
 4. You must NOT explain your reasoning in natural language.
 5. You must output EXACTLY ONE JSON object and nothing else.
 6. You must NOT output multiple APIs.
-7. If no API related to "package" is suspicious, output null.
+7. If no API related to "package" is suspicious, output null for ALL fields.
 
 ==========Decision Heuristics (in priority order)==========
 1. API calls that can be mapped to the dependency named in "package".
@@ -50,10 +53,21 @@ Conservative, high-reliability localization is preferred.
 5. If multiple candidates exist, choose the MOST SPECIFIC API call.
 6. If confidence is low, prefer null.
 
+==========natural_language_questions Field Specification==========
+- This field MUST be a very short question-like string.
+- It MUST be written as a concise diagnostic question.
+- It SHOULD describe potential unavailability or incompatibility of
+  ai_api_wrong under compare_version.
+- Preferred pattern (example, do NOT copy literally):
+  Why is <api_name> not available in <compare_version>?
+- Do NOT include explanations, background, or full sentences.
+- If ai_api_wrong is null, this field MUST be null.
+
 ==========Output Format (STRICT JSON)==========
 {
   "ai_api_wrong": "string or null",
-  "line_number": "int or null"
+  "line_number": "int or null",
+  "natural_language_questions": "string or null"
 }
 
 ==========User Input==========

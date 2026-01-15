@@ -160,5 +160,283 @@
     "case": "case1:[\"apple\", \"banana\", \"cherry\"], [\"durian\", \"grape\", \"kiwi\"],\ncase2:[\"watermelon\", \"peach\", \"banana\"], [\"peach\", \"watermelon\", \"banana\", \"cherries\"],\ncase3:[\"hello\", \"world\", \"example\", \"substring\"], [\"example\", \"substring\", \"hello\", \"world\"]",
     "solution_function_script": "```python\nimport numpy \n\ndef find_largest_equal_substring(arr1, arr2):\n    import numpy\n    max_len = 0\n    max_substring = ''\n    for i in range(len(arr1)):\n        for j in range(len(arr2)):\n            length = 0\n            while (i + length < len(arr1) and j + length < len(arr2) and \n                   numpy.compare_chararrays(arr1[i + length], arr2[j + length], '==', True)):\n                length += 1\n            if length > max_len:\n                max_len = length\n                max_substring = arr1[i:i + length]\n    return max_substring\n\n# Input data\ntest_data = [\n    ([\"apple\", \"banana\", \"cherry\"], [\"durian\", \"grape\", \"kiwi\"]),\n    ([\"watermelon\", \"peach\", \"banana\"], [\"peach\", \"watermelon\", \"banana\", \"cherries\"]),\n    ([\"hello\", \"world\", \"example\", \"substring\"], [\"example\", \"substring\", \"hello\", \"world\"])\n]\n\nfor arr1, arr2 in test_data:\n    try:\n        result = find_largest_equal_substring(arr1, arr2)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
     "message": "\n['watermelon']\n['hello', 'world']\n"
+  },
+  {
+    "solution_function": "def find_largest_equal_substring(arr1, arr2):\n    import numpy\n    max_len = 0\n    max_substring = ''\n    for i in range(len(arr1)):\n        for j in range(len(arr2)):\n            length = 0\n            while (i + length < len(arr1) and j + length < len(arr2) and \n                   numpy.compare_chararrays(arr1[i + length], arr2[j + length], '==', True)):\n                length += 1\n            if length > max_len:\n                max_len = length\n                max_substring = arr1[i:i + length]\n    return max_substring",
+    "solution_signature": "def find_largest_equal_substring(arr1: list, arr2: list) -> str",
+    "problem": "Please use python code to help me with a function that identifies and returns the largest contiguous substring present in both of two given lists of strings. Each list contains strings and the function should return the substring as a single string. The comparison should be case-sensitive. The numpy library is available for use.",
+    "package": "numpy",
+    "import": "import numpy",
+    "signature": "numpy.compare_chararrays(char1, char2, cmp, assume_equal)",
+    "doc_string": "numpy.compare_chararrays was used to compare two arrays of strings element-wise, returning an array of comparison results.",
+    "update": "numpy.compare_chararrays has been removed from the main namespace; you should use numpy.char.compare_chararrays instead for string array comparisons.",
+    "update_type": "Deprecated",
+    "compare_signature": "numpy.char.compare_chararrays(char1, char2, cmp, assume_equal)",
+    "origin_version": "1.26",
+    "compare_version": "2.0",
+    "api_id": "Ljf4kC458O",
+    "code_id": "rJ49uXKKxT",
+    "case": "case1:[\"apple\", \"banana\", \"cherry\"], [\"durian\", \"grape\", \"kiwi\"],\ncase2:[\"watermelon\", \"peach\", \"banana\"], [\"peach\", \"watermelon\", \"banana\", \"cherries\"],\ncase3:[\"hello\", \"world\", \"example\", \"substring\"], [\"example\", \"substring\", \"hello\", \"world\"]",
+    "solution_function_script": "```python\nimport numpy \n\ndef find_largest_equal_substring(arr1, arr2):\n    import numpy\n    max_len = 0\n    max_substring = ''\n    for i in range(len(arr1)):\n        for j in range(len(arr2)):\n            length = 0\n            while (i + length < len(arr1) and j + length < len(arr2) and \n                   numpy.compare_chararrays(arr1[i + length], arr2[j + length], '==', True)):\n                length += 1\n            if length > max_len:\n                max_len = length\n                max_substring = arr1[i:i + length]\n    return max_substring\n\n# Input data\ntest_data = [\n    ([\"apple\", \"banana\", \"cherry\"], [\"durian\", \"grape\", \"kiwi\"]),\n    ([\"watermelon\", \"peach\", \"banana\"], [\"peach\", \"watermelon\", \"banana\", \"cherries\"]),\n    ([\"hello\", \"world\", \"example\", \"substring\"], [\"example\", \"substring\", \"hello\", \"world\"])\n]\n\nfor arr1, arr2 in test_data:\n    try:\n        result = find_largest_equal_substring(arr1, arr2)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "\n['watermelon']\n['hello', 'world']\n",
+    "imports": ["numpy"],
+    "ast_structure": [
+      {
+        "function_name": "find_largest_equal_substring",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "range", "lineno": 5, "context": "expression" },
+          { "api": "len", "lineno": 5, "context": "expression" },
+          { "api": "range", "lineno": 6, "context": "expression" },
+          { "api": "len", "lineno": 6, "context": "expression" },
+          { "api": "len", "lineno": 8, "context": "expression" },
+          { "api": "len", "lineno": 8, "context": "expression" },
+          {
+            "api": "numpy.compare_chararrays",
+            "lineno": 9,
+            "context": "expression"
+          }
+        ]
+      }
+    ],
+    "ai_api_wrong": "numpy.compare_chararrays",
+    "line_number": 9,
+    "natural_language_questions": "Why is numpy.compare_chararrays not available in 2.0?"
+  },
+  {
+    "solution_function": "def sigmoid_based_sequence_classifier(sequence: list) -> str:\n    import torch\n    sigmoid_values = torch.sigmoid(torch.tensor(sequence, dtype=torch.float32))\n    threshold = 0.5\n    positive_count = (sigmoid_values > threshold).sum().item()\n    negative_count = len(sequence) - positive_count\n    return 'Positive' if positive_count > negative_count else 'Negative'",
+    "solution_signature": "sigmoid_based_sequence_classifier(sequence: list) -> str",
+    "problem": "Please use python code to help me with a function that takes a list of numerical values as input, applies a sigmoid transformation to each element using the torch library, and classifies the sequence as 'Positive' if the majority of the transformed values are greater than 0.5, otherwise classifies it as 'Negative'. The input is a list of floats, and the output is a string indicating the classification.",
+    "package": "torch",
+    "import": "import torch",
+    "signature": "torch.sigmoid(input)-> Tensor",
+    "doc_string": "Applies the element-wise function Sigmoid(x)=1/(1+exp(-x))",
+    "update": "Before torch 1.0, torch.sigmoid was not the preferred method; instead, torch.nn.functional.sigmoid was commonly used.",
+    "update_type": "Add",
+    "compare_signature": "torch.nn.functional.sigmoid(input)-> Tensor",
+    "origin_version": "2.0",
+    "compare_version": "1.0",
+    "api_id": "vnOSjqAGi4",
+    "code_id": "X17wxGeQYu",
+    "case": "Based on the problem description and the given code, I have identified the following characteristics of the input data:\n\n1. The input is a list of numerical values (floats).\n2. The classification is based on the majority of the sigmoid-transformed values, implying that we will consider both small and large lists.\n3. The values can range from negative to positive.\n\nGiven these characteristics, I will create three sets of input test data to ensure comprehensive testing of the `sigmoid_based_sequence_classifier` function.\n\n### Test Data Generation\n\n1. **Case 1: Majority positive values**  \n   This case includes a mix of positive values where the majority should result in a classification of 'Positive'.\n   ```python\n   case1: {[0.6, 0.8, 0.7, 0.9, 0.4]}\n   ```\n\n2. **Case 2: Majority negative values**  \n   This case includes a mix of negative values where the majority should classify as 'Negative'.\n   ```python\n   case2: {[-1.0, -0.5, -0.2, -0.3, -0.4]}\n   ```\n\n3. **Case 3: Equal values on edge case**  \n   This case has an equal number of transformed values above and below the threshold, testing how the function handles a tie.\n   ```python\n   case3: {[0.5, 0.5, 0.4, 0.4, 0.6]}\n   ```\n\n### Final Output for Input Test Data\n```python\ncase1: {[0.6, 0.8, 0.7, 0.9, 0.4]}\ncase2: {[-1.0, -0.5, -0.2, -0.3, -0.4]}\ncase3: {[0.5, 0.5, 0.4, 0.4, 0.6]}\n```",
+    "solution_function_script": "```python\nimport torch \n\ndef sigmoid_based_sequence_classifier(sequence: list) -> str:\n    import torch\n    sigmoid_values = torch.sigmoid(torch.tensor(sequence, dtype=torch.float32))\n    threshold = 0.5\n    positive_count = (sigmoid_values > threshold).sum().item()\n    negative_count = len(sequence) - positive_count\n    return 'Positive' if positive_count > negative_count else 'Negative'\n\n# Input data\ntest_data = [\n    [0.6, 0.8, 0.7, 0.9, 0.4],\n    [-1.0, -0.5, -0.2, -0.3, -0.4],\n    [0.5, 0.5, 0.4, 0.4, 0.6]\n]\n\nfor sequence in test_data:\n    try:\n        result = sigmoid_based_sequence_classifier(sequence)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "Positive\nNegative\nPositive\n"
+  },
+  {
+    "solution_function": "def find_max_encoded_length(files):\n    encoded_lengths = [len(os.fsencode(file)) for file in files]\n    return max(encoded_lengths)\n",
+    "solution_signature": "find_max_encoded_length(files: list[str]) -> int",
+    "problem": "Please use python code to help me with a function that determines the maximum length of encoded filenames in a list. The input is a list of strings, where each string represents a filename or path. The output should be an integer representing the maximum length of the encoded filename. Use the 'os' library to handle the encoding process.",
+    "package": "os",
+    "import": "import os",
+    "signature": "os.fsencode(filename)",
+    "doc_string": "Encode path-like filename to the filesystem encoding and error handler; return bytes unchanged.fsdecode() is the reverse function.",
+    "update": "New in version 3.2.",
+    "update_type": "Added",
+    "compare_signature": "",
+    "origin_version": "3.13",
+    "compare_version": "3.1",
+    "api_id": "oNyC8WuOLl",
+    "code_id": "EXmlRDb8IH",
+    "case": "Based on the provided problem description and benchmark code, we will create three sets of input test data for the `find_max_encoded_length` function. \n\n### Input Data Analysis\n1. The input is a list of strings where each string represents a filename or path. \n2. The function will compute the length of each encoded filename using `os.fsencode`, then return the maximum length found among them.\n\n### Input Data Group Generation\nHere are the three sets of input data, each representing different scenarios:\n\n1. Case with standard ASCII filenames:\n   - Contains basic filenames without special characters or long paths.\n\n   ```python\n   case1:{\"files\": [\"file1.txt\", \"document.docx\", \"image.png\"]}\n   ```\n\n2. Case with special characters and varying lengths:\n   - Includes filenames with special characters, whitespace, and mixed length.\n\n   ```python\n   case2:{\"files\": [\"file_2.txt\", \"report 2023 #1.docx\", \"café.pdf\", \"longer_file_name_with_special_chars_#@!.jpg\"]}\n   ```\n\n3. Case with deep directory structures:\n   - Includes paths with multiple folders, potentially leading to long encoded lengths.\n\n   ```python\n   case3:{\"files\": [\"/home/user/documents/project/file1.txt\", \"/var/log/apache2/error.log\", \"C:\\\\Program Files\\\\MyApp\\\\app.exe\", \"/this/is/a/very/deep/nested/structure/that/could/be/very/long/file.txt\"]}\n   ```\n\nThese cases provide a variety of scenarios, including different character types, lengths, and encoding complexities, which would be beneficial to test the function thoroughly.",
+    "solution_function_script": "```python\nimport os \n\ndef find_max_encoded_length(files):\n    encoded_lengths = [len(os.fsencode(file)) for file in files]\n    return max(encoded_lengths)\n\n# Input data\ntest_data = [\n    [\"file1.txt\", \"document.docx\", \"image.png\"],\n    [\"file_2.txt\", \"report 2023 #1.docx\", \"café.pdf\", \"longer_file_name_with_special_chars_#@!.jpg\"],\n    [\"/home/user/documents/project/file1.txt\", \"/var/log/apache2/error.log\", \"C:\\\\Program Files\\\\MyApp\\\\app.exe\", \"/this/is/a/very/deep/nested/structure/that/could/be/very/long/file.txt\"]\n]\n\nfor files in test_data:\n    try:\n        result = find_max_encoded_length(files)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "13\n43\n70\n"
+  },
+  {
+    "solution_function": "def find_max_encoded_length(files):\n    encoded_lengths = [len(os.fsencode(file)) for file in files]\n    return max(encoded_lengths)\n",
+    "solution_signature": "find_max_encoded_length(files: list[str]) -> int",
+    "problem": "Please use python code to help me with a function that determines the maximum length of encoded filenames in a list. The input is a list of strings, where each string represents a filename or path. The output should be an integer representing the maximum length of the encoded filename. Use the 'os' library to handle the encoding process.",
+    "package": "os",
+    "import": "import os",
+    "signature": "os.fsencode(filename)",
+    "doc_string": "Encode path-like filename to the filesystem encoding and error handler; return bytes unchanged.fsdecode() is the reverse function.",
+    "update": "New in version 3.2.",
+    "update_type": "Added",
+    "compare_signature": "",
+    "origin_version": "3.13",
+    "compare_version": "3.1",
+    "api_id": "oNyC8WuOLl",
+    "code_id": "EXmlRDb8IH",
+    "case": "Based on the provided problem description and benchmark code, we will create three sets of input test data for the `find_max_encoded_length` function. \n\n### Input Data Analysis\n1. The input is a list of strings where each string represents a filename or path. \n2. The function will compute the length of each encoded filename using `os.fsencode`, then return the maximum length found among them.\n\n### Input Data Group Generation\nHere are the three sets of input data, each representing different scenarios:\n\n1. Case with standard ASCII filenames:\n   - Contains basic filenames without special characters or long paths.\n\n   ```python\n   case1:{\"files\": [\"file1.txt\", \"document.docx\", \"image.png\"]}\n   ```\n\n2. Case with special characters and varying lengths:\n   - Includes filenames with special characters, whitespace, and mixed length.\n\n   ```python\n   case2:{\"files\": [\"file_2.txt\", \"report 2023 #1.docx\", \"café.pdf\", \"longer_file_name_with_special_chars_#@!.jpg\"]}\n   ```\n\n3. Case with deep directory structures:\n   - Includes paths with multiple folders, potentially leading to long encoded lengths.\n\n   ```python\n   case3:{\"files\": [\"/home/user/documents/project/file1.txt\", \"/var/log/apache2/error.log\", \"C:\\\\Program Files\\\\MyApp\\\\app.exe\", \"/this/is/a/very/deep/nested/structure/that/could/be/very/long/file.txt\"]}\n   ```\n\nThese cases provide a variety of scenarios, including different character types, lengths, and encoding complexities, which would be beneficial to test the function thoroughly.",
+    "solution_function_script": "```python\nimport os \n\ndef find_max_encoded_length(files):\n    encoded_lengths = [len(os.fsencode(file)) for file in files]\n    return max(encoded_lengths)\n\n# Input data\ntest_data = [\n    [\"file1.txt\", \"document.docx\", \"image.png\"],\n    [\"file_2.txt\", \"report 2023 #1.docx\", \"café.pdf\", \"longer_file_name_with_special_chars_#@!.jpg\"],\n    [\"/home/user/documents/project/file1.txt\", \"/var/log/apache2/error.log\", \"C:\\\\Program Files\\\\MyApp\\\\app.exe\", \"/this/is/a/very/deep/nested/structure/that/could/be/very/long/file.txt\"]\n]\n\nfor files in test_data:\n    try:\n        result = find_max_encoded_length(files)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "13\n43\n70\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "find_max_encoded_length",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "len", "lineno": 2, "context": "expression" },
+          { "api": "os.fsencode", "lineno": 2, "context": "expression" },
+          { "api": "max", "lineno": 3, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "os.fsencode",
+    "line_number": 2,
+    "natural_language_questions": "Why is os.fsencode not available in 3.1?"
+  },
+  {
+    "results": [
+      {
+        "id": "/numpy/numpy",
+        "title": "NumPy",
+        "description": "NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.",
+        "branch": "main",
+        "lastUpdateDate": "2025-12-25T01:18:19.862Z",
+        "state": "finalized",
+        "totalTokens": 937269,
+        "totalSnippets": 3593,
+        "stars": 29460,
+        "trustScore": -1,
+        "benchmarkScore": 84.1,
+        "versions": ["v2.3.1", "v2.1.3"],
+        "score": 0.8,
+        "vip": true
+      },
+      {
+        "id": "/cupy/cupy",
+        "title": "CuPy",
+        "description": "CuPy is a NumPy/SciPy-compatible array library for GPU-accelerated computing with Python, acting as a drop-in replacement for existing code on NVIDIA CUDA or AMD ROCm platforms.",
+        "branch": "main",
+        "lastUpdateDate": "2025-12-28T16:15:57.272Z",
+        "state": "finalized",
+        "totalTokens": 99310,
+        "totalSnippets": 730,
+        "stars": 10156,
+        "trustScore": 8.7,
+        "benchmarkScore": 76.7,
+        "versions": [],
+        "score": 0.43689308,
+        "vip": false
+      },
+      {
+        "id": "/cpmpy/cpmpy",
+        "title": "CPMpy",
+        "description": "CPMpy is a constraint programming and modeling library in Python, based on NumPy, offering direct solver access for combinatorial problems.",
+        "branch": "master",
+        "lastUpdateDate": "2025-10-01T06:10:52.567Z",
+        "state": "finalized",
+        "totalTokens": 77753,
+        "totalSnippets": 382,
+        "stars": 265,
+        "trustScore": 5,
+        "benchmarkScore": 94.5,
+        "versions": [],
+        "score": 0.682423,
+        "vip": true
+      },
+      {
+        "id": "/exphp/npyz",
+        "title": "npyz",
+        "description": "Numpy format (`*.npy`) serialization and deserialization library for reading and writing `*.npy` files, including `npz` support, with a focus on type-safety and memory efficiency through iterators.",
+        "branch": "master",
+        "lastUpdateDate": "2025-10-15T04:07:03.390Z",
+        "state": "finalized",
+        "totalTokens": 4746,
+        "totalSnippets": 18,
+        "stars": 30,
+        "trustScore": 7.9,
+        "benchmarkScore": 92.2,
+        "versions": [],
+        "score": 0.46372324,
+        "vip": false
+      },
+      {
+        "id": "/numpy/numpy-financial",
+        "title": "NumPy Financial",
+        "description": "NumPy Financial is a Python package providing a collection of elementary financial functions, serving as a replacement for the deprecated financial functions in NumPy.",
+        "branch": "main",
+        "lastUpdateDate": "2025-10-05T01:51:18.292Z",
+        "state": "finalized",
+        "totalTokens": 1564,
+        "totalSnippets": 24,
+        "stars": 382,
+        "trustScore": 8.7,
+        "benchmarkScore": 36.5,
+        "versions": [],
+        "score": 0.60079867,
+        "vip": false
+      }
+    ]
+  },
+  {
+    "ai_api_wrong": "os.fsencode",
+    "line_number": 2,
+    "natural_language_questions": "Why is os.fsencode not available in 3.1?"
+  },
+  {
+    "compare_version": "3.1",
+    "package": "os",
+    "solution_function": "def find_max_encoded_length(files):\n    encoded_lengths = [len(os.fsencode(file)) for file in files]\n    return max(encoded_lengths)\n",
+    "ast_structure": [
+      {
+        "function_name": "find_max_encoded_length",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "len", "lineno": 2, "context": "expression" },
+          { "api": "os.fsencode", "lineno": 2, "context": "expression" },
+          { "api": "max", "lineno": 3, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "os.fsencode",
+    "line_number": 2,
+    "natural_language_questions": "Why is os.fsencode not available in 3.1?"
+  },
+  {
+    "result": {
+      "tools": [
+        {
+          "name": "resolve-library-id",
+          "title": "Resolve Context7 Library ID",
+          "description": "Resolves a package/product name to a Context7-compatible library ID and returns matching libraries.\n\nYou MUST call this function before 'query-docs' to obtain a valid Context7-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.\n\nSelection Process:\n1. Analyze the query to understand what library/package the user is looking for\n2. Return the most relevant match based on:\n- Name similarity to the query (exact matches prioritized)\n- Description relevance to the query's intent\n- Documentation coverage (prioritize libraries with higher Code Snippet counts)\n- Source reputation (consider libraries with High or Medium reputation more authoritative)\n- Benchmark Score: Quality indicator (100 is the highest score)\n\nResponse Format:\n- Return the selected library ID in a clearly marked section\n- Provide a brief explanation for why this library was chosen\n- If multiple good matches exist, acknowledge this but proceed with the most relevant one\n- If no good matches exist, clearly state this and suggest query refinements\n\nFor ambiguous queries, request clarification before proceeding with a best-guess match.\n\nIMPORTANT: Do not call this tool more than 3 times per question. If you cannot find what you need after 3 calls, use the best result you have.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The user's original question or task. This is used to rank library results by relevance to what the user is trying to accomplish. IMPORTANT: Do not include any sensitive or confidential information such as API keys, passwords, credentials, or personal data in your query."
+              },
+              "libraryName": {
+                "type": "string",
+                "description": "Library name to search for and retrieve a Context7-compatible library ID."
+              }
+            },
+            "required": ["query", "libraryName"],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          }
+        },
+        {
+          "name": "query-docs",
+          "title": "Query Documentation",
+          "description": "Retrieves and queries up-to-date documentation and code examples from Context7 for any programming library or framework.\n\nYou must call 'resolve-library-id' first to obtain the exact Context7-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.\n\nIMPORTANT: Do not call this tool more than 3 times per question. If you cannot find what you need after 3 calls, use the best information you have.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "libraryId": {
+                "type": "string",
+                "description": "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolve-library-id' or directly from user query in the format '/org/project' or '/org/project/version'."
+              },
+              "query": {
+                "type": "string",
+                "description": "The question or task you need help with. Be specific and include relevant details. Good: 'How to set up authentication with JWT in Express.js' or 'React useEffect cleanup function examples'. Bad: 'auth' or 'hooks'. IMPORTANT: Do not include any sensitive or confidential information such as API keys, passwords, credentials, or personal data in your query."
+              }
+            },
+            "required": ["libraryId", "query"],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          }
+        }
+      ]
+    },
+    "jsonrpc": "2.0",
+    "id": "f20b3877-ffdc-4ed1-9028-e82129a9e7a0"
   }
 ]
