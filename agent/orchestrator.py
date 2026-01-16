@@ -1,33 +1,4 @@
-import json
-import re
-import sys
-from camel.models import ModelFactory
-from camel.types import ModelPlatformType
-from utils import *
-from camel.agents.chat_agent import ChatAgent
-from agent.client import make_mcp_tool
-
-def create_agent( system_prompt: str , mcp_client ):
-    mcp_tools = []
-    tool_defs = mcp_client.list_tools()
-    for tool_def in tool_defs:
-        mcp_tools.append(make_mcp_tool(tool_def, mcp_client))
-
-    model = ModelFactory.create(
-        model_platform=ModelPlatformType.OPENAI,
-        model_type="deepseek-ai/DeepSeek-V3",
-        model_config_dict={
-            "temperature": 0.7,
-            "max_tokens": 4096,
-        },
-    )
-
-    agent = ChatAgent(
-        system_message=system_prompt,
-        model=model,
-        tools=mcp_tools,
-    )
-    return agent
+import json,re,sys
 
 class Orchestrator:
     def __init__(self, agents: dict, raw_data: dict):
@@ -115,20 +86,6 @@ class Orchestrator:
             "reason_type":self.raw_data['reason_type'],
             "ai_api_answer_change":self.raw_data['ai_api_answer_change']
         }
-    
-    def testmcp(self):
-        data = self._location_get_variables() # <class 'dict'>
-        task = txt_read_file("/Users/houmiao/Desktop/MASLM/context7.md")
-
-        final_data = str(data) + task
-
-        resp = self.agents["mcp_test"].step(final_data)
-        print("resp=========>")
-        print(resp)
-        content = self._get_content(resp)
-        print("\n\ncontent:\n\n", content)
-        sys.exit(0)
-        return self.raw_data
 
     def location_library(self):
         print("location_library")

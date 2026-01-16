@@ -79,7 +79,6 @@ def create_agent(
 
 
 
-
 if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
@@ -101,7 +100,6 @@ Tool: query-docs
 
 Always call these tools by naming them exactly and filling all required arguments correctly. Do not guess; if unsure, ask first for the correct parameters.
 """
-
     agent_test = create_agent(system_prompt=SYSTEM_PROMPT, api_key="", server_url="https://mcp.context7.com/mcp")
     result = agent_test.step(
         """
@@ -147,6 +145,8 @@ Do NOT include tool call logs in the output.
     print(result)
 
 
+
+"第一次执行结果:"
 # msgs=[
 #     BaseMessage(
 #         role_name='Assistant', 
@@ -241,66 +241,66 @@ Do NOT include tool call logs in the output.
 
 
 
-
-msgs=[
-    BaseMessage(
-        role_name='Assistant', 
-        role_type=<RoleType.ASSISTANT: 'assistant'>, meta_dict={}, 
-        content='{\n  "ai_api_change": "The function `numpy.compare_chararrays` has been removed from the main NumPy namespace in version 2.0. It has been relocated to the `numpy.char` submodule and should now be accessed as `numpy.char.compare_chararrays`. To fix existing code, replace instances of `np.compare_chararrays` with `np.char.compare_chararrays`. Example: `result = np.char.compare_chararrays([\'a\', \'b\'], [\'a\', \'c\'], \'==\')`."\n}', 
-        video_bytes=None, image_list=None, image_detail='auto', video_detail='low', parsed=None
-    )
-] 
-terminated=False 
-info={
-    'id': '019bc6361236ce0950ecd23d1e135a50', 
-    'usage': {
-        'completion_tokens': 110, 'prompt_tokens': 2166, 
-        'total_tokens': 2276, 
-        'completion_tokens_details': {
-            'accepted_prediction_tokens': None, 
-            'audio_tokens': None, 
-            'reasoning_tokens': 0, 
-            'rejected_prediction_tokens': None
-        }, 
-    'prompt_tokens_details': None
-    }, 
-    'termination_reasons': ['stop'], 'num_tokens': 1746, 
-    'tool_calls': [
-        ToolCallingRecord(
-            tool_name='resolve_library_id', 
-            args={'query': 'numpy.compare_chararrays', 'libraryName': 'numpy'}, 
-            result={
-                'result': {
-                    'content': [
-                        {
-                            'type': 'text', 
-                            'text': 'Available Libraries:\n\nEach result includes:\n- Library ID: Context7-compatible identifier (format: /org/project)\n- Name: Library or package name\n- Description: Short summary\n- Code Snippets: Number of available code examples\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\n- Benchmark Score: Quality indicator (100 is the highest score)\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\n\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\n\n----------\n\n- Title: NumPy\n- Context7-compatible library ID: /numpy/numpy\n- Description: NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.\n- Code Snippets: 3593\n- Source Reputation: Unknown\n- Benchmark Score: 84.1\n- Versions: v2.3.1, v2.1.3\n----------\n- Title: CPMpy\n- Context7-compatible library ID: /cpmpy/cpmpy\n- Description: CPMpy is a constraint programming and modeling library in Python, based on NumPy, offering direct solver access for combinatorial problems.\n- Code Snippets: 382\n- Source Reputation: Medium\n- Benchmark Score: 94.5\n----------\n- Title: npcpy\n- Context7-compatible library ID: /npc-worldwide/npcpy\n- Description: npcpy is the core library of the NPC Toolkit, designed to enhance natural language processing pipelines and agent tooling for building advanced LLM applications and research.\n- Code Snippets: 99\n- Source Reputation: Medium\n- Benchmark Score: 69.4'
-                        }
-                    ]
-                }, 
-                'jsonrpc': '2.0', 'id': 'c57ae2ce-be9c-4080-9fb4-3cf52c0110ae'
-            }, 
-            tool_call_id='019bc635f1dcded4e0bfde77a8ff0770'
-        ), 
-        ToolCallingRecord(
-            tool_name='query_docs', 
-            args={
-                'libraryId': '/numpy/numpy', 
-                'query': 'numpy.compare_chararrays removal in NumPy 2.0 and alternative'
-            }, 
-            result={
-                'result': {
-                    'content': [
-                        {
-                            'type': 'text', 
-                            'text': "### Relocate numpy.compare_chararrays to numpy.char.compare_chararrays\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\n\nThe function `np.compare_chararrays` has been removed from the main NumPy namespace. It should now be accessed via the `np.char` submodule as `np.char.compare_chararrays`.\n\n```python\nimport numpy as np\n\n# Old (removed from main namespace) usage:\n# result = np.compare_chararrays(['a', 'b'], ['a', 'c'], '==')\n\n# New (recommended) usage:\nresult = np.char.compare_chararrays(['a', 'b'], ['a', 'c'], '==')\nprint(result)\n\nresult_ne = np.char.compare_chararrays(['hello', 'world'], ['hello', 'python'], '!=')\nprint(result_ne)\n```\n\n--------------------------------\n\n### Handle Deprecation of chararray in Main NumPy Namespace\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\n\nThe `chararray` type in the main NumPy namespace (`np.chararray`) is deprecated. While it can still be imported from `np.char.chararray` without a deprecation warning for now, users should be aware of its planned full removal.\n\n```python\nimport numpy as np\n\n# Deprecated in main namespace, but still importable from np.char\nfrom numpy.char import chararray\n\n# Creating a chararray\narr = chararray((3,), itemsize=5)\narr[:] = 'test'\nprint(arr)\n\n# Accessing an element\nprint(arr[0])\n```\n\n### Release Notes > Removals > Namespace Changes\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\n\nSeveral functions have been removed from the main NumPy namespace and relocated to submodules. ``np.compare_chararrays`` is now accessible as ``np.char.compare_chararrays``, ``np.format_parser`` has moved to ``np.rec.format_parser``, and ``np.round_`` has been replaced with ``np.round``. The ``charrarray`` class in the main namespace is deprecated and should be imported from ``np.char.chararray`` instead.\n\n--------------------------------\n\n### Character arrays\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/reference/arrays.classes.rst\n\nThe `~numpy.char.chararray` class exists for backwards compatibility with Numarray, it is not recommended for new development. Starting from numpy 1.4, if one needs arrays of strings, it is recommended to use arrays of `dtype` `object_`, `bytes_` or `str_`, and use the free functions in the `numpy.char` module for fast vectorized string operations.\n\n--------------------------------\n\n### Legacy fixed-width string functionality > Comparison > Whitespace Handling\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/reference/routines.char.rst\n\nUnlike the standard numpy comparison operators, the comparison operators in the `char` module strip trailing whitespace characters before performing the comparison. This behavior is useful when comparing strings that may have different amounts of padding, as it focuses the comparison on the actual string content rather than whitespace differences."
-                        }
-                    ]
-                }, 
-                'jsonrpc': '2.0', 'id': '9315516a-407f-4c52-9afa-ccfe63d245d2'
-            }, 
-            tool_call_id='019bc63603928f7175ac34d23e287248'
-        )
-    ], 
-    'external_tool_call_requests': None
-}
+"第二次执行结果，修改了prompt格式以及step中的任务描述"
+# msgs=[
+#     BaseMessage(
+#         role_name='Assistant', 
+#         role_type=<RoleType.ASSISTANT: 'assistant'>, meta_dict={}, 
+#         content='{\n  "ai_api_change": "The function `numpy.compare_chararrays` has been removed from the main NumPy namespace in version 2.0. It has been relocated to the `numpy.char` submodule and should now be accessed as `numpy.char.compare_chararrays`. To fix existing code, replace instances of `np.compare_chararrays` with `np.char.compare_chararrays`. Example: `result = np.char.compare_chararrays([\'a\', \'b\'], [\'a\', \'c\'], \'==\')`."\n}', 
+#         video_bytes=None, image_list=None, image_detail='auto', video_detail='low', parsed=None
+#     )
+# ] 
+# terminated=False 
+# info={
+#     'id': '019bc6361236ce0950ecd23d1e135a50', 
+#     'usage': {
+#         'completion_tokens': 110, 'prompt_tokens': 2166, 
+#         'total_tokens': 2276, 
+#         'completion_tokens_details': {
+#             'accepted_prediction_tokens': None, 
+#             'audio_tokens': None, 
+#             'reasoning_tokens': 0, 
+#             'rejected_prediction_tokens': None
+#         }, 
+#     'prompt_tokens_details': None
+#     }, 
+#     'termination_reasons': ['stop'], 'num_tokens': 1746, 
+#     'tool_calls': [
+#         ToolCallingRecord(
+#             tool_name='resolve_library_id', 
+#             args={'query': 'numpy.compare_chararrays', 'libraryName': 'numpy'}, 
+#             result={
+#                 'result': {
+#                     'content': [
+#                         {
+#                             'type': 'text', 
+#                             'text': 'Available Libraries:\n\nEach result includes:\n- Library ID: Context7-compatible identifier (format: /org/project)\n- Name: Library or package name\n- Description: Short summary\n- Code Snippets: Number of available code examples\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\n- Benchmark Score: Quality indicator (100 is the highest score)\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\n\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\n\n----------\n\n- Title: NumPy\n- Context7-compatible library ID: /numpy/numpy\n- Description: NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.\n- Code Snippets: 3593\n- Source Reputation: Unknown\n- Benchmark Score: 84.1\n- Versions: v2.3.1, v2.1.3\n----------\n- Title: CPMpy\n- Context7-compatible library ID: /cpmpy/cpmpy\n- Description: CPMpy is a constraint programming and modeling library in Python, based on NumPy, offering direct solver access for combinatorial problems.\n- Code Snippets: 382\n- Source Reputation: Medium\n- Benchmark Score: 94.5\n----------\n- Title: npcpy\n- Context7-compatible library ID: /npc-worldwide/npcpy\n- Description: npcpy is the core library of the NPC Toolkit, designed to enhance natural language processing pipelines and agent tooling for building advanced LLM applications and research.\n- Code Snippets: 99\n- Source Reputation: Medium\n- Benchmark Score: 69.4'
+#                         }
+#                     ]
+#                 }, 
+#                 'jsonrpc': '2.0', 'id': 'c57ae2ce-be9c-4080-9fb4-3cf52c0110ae'
+#             }, 
+#             tool_call_id='019bc635f1dcded4e0bfde77a8ff0770'
+#         ), 
+#         ToolCallingRecord(
+#             tool_name='query_docs', 
+#             args={
+#                 'libraryId': '/numpy/numpy', 
+#                 'query': 'numpy.compare_chararrays removal in NumPy 2.0 and alternative'
+#             }, 
+#             result={
+#                 'result': {
+#                     'content': [
+#                         {
+#                             'type': 'text', 
+#                             'text': "### Relocate numpy.compare_chararrays to numpy.char.compare_chararrays\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\n\nThe function `np.compare_chararrays` has been removed from the main NumPy namespace. It should now be accessed via the `np.char` submodule as `np.char.compare_chararrays`.\n\n```python\nimport numpy as np\n\n# Old (removed from main namespace) usage:\n# result = np.compare_chararrays(['a', 'b'], ['a', 'c'], '==')\n\n# New (recommended) usage:\nresult = np.char.compare_chararrays(['a', 'b'], ['a', 'c'], '==')\nprint(result)\n\nresult_ne = np.char.compare_chararrays(['hello', 'world'], ['hello', 'python'], '!=')\nprint(result_ne)\n```\n\n--------------------------------\n\n### Handle Deprecation of chararray in Main NumPy Namespace\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\n\nThe `chararray` type in the main NumPy namespace (`np.chararray`) is deprecated. While it can still be imported from `np.char.chararray` without a deprecation warning for now, users should be aware of its planned full removal.\n\n```python\nimport numpy as np\n\n# Deprecated in main namespace, but still importable from np.char\nfrom numpy.char import chararray\n\n# Creating a chararray\narr = chararray((3,), itemsize=5)\narr[:] = 'test'\nprint(arr)\n\n# Accessing an element\nprint(arr[0])\n```\n\n### Release Notes > Removals > Namespace Changes\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\n\nSeveral functions have been removed from the main NumPy namespace and relocated to submodules. ``np.compare_chararrays`` is now accessible as ``np.char.compare_chararrays``, ``np.format_parser`` has moved to ``np.rec.format_parser``, and ``np.round_`` has been replaced with ``np.round``. The ``charrarray`` class in the main namespace is deprecated and should be imported from ``np.char.chararray`` instead.\n\n--------------------------------\n\n### Character arrays\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/reference/arrays.classes.rst\n\nThe `~numpy.char.chararray` class exists for backwards compatibility with Numarray, it is not recommended for new development. Starting from numpy 1.4, if one needs arrays of strings, it is recommended to use arrays of `dtype` `object_`, `bytes_` or `str_`, and use the free functions in the `numpy.char` module for fast vectorized string operations.\n\n--------------------------------\n\n### Legacy fixed-width string functionality > Comparison > Whitespace Handling\n\nSource: https://github.com/numpy/numpy/blob/main/doc/source/reference/routines.char.rst\n\nUnlike the standard numpy comparison operators, the comparison operators in the `char` module strip trailing whitespace characters before performing the comparison. This behavior is useful when comparing strings that may have different amounts of padding, as it focuses the comparison on the actual string content rather than whitespace differences."
+#                         }
+#                     ]
+#                 }, 
+#                 'jsonrpc': '2.0', 'id': '9315516a-407f-4c52-9afa-ccfe63d245d2'
+#             }, 
+#             tool_call_id='019bc63603928f7175ac34d23e287248'
+#         )
+#     ], 
+#     'external_tool_call_requests': None
+# }
