@@ -149,7 +149,7 @@ if __name__ == "__main__":
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
 
     # 开始计时
-    # start_time = time.time()
+    start_time = time.time()
     maslm()
     # print("JUDGE")
     # print("JUDGE")
@@ -166,8 +166,8 @@ if __name__ == "__main__":
     # judge_bench()
 
     # 结束计时
-    # end_time = time.time()
-    # print(f"Total time: {end_time - start_time} seconds")
+    end_time = time.time()
+    print(f"Total time: {end_time - start_time} seconds")
 
 
 

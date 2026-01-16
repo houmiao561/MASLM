@@ -71,7 +71,8 @@ class Orchestrator:
             "solution_function":self.raw_data['solution_function'],
             "ast_structure":self.raw_data['ast_structure'],
             "ai_api_wrong":self.raw_data['ai_api_wrong'],
-            "line_number":self.raw_data['line_number']   
+            "line_number":self.raw_data['line_number'],
+            "natural_language_questions":self.raw_data['natural_language_questions']  
         }
     
     def _fix_function_get_variables(self):
@@ -83,8 +84,11 @@ class Orchestrator:
             "ast_structure":self.raw_data['ast_structure'],
             "ai_api_wrong":self.raw_data['ai_api_wrong'],
             "line_number":self.raw_data['line_number'],
+            "natural_language_questions":self.raw_data['natural_language_questions'],
             "reason_type":self.raw_data['reason_type'],
-            "ai_api_answer_change":self.raw_data['ai_api_answer_change']
+            "ai_api_answer_change":self.raw_data['ai_api_answer_change'],
+            "mcp_raw":self.raw_data['mcp_raw'],
+            "mcp_evidence_summary":self.raw_data['mcp_evidence_summary']
         }
 
     def location_library(self):
@@ -101,6 +105,7 @@ class Orchestrator:
         result = self._extract_json(content)
         self.raw_data["ai_api_wrong"] = result["ai_api_wrong"]
         self.raw_data["line_number"] = result["line_number"]
+        self.raw_data["natural_language_questions"] = result["natural_language_questions"]
         return self.raw_data
     
     def answer_change(self):
@@ -116,6 +121,8 @@ class Orchestrator:
         result = self._extract_json(content)
         self.raw_data["ai_api_answer_change"] = result["ai_api_answer_change"] 
         self.raw_data["reason_type"] = result["reason_type"]
+        self.raw_data["mcp_raw"] = result["mcp_raw"]
+        self.raw_data["mcp_evidence_summary"] = result["mcp_evidence_summary"]
         return self.raw_data
         
     def fix_function(self):
