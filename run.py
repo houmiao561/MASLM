@@ -3,10 +3,9 @@ import sys
 import time
 from ast_pre.ast_pre import extract_ast_structure
 from utils import *
-from agent.mas import Orchestrator, create_agent
-from agent.judge import OrchestratorJudger
-from agent.mcp_tools import ANSWER_MCP_TOOLS
-from agent.client import MCPClient
+from agent.orchestrator import Orchestrator
+from agent.create_single_agent import create_agent
+from agent.judger import OrchestratorJudger
 
 def maslm():
     FINAL_TOKEN = 0
@@ -17,24 +16,17 @@ def maslm():
         ast_result = extract_ast_structure(CODE)
         sample = {**CODE, **ast_result} # 拼接
 
-
-        mcp_client = MCPClient(["node", "./web-search-mcp/dist/index.js"])
-
         # MAS启动
         agents = {
-            "mcp_test": create_agent(MCP_TEST_AGENT_PROMPT,mcp_client),
-            "location_library": create_agent(LOCATION_AGENT_PROMPT,mcp_client), 
-            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,mcp_client),
-            "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT,mcp_client)
+            "location_library": create_agent(LOCATION_AGENT_PROMPT), 
+            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp"),
+            "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
         }
 
         orch = Orchestrator(agents, sample)
-        
+
 
         # MAS具体执行三个Agent,前两个不执行没法执行第三个
-        testmcp = orch.testmcp()
-        
-        sys.exit(0)
         location_result = orch.location_library()
         answer_change_result = orch.answer_change()
         fix_function_result = orch.fix_function()
@@ -151,7 +143,6 @@ if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
-    MCP_TEST_AGENT_PROMPT = txt_read_file("/Users/houmiao/Desktop/MASLM/mcp_test_agent_prompt.txt")
     LOCATION_AGENT_PROMPT = txt_read_file("prompt/easy_python/location.txt")
     ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")

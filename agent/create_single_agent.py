@@ -2,7 +2,7 @@ from camel.models import ModelFactory
 from camel.types import ModelPlatformType
 from camel.agents.chat_agent import ChatAgent,FunctionTool
 from typing import Optional, Dict, Any
-from client import MCPClient
+from agent.client import MCPClient
 import os
 
 def create_agent(
