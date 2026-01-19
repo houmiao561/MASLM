@@ -42,8 +42,56 @@
     "mcp_raw": { "resolve_library_id": null, "query_docs": null },
     "mcp_evidence_summary": "No MCP evidence was retrieved due to missing natural_language_questions and ai_api_wrong.",
     "ai_api_fix_function": "def compute_weighted_average(data, weights):\n    import numpy as np\n    float_data = np.asfarray(data)\n    float_weights = np.asfarray(weights)\n    weighted_sum = np.dot(float_data, float_weights)\n    total_weight = np.sum(float_weights)\n    return weighted_sum / total_weight",
-    "judge_reason": "The AI did not return any wrong APIs or changes.",
+    "judge_reason": "The AI did not locate any wrong API, so the evaluation for both location and update is incorrect.",
     "judge_locate_answer": 0,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "def find_callables_and_sum(in_list):\n    total_sum = 0\n    for item in in_list:\n        if callable(item):\n            total_sum += item()\n    return total_sum",
+    "solution_signature": "find_callables_and_sum(in_list: list) -> int",
+    "problem": "Please use python code to help me with a function that takes a list of mixed data types, including both integers and callable objects (functions with no arguments that return an integer), and returns the sum of the values produced by invoking only the callable objects. The input is a list containing integers and callable objects. The output is a single integer. Make sure to utilize the 'python' library.",
+    "package": "python",
+    "import": "python",
+    "signature": "callable(object)->bool",
+    "doc_string": "callable() checks if an object is callable, meaning it can be invoked as a function, or if it has a __call__ method.",
+    "update": "callable() has been replaced by hasattr() because hasattr() is a more explicit approach",
+    "update_type": "Deprecated",
+    "compare_signature": "hasattr(object, name)->bool",
+    "origin_version": "2.7",
+    "compare_version": "3.9",
+    "api_id": "YOKeKOVTYP",
+    "code_id": "Oq8eDpCkfL",
+    "case": "case1:[1, 2, lambda: 3, 4, lambda: 5],\ncase2:[lambda: 10, lambda: 20, 30, 40],\ncase3:[100, 200, lambda: 300, lambda: 400, 500]",
+    "solution_function_script": "```python\npython\n\ndef find_callables_and_sum(in_list):\n    total_sum = 0\n    for item in in_list:\n        if callable(item):\n            total_sum += item()\n    return total_sum\n\n# Input data\ntest_data = [\n    [1, 2, lambda: 3, 4, lambda: 5],\n    [lambda: 10, lambda: 20, 30, 40],\n    [100, 200, lambda: 300, lambda: 400, 500]\n]\n\nfor in_list in test_data:\n    try:\n        result = find_callables_and_sum(in_list)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "8\n30\n700\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "find_callables_and_sum",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "callable", "lineno": 4, "context": "if-condition" },
+          { "api": "item", "lineno": 5, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "callable",
+    "line_number": 4,
+    "natural_language_questions": "Why is callable not available in python 3.9?",
+    "ai_api_answer_change": {
+      "what_changed": "No evidence of changes to the `callable` function in Python 3.9.",
+      "why_it_breaks": "No evidence suggests that `callable` is unavailable or problematic in Python 3.9.",
+      "how_to_fix": "No fix guidance is required as the MCP evidence does not indicate any issues with `callable` in Python 3.9."
+    },
+    "reason_type": "Unknown",
+    "mcp_raw": {
+      "resolve_library_id": "{'result': {'content': [{'type': 'text', 'text': 'Available Libraries:\\n\\nEach result includes:\\n- Library ID: Context7-compatible identifier (format: /org/project)\\n- Name: Library or package name\\n- Description: Short summary\\n- Code Snippets: Number of available code examples\\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\\n- Benchmark Score: Quality indicator (100 is the highest score)\\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\\n\\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\\n\\n----------\\n\\n- Title: Python\\n- Context7-compatible library ID: /python/cpython\\n- Description: The Python programming language\\n- Code Snippets: 7177\\n- Source Reputation: High\\n- Benchmark Score: 91.1\\n- Versions: v3.9.22, v3.11.14, v3.13.9\\n----------\\n- Title: Python\\n- Context7-compatible library ID: /websites/python_3_10\\n- Description: Python is a high-level, interpreted programming language that emphasizes readability and developer productivity, offering dynamic typing, a comprehensive standard library, and a broad ecosystem for web development, scripting, automation, and data science.\\n- Code Snippets: 6243\\n- Source Reputation: High\\n- Benchmark Score: 92.1\\n----------\\n- Title: Python\\n- Context7-compatible library ID: /websites/devdocs_io_python_3_14\\n- Description: Python is a high-level, interpreted programming language known for its simple syntax and versatile applications in web development, data science, automation, and scientific computing.\\n- Code Snippets: 21524\\n- Source Reputation: High\\n- Benchmark Score: 91.2\\n----------\\n- Title: Python 3.15\\n- Context7-compatible library ID: /websites/python_3_15\\n- Description: Python is a high-level, general-purpose programming language known for its readability, versatility, and extensive libraries.\\n- Code Snippets: 6515\\n- Source Reputation: High\\n- Benchmark Score: 85\\n----------\\n- Title: Python 3.2\\n- Context7-compatible library ID: /websites/python_3_2\\n- Description: Python 3.2 is a specific version of the Python programming language, offering features for general-purpose programming and a comprehensive standard library.\\n- Code Snippets: 14793\\n- Source Reputation: High\\n- Benchmark Score: 94.7'}]}, 'jsonrpc': '2.0', 'id': '3d508756-423c-4da8-b15e-bff40228e562'}",
+      "query_docs": "{'result': {'content': [{'type': 'text', 'text': \"### PyObject_CallNoArgs - Call with no arguments\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/c-api/call.rst\\n\\nCall a callable Python object without any arguments. This is the most efficient way to call a callable object with no arguments. Available since Python 3.9.\\n\\n```APIDOC\\n## PyObject_CallNoArgs\\n\\n### Description\\nCall a callable Python object without any arguments in the most efficient way possible.\\n\\n### Signature\\n```c\\nPyObject* PyObject_CallNoArgs(PyObject *callable)\\n```\\n\\n### Parameters\\n- **callable** (PyObject*) - Required - A callable Python object\\n\\n### Return Value\\n- **PyObject*** - Result of the call on success, or NULL on failure\\n\\n### Version\\n- Added in Python 3.9\\n\\n### Notes\\n- This is the most efficient way to call a callable Python object without any argument\\n- Raises an exception and returns NULL on failure\\n```\\n\\n--------------------------------\\n\\n### PyObject_CallOneArg - Call with single argument\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/c-api/call.rst\\n\\nCall a callable Python object with exactly one positional argument and no keyword arguments. Available since Python 3.9.\\n\\n```APIDOC\\n## PyObject_CallOneArg\\n\\n### Description\\nCall a callable Python object with exactly one positional argument and no keyword arguments.\\n\\n### Signature\\n```c\\nPyObject* PyObject_CallOneArg(PyObject *callable, PyObject *arg)\\n```\\n\\n### Parameters\\n- **callable** (PyObject*) - Required - A callable Python object\\n- **arg** (PyObject*) - Required - The single positional argument\\n\\n### Return Value\\n- **PyObject*** - Result of the call on success, or NULL on failure\\n\\n### Version\\n- Added in Python 3.9\\n\\n### Notes\\n- Raises an exception and returns NULL on failure\\n```\\n\\n--------------------------------\\n\\n### PyObject_CallMethodNoArgs - Call method without arguments\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/c-api/call.rst\\n\\nCall a method of a Python object without arguments, where the method name is given as a Python string object. Available since Python 3.9.\\n\\n```APIDOC\\n## PyObject_CallMethodNoArgs\\n\\n### Description\\nCall a method of a Python object without arguments, where the method name is given as a Python string object.\\n\\n### Signature\\n```c\\nPyObject* PyObject_CallMethodNoArgs(PyObject *obj, PyObject *name)\\n```\\n\\n### Parameters\\n- **obj** (PyObject*) - Required - The object whose method will be called\\n- **name** (PyObject*) - Required - Python string object containing the method name\\n\\n### Return Value\\n- **PyObject*** - Result of the call on success, or NULL on failure\\n\\n### Version\\n- Added in Python 3.9\\n\\n### Notes\\n- Raises an exception and returns NULL on failure\\n```\\n\\n--------------------------------\\n\\n### PyObject_CallMethodOneArg - Call method with single argument\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/c-api/call.rst\\n\\nCall a method of a Python object with a single positional argument, where the method name is given as a Python string object. Available since Python 3.9.\\n\\n```APIDOC\\n## PyObject_CallMethodOneArg\\n\\n### Description\\nCall a method of a Python object with a single positional argument, where the method name is given as a Python string object.\\n\\n### Signature\\n```c\\nPyObject* PyObject_CallMethodOneArg(PyObject *obj, PyObject *name, PyObject *arg)\\n```\\n\\n### Parameters\\n- **obj** (PyObject*) - Required - The object whose method will be called\\n- **name** (PyObject*) - Required - Python string object containing the method name\\n- **arg** (PyObject*) - Required - The single positional argument\\n\\n### Return Value\\n- **PyObject*** - Result of the call on success, or NULL on failure\\n\\n### Version\\n- Added in Python 3.9\\n\\n### Notes\\n- Raises an exception and returns NULL on failure\\n```\\n\\n--------------------------------\\n\\n### Use Ellipsis for Arbitrary Parameters in Python Callable Annotations\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/library/typing.rst\\n\\nThis snippet illustrates how to use the ellipsis (`...`) as the argument list in a `Callable` annotation. This indicates that the callable can accept any arbitrary number or type of parameters, as long as its return type matches the specified type. It's useful when the exact signature of parameters is not important, but the return type is.\\n\\n```python\\ndef concat(x: str, y: str) -> str:\\n    return x + y\\n\\nx: Callable[..., str]\\nx = str     # OK\\nx = concat  # Also OK\\n```\"}]}, 'jsonrpc': '2.0', 'id': '3ea2c31f-47f3-4572-89eb-eee04182b2ae'}"
+    },
+    "mcp_evidence_summary": "The MCP response does not indicate any changes or issues with the `callable` function in Python 3.9. The documentation retrieved focuses on new API additions (`PyObject_CallNoArgs`, `PyObject_CallOneArg`, etc.) introduced in Python 3.9 but does not address the availability or changes to the `callable` function.",
+    "ai_api_fix_function": "def find_callables_and_sum(in_list):\n    total_sum = 0\n    for item in in_list:\n        if callable(item):\n            total_sum += item()\n    return total_sum",
+    "judge_reason": "The AI correctly located the problematic API ('callable') but provided incorrect information about its change. The ground-truth update specifies replacement by 'hasattr', which the AI missed.",
+    "judge_locate_answer": 1,
     "judge_update_answer": 0
   },
   {
@@ -89,8 +137,110 @@
     "mcp_raw": { "resolve_library_id": null, "query_docs": null },
     "mcp_evidence_summary": "No evidence was retrieved due to missing natural_language_questions and ai_api_wrong fields.",
     "ai_api_fix_function": "def process_tasks_with_lock(tasks, lock):\n    results = []\n    for task in tasks:\n        lock.acquire_lock()\n        try:\n            result = task()\n            results.append(result)\n        finally:\n            lock.release()\n    return results",
-    "judge_reason": "The AI did not mention the wrong library function specified.",
+    "judge_reason": "The AI did not locate the problematic API (acquire_lock()), so no further evaluation is possible.",
     "judge_locate_answer": 0,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "def matrix_path_product(matrix_list):\n    product = np.asmatrix(matrix_list[0])\n    for matrix in matrix_list[1:]:\n        product *= np.asmatrix(matrix)\n    return product.tolist()",
+    "solution_signature": "matrix_path_product(matrix_list: list[list[list[float]]]) -> list[list[float]]",
+    "problem": "Please use python code to help me with a function that takes a list of 2D lists (matrices) consisting of floating-point numbers, and returns the product of these matrices as a 2D list. The function should leverage matrix multiplication capabilities from the numpy library.",
+    "package": "numpy",
+    "import": "import numpy as np",
+    "signature": "np.asmatrix(data, dtype=None)->numpy.matrix",
+    "doc_string": "It is used to create matrices from array-like objects, supporting matrix multiplication using the '*' operator.",
+    "update": "Before numpy 2.0, np.bmat was the standard way to apply the bmat function; however, after numpy 2.0, it is recommended to use np.asmatrix instead.",
+    "update_type": "Add",
+    "compare_signature": "np.bmat(obj, ldict=None, gdict=None)->numpy.matrix",
+    "origin_version": "2.0",
+    "compare_version": "1.26",
+    "api_id": "IqQFHEJM99",
+    "code_id": "uOoKdPhi5K",
+    "case": "case1: [[[1.0, 2.0], [3.0, 4.0]], [[5.0, 6.0], [7.0, 8.0]]],\ncase2: [[[1.0, 2.0], [3.0, 4.0]], [[7.0, 8.0], [9.0, 10.0]], [[11.0, 12.0], [13.0, 14.0]]],\ncase3: [[[1.5, -2.5], [3.2, 4.8]], [[-1.1, 2.0], [3.6, 0.5]], [[0.5, 1.5], [2.5, 3.5]]]",
+    "solution_function_script": "```python\nimport numpy as np \n\ndef matrix_path_product(matrix_list):\n    product = np.asmatrix(matrix_list[0])\n    for matrix in matrix_list[1:]:\n        product *= np.asmatrix(matrix)\n    return product.tolist()\n\n# Input data\ntest_data = [\n    [[[1.0, 2.0], [3.0, 4.0]], [[5.0, 6.0], [7.0, 8.0]]],\n    [[[1.0, 2.0], [3.0, 4.0]], [[7.0, 8.0], [9.0, 10.0]], [[11.0, 12.0], [13.0, 14.0]]],\n    [[[1.5, -2.5], [3.2, 4.8]], [[-1.1, 2.0], [3.6, 0.5]], [[0.5, 1.5], [2.5, 3.5]]]\n]\n\nfor matrix_list in test_data:\n    try:\n        result = matrix_path_product(matrix_list)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "[[19.0, 22.0], [43.0, 50.0]]\n[[639.0, 692.0], [1459.0, 1580.0]]\n[[-0.9500000000000002, -9.850000000000001], [28.880000000000003, 51.440000000000005]]\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "matrix_path_product",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "np.asmatrix", "lineno": 2, "context": "expression" },
+          { "api": "np.asmatrix", "lineno": 4, "context": "expression" },
+          { "api": "product.tolist", "lineno": 5, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "np.asmatrix",
+    "line_number": 2,
+    "natural_language_questions": "Why is np.asmatrix not available in 1.26?",
+    "ai_api_answer_change": {
+      "what_changed": "`np.asmatrix` is deprecated due to its unsafe semantic behavior and incompatibility.",
+      "why_it_breaks": "Using `np.asmatrix` can lead to silent incorrect results because it does not guarantee semantic compatibility with functions that do not explicitly check for it.",
+      "how_to_fix": "Replace `np.asmatrix` with `np.array` or `np.asarray` for safer and more predictable behavior."
+    },
+    "reason_type": "Deprecated",
+    "mcp_raw": {
+      "resolve_library_id": "{'result': {'content': [{'type': 'text', 'text': 'Available Libraries:\\n\\nEach result includes:\\n- Library ID: Context7-compatible identifier (format: /org/project)\\n- Name: Library or package name\\n- Description: Short summary\\n- Code Snippets: Number of available code examples\\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\\n- Benchmark Score: Quality indicator (100 is the highest score)\\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\\n\\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\\n\\n----------\\n\\n- Title: NumPy\\n- Context7-compatible library ID: /numpy/numpy\\n- Description: NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.\\n- Code Snippets: 3593\\n- Source Reputation: Unknown\\n- Benchmark Score: 84.1\\n- Versions: v2.3.1, v2.1.3\\n----------\\n- Title: CPMpy\\n- Context7-compatible library ID: /cpmpy/cpmpy\\n- Description: CPMpy is a constraint programming and modeling library in Python, based on NumPy, offering direct solver access for combinatorial problems.\\n- Code Snippets: 382\\n- Source Reputation: Medium\\n- Benchmark Score: 94.5\\n----------\\n- Title: npyz\\n- Context7-compatible library ID: /exphp/npyz\\n- Description: Numpy format (`*.npy`) serialization and deserialization library for reading and writing `*.npy` files, including `npz` support, with a focus on type-safety and memory efficiency through iterators.\\n- Code Snippets: 18\\n- Source Reputation: High\\n- Benchmark Score: 92.2\\n----------\\n- Title: Linopy\\n- Context7-compatible library ID: /pypsa/linopy\\n- Description: Linopy is a Python package that simplifies optimization with array-like variables and constraints, bridging data analysis tools like xarray with solvers for linear, integer, and quadratic programming.\\n- Code Snippets: 119\\n- Source Reputation: High\\n----------\\n- Title: CPMpy\\n- Context7-compatible library ID: /websites/cpmpy_readthedocs_io_en\\n- Description: CPMpy is a Python library for Constraint Programming and Modeling, designed to solve combinatorial problems by searching over discrete decision variables. It integrates with various solvers and transforms expressions for compatibility.\\n- Code Snippets: 1102\\n- Source Reputation: High'}]}, 'jsonrpc': '2.0', 'id': 'c49af13e-7a52-4d00-8075-4be2453e2f3b'}",
+      "query_docs": "{'result': {'content': [{'type': 'text', 'text': \"### Detailed description > Limitations of Existing Approaches\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/neps/nep-0016-abstract-array.rst\\n\\nThe `np.asanyarray` function is sometimes suggested as a solution, but its semantics are backwards: it guarantees that the returned object uses the same memory layout as an `ndarray`, but tells you nothing about its semantic behavior. This makes it unsafe to use in practice. NumPy's own `ndarray` subclasses—`np.matrix` and `np.ma.masked_array`—demonstrate this problem by having incompatible semantics. When passed to functions that don't explicitly check for them, they may silently return incorrect results.\"}]}, 'jsonrpc': '2.0', 'id': '963d087d-66df-454e-970a-21dddc14ecbc'}"
+    },
+    "mcp_evidence_summary": "The MCP evidence indicates that `np.asmatrix` is deprecated due to its unsafe semantic behavior and incompatibility with functions that do not explicitly check for it, leading to potential silent incorrect results.",
+    "ai_api_fix_function": "def matrix_path_product(matrix_list):\n    product = np.array(matrix_list[0])\n    for matrix in matrix_list[1:]:\n        product *= np.array(matrix)\n    return product.tolist()",
+    "judge_reason": "The AI correctly identified the problematic API (`np.asmatrix`), which matches the ground-truth signature. However, the AI's explanation of the API change ('deprecated due to unsafe semantic behavior') differs from the ground-truth update ('recommended to use np.asmatrix instead of np.bmat').",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "import numpy as np\ndef format_large_matrix_and_calculate_sum(matrix: np.ndarray, precision: int) -> float:\n    np.set_printoptions(precision=precision, threshold=5, edgeitems=2, linewidth=100, suppress=True)\n    print(matrix)\n    return np.sum(matrix)",
+    "solution_signature": "format_large_matrix_and_calculate_sum(matrix: np.ndarray, precision: int) -> float",
+    "problem": "Please use python code to help me with a function that takes a two-dimensional NumPy array and an integer representing the desired precision for floating-point numbers. The function should configure the console output to format the array string representation with the specified precision. It should also limit the number of elements displayed in a large array to enhance readability, while ensuring the output remains concise. Finally, the function should return the sum of all elements in the array. The input matrix is a NumPy 2D array and the precision is an integer. The output is a float representing the sum of all matrix elements. Use the numpy library to achieve this.",
+    "package": "numpy",
+    "import": "import numpy as np",
+    "signature": "np.set_printoptions(precision=None, threshold=None, edgeitems=None, linewidth=None, suppress=None, nanstr=None, infstr=None, formatter=None, sign=None, floatmode=None, *, legacy=None)",
+    "doc_string": "It is used to define custom string representations for NumPy arrays.",
+    "update": "Before numpy 2.0, np.set_string_function was the standard way to apply the set_string_function function; however, after numpy 2.0, it is recommended to use np.set_printoptions instead.",
+    "update_type": "Add",
+    "compare_signature": "np.set_string_function(f, repr=True)",
+    "origin_version": "2.0",
+    "compare_version": "1.16",
+    "api_id": "djzBJYFYQq",
+    "code_id": "cACAqhDI2I",
+    "case": "Here are three sets of high-quality and comprehensive input test data based on the described problem and benchmark code:\n\n### Case 1: Small Array, Low Precision\nThis case tests a small 2D array with low precision settings.\n```python\ncase1: { \n    \"matrix\": np.array([[1.123456, 2.65432], [3.98765, 4.12345]]), \n    \"precision\": 2 \n}\n```\n\n### Case 2: Large Array, Default Precision\nThis case tests a larger 2D array while keeping the default precision.\n```python\ncase2: { \n    \"matrix\": np.random.rand(10, 10) * 100,  # A 10x10 matrix with random float values between 0 and 100\n    \"precision\": 6 \n}\n```\n\n### Case 3: Large Array, High Precision\nThis case evaluates a large 2D array with higher precision settings.\n```python\ncase3: { \n    \"matrix\": np.random.rand(20, 20) * 1000,  # A 20x20 matrix with random float values between 0 and 1000\n    \"precision\": 10 \n}\n``` \n\nThese test cases cover a range of scenarios, including small and large matrices, as well as different levels of floating-point precision.",
+    "solution_function_script": "```python\nimport numpy as np\n\ndef format_large_matrix_and_calculate_sum(matrix: np.ndarray, precision: int) -> float:\n    np.set_printoptions(precision=precision, threshold=5, edgeitems=2, linewidth=100, suppress=True)\n    print(matrix)\n    return np.sum(matrix)\n\n# Input data\ntest_data = [\n    (np.array([[1.123456, 2.65432], [3.98765, 4.12345]]), 2),\n    (np.random.rand(10, 10) * 100, 6),\n    (np.random.rand(20, 20) * 1000, 10)\n]\n\nfor matrix, precision in test_data:\n    try:\n        result = format_large_matrix_and_calculate_sum(matrix, precision)\n        print(\"Sum of elements:\", result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "[[1.12 2.65]\n [3.99 4.12]]\nSum of elements: 11.888876\n[[96.784441 42.966162 ... 72.777463 37.552575]\n [57.081591 23.531265 ... 61.44409  62.047397]\n ...\n [45.364576 93.968334 ... 74.017884 59.417117]\n [44.722641 79.078222 ... 18.05309  44.854475]]\nSum of elements: 5451.800521261177\n[[306.573719262  360.0921652767 ... 431.2929391699 893.0742698688]\n [970.9034449849 107.0245376232 ...   7.7485119832 817.5633357789]\n ...\n [399.6355782125 667.9719656871 ... 979.7973876064 952.0882672002]\n [531.5366930216 170.1279391458 ... 874.5484969814 932.1325252119]]\nSum of elements: 199584.0391286854\n",
+    "imports": ["numpy"],
+    "ast_structure": [
+      {
+        "function_name": "format_large_matrix_and_calculate_sum",
+        "lineno": 2,
+        "api_calls": [
+          {
+            "api": "np.set_printoptions",
+            "lineno": 3,
+            "context": "expression"
+          },
+          { "api": "print", "lineno": 4, "context": "expression" },
+          { "api": "np.sum", "lineno": 5, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "np.set_printoptions",
+    "line_number": 3,
+    "natural_language_questions": "Why is np.set_printoptions not available in 1.16?",
+    "ai_api_answer_change": {
+      "what_changed": "The `np.set_printoptions` function introduced the `legacy` parameter in version 1.14 to revert printing behavior to older versions.",
+      "why_it_breaks": "In version 1.16, the `np.set_printoptions` function expects compatibility adjustments due to changes introduced in version 1.14.",
+      "how_to_fix": "Use the `legacy` parameter (`legacy=\"1.13\"`) to revert to pre-1.14 behavior or ensure the function is called with updated parameters compatible with version 1.16."
+    },
+    "reason_type": "BehaviorChange",
+    "mcp_raw": {
+      "resolve_library_id": "{'result': {'content': [{'type': 'text', 'text': 'Available Libraries:\\n\\nEach result includes:\\n- Library ID: Context7-compatible identifier (format: /org/project)\\n- Name: Library or package name\\n- Description: Short summary\\n- Code Snippets: Number of available code examples\\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\\n- Benchmark Score: Quality indicator (100 is the highest score)\\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\\n\\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\\n\\n----------\\n\\n- Title: NumPy\\n- Context7-compatible library ID: /numpy/numpy\\n- Description: NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.\\n- Code Snippets: 3593\\n- Source Reputation: Unknown\\n- Benchmark Score: 84.1\\n- Versions: v2.3.1, v2.1.3\\n----------\\n- Title: CPMpy\\n- Context7-compatible library ID: /cpmpy/cpmpy\\n- Description: CPMpy is a constraint programming and modeling library in Python, based on NumPy, offering direct solver access for combinatorial problems.\\n- Code Snippets: 382\\n- Source Reputation: Medium\\n- Benchmark Score: 94.5\\n----------\\n- Title: npyz\\n- Context7-compatible library ID: /exphp/npyz\\n- Description: Numpy format (`*.npy`) serialization and deserialization library for reading and writing `*.npy` files, including `npz` support, with a focus on type-safety and memory efficiency through iterators.\\n- Code Snippets: 18\\n- Source Reputation: High\\n- Benchmark Score: 92.2\\n----------\\n- Title: npcpy\\n- Context7-compatible library ID: /npc-worldwide/npcpy\\n- Description: npcpy is the core library of the NPC Toolkit, designed to enhance natural language processing pipelines and agent tooling for building advanced LLM applications and research.\\n- Code Snippets: 99\\n- Source Reputation: Medium\\n- Benchmark Score: 69.4\\n----------\\n- Title: cpnpy\\n- Context7-compatible library ID: /fit-alessandro-berti/cpn-py\\n- Description: cpnpy is a Python library for simulating Colored Petri Nets with optional time semantics, supporting color sets, guards, arc expressions, and timed token behavior.\\n- Code Snippets: 90\\n- Source Reputation: Medium\\n- Benchmark Score: 92.2'}]}, 'jsonrpc': '2.0', 'id': 'dd4b548e-f2d8-426d-ad9a-6a1aa7798049'}",
+      "query_docs": "{'result': {'content': [{'type': 'text', 'text': '### Configure NumPy Print Options for Legacy Behavior (Python)\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.14.0-notes.rst\\n\\nThis snippet demonstrates how to configure NumPy\\'s print options to retain the string and representation formatting used in NumPy versions prior to 1.14. It uses `np.set_printoptions` with the `legacy=\\'1.13\\'` argument. A `try-except` block is included to gracefully handle `TypeError` if the `legacy` option is not available, ensuring compatibility with different NumPy versions.\\n\\n```python\\n# FIXME: We need the str/repr formatting used in Numpy < 1.14.\\ntry:\\n    np.set_printoptions(legacy=\\'1.13\\')\\nexcept TypeError:\\n    pass\\n```\\n\\n--------------------------------\\n\\n### Set NumPy Print Options with Legacy Mode\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.14.0-notes.rst\\n\\nEnable legacy printing mode to reproduce NumPy 1.13 behavior and disable new array printing changes. This function sets global print options for ndarrays and numpy scalars, with the legacy parameter allowing reversion to previous formatting standards.\\n\\n```python\\nnp.set_printoptions(legacy=\"1.13\")\\n```\\n\\n--------------------------------\\n\\n### Restore Legacy NumPy Dtype Print Options in Python\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.22.0-notes.rst\\n\\nThis Python code snippet allows users to revert the string representation of NumPy dtypes to the behavior present before version 1.21. After an update introduced spaces after colons and between fields in dtype `repr`, this option restores the previous, more compact format. It\\'s useful for maintaining compatibility with older output expectations.\\n\\n```python\\nnp.set_printoptions(legacy=\"1.21\")\\n```\\n\\n--------------------------------\\n\\n### numpy.printoptions - Custom repr Behavior\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.1.0-notes.rst\\n\\nPrint options now support an override_repr parameter for defining custom repr(array) behavior, enabling greater control over array display formatting.\\n\\n```APIDOC\\n## numpy.set_printoptions / numpy.get_printoptions\\n\\n### Description\\nManage array printing options including the new override_repr parameter for custom array representation.\\n\\n### Function Signature - set_printoptions\\n```python\\nnumpy.set_printoptions(precision=None, threshold=None, edgeitems=None, linewidth=None, \\n                       suppress=None, nanstr=None, infstr=None, formatter=None, \\n                       sign=None, floatmode=None, *, legacy=None, override_repr=None)\\n```\\n\\n### Function Signature - get_printoptions\\n```python\\nnumpy.get_printoptions()\\n```\\n\\n### Parameters (set_printoptions)\\n- **override_repr** (callable, optional) - Optional - Custom function to define repr(array) behavior\\n- **precision** (int, optional) - Optional - Number of digits of precision for floating point output\\n- **threshold** (int, optional) - Optional - Threshold for summarizing arrays\\n- **linewidth** (int, optional) - Optional - Number of characters per line\\n- **suppress** (bool, optional) - Optional - Suppress scientific notation\\n- **formatter** (dict, optional) - Optional - Dictionary of custom formatters by type\\n\\n### Returns (get_printoptions)\\n- **options** (dict) - Dictionary of current print options\\n\\n### Example\\n```python\\nimport numpy as np\\n\\n# Custom repr function\\ndef custom_repr(arr):\\n    return f\"CustomArray({arr.shape})\"\\n\\n# Set custom repr\\nnp.set_printoptions(override_repr=custom_repr)\\n\\n# Get current options\\noptions = np.get_printoptions()\\nprint(options)\\n```\\n\\n### Reference\\n(gh-26611)\\n```\\n\\n### Printing NumPy Arrays > Defining printing options > Applying settings globally\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/user/how-to-print.rst\\n\\nTo change printing options for the entire runtime session in NumPy, you can use the `numpy.set_printoptions` function. This allows you to set various parameters like precision, linewidth, and how `nan` and `inf` are displayed, which will then apply to all subsequent array printouts. If you need to inspect the currently active print settings, the `numpy.get_printoptions` function can be used to retrieve a dictionary of these settings. To revert any custom settings back to their original defaults, you would call `numpy.set_printoptions` with its default parameter values.'}]}, 'jsonrpc': '2.0', 'id': '8fbfb558-217c-4431-a186-4fde1a0b7267'}"
+    },
+    "mcp_evidence_summary": "The MCP evidence indicates that `np.set_printoptions` underwent behavioral changes starting from NumPy version 1.14, introducing the `legacy` parameter to revert to older printing behaviors. The function remains available but may require adjustments for compatibility.",
+    "ai_api_fix_function": "import numpy as np\ndef format_large_matrix_and_calculate_sum(matrix: np.ndarray, precision: int) -> float:\n    np.set_printoptions(precision=precision, threshold=5, edgeitems=2, linewidth=100, suppress=True, legacy=\"1.13\")\n    print(matrix)\n    return np.sum(matrix)",
+    "judge_reason": "The AI correctly located the problematic API (np.set_printoptions) but described an incorrect change (legacy parameter introduction) instead of the actual change (deprecation of np.set_string_function in favor of np.set_printoptions).",
+    "judge_locate_answer": 1,
     "judge_update_answer": 0
   },
   {
@@ -138,9 +288,56 @@
     "mcp_raw": { "resolve_library_id": null, "query_docs": null },
     "mcp_evidence_summary": "No MCP evidence was retrieved due to missing natural_language_questions and ai_api_wrong fields.",
     "ai_api_fix_function": "def custom_array_representation(arr: np.ndarray, precision: int, threshold: int) -> str:\n    import numpy as np\n    np.set_printoptions(precision=precision, threshold=threshold)\n    formatted_array = np.array2string(arr)\n    return formatted_array",
-    "judge_reason": "The AI did not identify any incorrect API.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI failed to locate the problematic API (ai_api_wrong is None), so no further evaluation is needed.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "import numpy as np\ndef common_promoted_type(arrays):\n    promoted_type = arrays[0].dtype\n    for array in arrays[1:]:\n        promoted_type = np.promote_types(promoted_type, array.dtype)\n    return promoted_type",
+    "solution_signature": "common_promoted_type(arrays: list) -> np.dtype",
+    "problem": "Please use python code to help me with a function that determines the common data type for a list of numpy arrays, such that all arrays can be safely cast to this common type without data loss. The input is a list of numpy arrays and the output is a numpy dtype that represents the promoted type. You should use the numpy library for this task.",
+    "package": "numpy",
+    "import": "import numpy as np",
+    "signature": "np.promote_types(type1, type2)->numpy.dtype",
+    "doc_string": "It is used to determine the common type that two or more input arrays could be safely cast to.",
+    "update": "Before numpy 2.0, np.find_common_type was the standard way to apply the find_common_type function; however, after numpy 2.0, it is recommended to use np.promote_types instead.",
+    "update_type": "Add",
+    "compare_signature": "np.find_common_type(array_types, scalar_types)->numpy.dtype",
+    "origin_version": "2.0",
+    "compare_version": "1.16",
+    "api_id": "pxxtCIePhX",
+    "code_id": "5cWdpuCQPC",
+    "case": "Based on the problem description and the provided benchmark code, we need to determine the input data types for the `common_promoted_type` function, which takes a list of numpy arrays as input.\n\n1. **Determine the input data**:\n   - The input is a list of numpy arrays.\n   - The numpy arrays can have various data types such as integer, float, etc.\n   - To create comprehensive test cases, we should include different combinations of data types that can be safely cast without data loss.\n\n2. **Final input data group generation**:\nHere are three valid test cases for the function:\n\n```\ncase1: {[np.array([1, 2, 3], dtype=np.int32), np.array([4, 5, 6], dtype=np.int64)]}\ncase2: {[np.array([1.0, 2.0, 3.0], dtype=np.float32), np.array([4.0, 5.0], dtype=np.float64), np.array([6, 7], dtype=np.int32)]}\ncase3: {[np.array([True, False]), np.array([1, 0], dtype=np.int8), np.array([1.5, 2.5], dtype=np.float64)]}\n``` \n\n### Explanation of test cases:\n- **case1**: Both arrays are integers of different sizes (int32 and int64). The promoted type should be int64.\n- **case2**: Mixed types of floats and integers, which can all be safely cast to float64.\n- **case3**: A mix of boolean, integer, and float data types, which should promote to a float64 type. \n\nThese test cases are comprehensive and cover different scenarios of numpy array data types that can impact the common promoted type determination.",
+    "solution_function_script": "```python\nimport numpy as np\n\ndef common_promoted_type(arrays):\n    promoted_type = arrays[0].dtype\n    for array in arrays[1:]:\n        promoted_type = np.promote_types(promoted_type, array.dtype)\n    return promoted_type\n\n# Input data\ntest_data = [\n    [np.array([1, 2, 3], dtype=np.int32), np.array([4, 5, 6], dtype=np.int64)],\n    [np.array([1.0, 2.0, 3.0], dtype=np.float32), np.array([4.0, 5.0], dtype=np.float64), np.array([6, 7], dtype=np.int32)],\n    [np.array([True, False]), np.array([1, 0], dtype=np.int8), np.array([1.5, 2.5], dtype=np.float64)]\n]\n\nfor arrays in test_data:\n    try:\n        result = common_promoted_type(arrays)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "int64\nfloat64\nfloat64\n",
+    "imports": ["numpy"],
+    "ast_structure": [
+      {
+        "function_name": "common_promoted_type",
+        "lineno": 2,
+        "api_calls": [
+          { "api": "np.promote_types", "lineno": 5, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "np.promote_types",
+    "line_number": 5,
+    "natural_language_questions": "Why is np.promote_types not available in numpy 1.16?",
+    "ai_api_answer_change": {
+      "what_changed": "Behavior of np.promote_types changed in later versions, particularly correcting incorrect promotions involving timedelta64 and uint64.",
+      "why_it_breaks": "In NumPy 1.16, np.promote_types may have exhibited incorrect behavior for certain type promotions, which was corrected in later versions.",
+      "how_to_fix": "Ensure that the types being promoted are compatible and expect TypeError for incompatible types as per later NumPy versions."
+    },
+    "reason_type": "BehaviorChange",
+    "mcp_raw": {
+      "resolve_library_id": "{'result': {'content': [{'type': 'text', 'text': 'Available Libraries:\\n\\nEach result includes:\\n- Library ID: Context7-compatible identifier (format: /org/project)\\n- Name: Library or package name\\n- Description: Short summary\\n- Code Snippets: Number of available code examples\\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\\n- Benchmark Score: Quality indicator (100 is the highest score)\\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\\n\\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\\n\\n----------\\n\\n- Title: NumPy\\n- Context7-compatible library ID: /numpy/numpy\\n- Description: NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.\\n- Code Snippets: 3593\\n- Source Reputation: Unknown\\n- Benchmark Score: 84.1\\n- Versions: v2.3.1, v2.1.3\\n----------\\n- Title: CPMpy\\n- Context7-compatible library ID: /cpmpy/cpmpy\\n- Description: CPMpy is a constraint programming and modeling library in Python, based on NumPy, offering direct solver access for combinatorial problems.\\n- Code Snippets: 382\\n- Source Reputation: Medium\\n- Benchmark Score: 94.5\\n----------\\n- Title: npyz\\n- Context7-compatible library ID: /exphp/npyz\\n- Description: Numpy format (`*.npy`) serialization and deserialization library for reading and writing `*.npy` files, including `npz` support, with a focus on type-safety and memory efficiency through iterators.\\n- Code Snippets: 18\\n- Source Reputation: High\\n- Benchmark Score: 92.2\\n----------\\n- Title: cpnpy\\n- Context7-compatible library ID: /fit-alessandro-berti/cpn-py\\n- Description: cpnpy is a Python library for simulating Colored Petri Nets with optional time semantics, supporting color sets, guards, arc expressions, and timed token behavior.\\n- Code Snippets: 90\\n- Source Reputation: Medium\\n- Benchmark Score: 92.2\\n----------\\n- Title: npcpy\\n- Context7-compatible library ID: /npc-worldwide/npcpy\\n- Description: npcpy is the core library of the NPC Toolkit, designed to enhance natural language processing pipelines and agent tooling for building advanced LLM applications and research.\\n- Code Snippets: 99\\n- Source Reputation: Medium\\n- Benchmark Score: 69.4'}]}, 'jsonrpc': '2.0', 'id': 'bf5649d6-27e2-4d18-bcd8-3a6a67fb050f'}",
+      "query_docs": "{'result': {'content': [{'type': 'text', 'text': '### NumPy promote_types type promotion with timedelta and uint64\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.20.0-notes.rst\\n\\nDemonstrates the corrected behavior of np.promote_types for timedelta64 (\"m8\") type promotion. Previously, promote_types(\"float32\", \"m8\") and promote_types(\"uint64\", \"m8\") incorrectly returned \"m8\". Now they correctly raise TypeError, and both orderings are consistent.\\n\\n```python\\nimport numpy as np\\n\\n# Before fix: incorrect behavior\\n# np.promote_types(\"float32\", \"m8\") -> \"m8\"\\n# np.promote_types(\"uint64\", \"m8\") -> \"m8\"\\n\\n# After fix: consistent TypeError\\ntry:\\n    np.promote_types(\"float32\", \"m8\")\\nexcept TypeError:\\n    pass\\n\\ntry:\\n    np.promote_types(\"uint64\", \"m8\")\\nexcept TypeError:\\n    pass\\n\\n# Both orderings now raise TypeError consistently:\\ntry:\\n    np.promote_types(\"m8\", \"uint64\")\\nexcept TypeError:\\n    pass\\n```\\n\\n--------------------------------\\n\\n### Structured dtype promotion in NumPy\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.23.0-notes.rst\\n\\nNumPy now supports structured dtype promotion by promoting individual field subtypes instead of raising exceptions. Promotion enforces matching field names, order, and titles while ensuring native byte-order for all fields and removing padding.\\n\\n```python\\nimport numpy as np\\n\\n# Promote structured dtypes by field subtypes\\ndtype1 = np.dtype(\\'i,i\\')\\ndtype2 = np.dtype(\\'i,d\\')\\n\\nresult = np.result_type(dtype1, dtype2)\\nprint(result)\\n# Output: dtype([(\\'f0\\', \\'<i4\\'), (\\'f1\\', \\'<f8\\')])\\n```\\n\\n### Abstract\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/neps/nep-0050-scalar-promotion.rst\\n\\nSince NumPy 1.7, promotion rules use so-called \"safe casting\" which relies on inspection of the values involved. This approach, while identifying edge cases, proved complex to implement and made behavior hard to predict. Two main types of confusing results emerged: 1. Value-based promotion, where the value of a Python integer (e.g., `1` vs `255`) can determine the output type of functions like `np.result_type`, as `1` can be represented by `int8` but `255` cannot. This also applies to 0-D arrays where the `dtype` might be ignored in favor of the value. 2. Inconsistency when 0-D arrays or NumPy scalars are involved, as value-based promotion is unexpectedly disabled, leading to results like `np.int64` because `np.array(1)` typically defaults to `int64` on many systems. These issues affect various operations, including multiplication, addition, and comparisons.\\n\\n--------------------------------\\n\\n### Structured Arrays > Structure Comparison and Promotion > Promotion Requirements\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/user/basics.rec.rst\\n\\nTo compare two structured arrays, it must be possible to promote them to a common dtype using `numpy.result_type` and `numpy.promote_types`. This enforces that the number of fields, field names, and field titles must match precisely. When promotion is not possible due to mismatching field names or other incompatibilities, NumPy raises an error.\\n\\n--------------------------------\\n\\n### Type Promotion > Issues > Problem Scope and Context\\n\\nSource: https://github.com/numpy/numpy/wiki/Promotion-Difficulties\\n\\nThe problems with NumPy\\'s type promotion system are generally very difficult to solve generically, especially when allowing users to add new data types. There may not even be a universally \"good\" solution. These issues most commonly arise in practical scenarios such as np.concatenate with multiple arrays, ufuncs with many inputs (rare but used by libraries like numexpr), and np.array with mixed-type input. The challenge increases because np.array requires determining a common type and potentially necessitates multiple passes through the data.'}]}, 'jsonrpc': '2.0', 'id': '5f59c64d-89a5-4d87-8b8f-d4a0f376f956'}"
+    },
+    "mcp_evidence_summary": "MCP evidence indicates that np.promote_types underwent behavioral changes in later versions of NumPy, particularly around timedelta and uint64 type promotion, which now raises TypeError consistently. Additionally, structured dtype promotion was improved in version 1.23.",
+    "ai_api_fix_function": "import numpy as np\ndef common_promoted_type(arrays):\n    promoted_type = arrays[0].dtype\n    for array in arrays[1:]:\n        promoted_type = np.promote_types(promoted_type, array.dtype)\n    return promoted_type",
+    "judge_reason": "The AI correctly located the problematic API (np.promote_types) but the explanation of the API change is incorrect. The ground-truth update refers to np.find_common_type being deprecated in favor of np.promote_types, while the AI's explanation describes a behavior correction in np.promote_types.",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def find_common_dtype_and_compute(arr1, arr2, arr3):\n    type1 = arr1.dtype\n    type2 = arr2.dtype\n    type3 = arr3.dtype\n    common_type = np.promote_types(np.promote_types(type1, type2), type3)\n    arr1_casted = arr1.astype(common_type)\n    arr2_casted = arr2.astype(common_type)\n    arr3_casted = arr3.astype(common_type)\n    result = arr1_casted + arr2_casted - arr3_casted\n    return result",
@@ -189,9 +386,58 @@
     },
     "mcp_evidence_summary": "The MCP evidence indicates that `np.promote_types` underwent a behavior change in version 1.20.0, where type promotion between certain types (e.g., `uint64` and `timedelta`) now consistently raises a `TypeError` instead of returning an incorrect result. This change ensures symmetric and predictable type promotion behavior.",
     "ai_api_fix_function": "def find_common_dtype_and_compute(arr1, arr2, arr3):\n    type1 = arr1.dtype\n    type2 = arr2.dtype\n    type3 = arr3.dtype\n    try:\n        common_type = np.promote_types(np.promote_types(type1, type2), type3)\n    except TypeError:\n        common_type = np.result_type(type1, type2, type3)\n    arr1_casted = arr1.astype(common_type)\n    arr2_casted = arr2.astype(common_type)\n    arr3_casted = arr3.astype(common_type)\n    result = arr1_casted + arr2_casted - arr3_casted\n    return result",
-    "judge_reason": "The AI's answer is incorrect because it did not mention the wrong library function specified (np.find_common_type).",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI correctly identified the problematic API (np.promote_types) but provided an incorrect explanation of the API change. The real change was about replacing np.find_common_type with np.promote_types, not about raising a TypeError for specific type combinations.",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "def find_unique_elements(arr1, arr2):\n    import numpy as np\n    bool_arr = np.isin(arr1, arr2)\n    return [arr1[i] for i in range(len(arr1)) if not bool_arr[i]]",
+    "solution_signature": "find_unique_elements(arr1: list, arr2: list) -> list",
+    "problem": "Please use python code to help me with a function that determines which elements in the first list are not present in the second list. The function should take two input parameters: arr1 and arr2, both are lists of integers. The output should be a list of integers that are unique to the first list. The numpy library should be used to perform the element checking.",
+    "package": "numpy",
+    "import": "import numpy as np",
+    "signature": "np.isin(element, test_elements, assume_unique=False, invert=False, *, kind=None)->numpy.ndarray, bool",
+    "doc_string": "It is used to check if elements of one array are contained in another, returning a boolean array.",
+    "update": "Before numpy 2.0, np.in1d was the standard way to apply the in1d function; however, after numpy 2.0, it is recommended to use np.isin instead.",
+    "update_type": "Add",
+    "compare_signature": "np.in1d(ar1, ar2, assume_unique=False, invert=False, *, kind=None)->(M,) numpy.ndarray, bool",
+    "origin_version": "2.0",
+    "compare_version": "1.16",
+    "api_id": "rYawjVdP3n",
+    "code_id": "G6kebjXsAC",
+    "case": "Based on the problem description and the provided benchmark code, we need to generate test data that evaluates how well the function `find_unique_elements` can identify integers in the first list (arr1) that do not appear in the second list (arr2). The inputs are both lists of integers.\n\n### Analysis of Input Data\n1. **Input Types**: The input data consists of two lists of integers.\n2. **Range Limit**: The integers can be positive, negative, or zero, but there is no strict range mentioned in the problem, implying that they could be of varying sizes and values.\n3. **Expected Output**: The output should be a list of integers that are present in arr1 but not in arr2.\n\n### Generated Input Test Data\nHere are three comprehensive test cases to evaluate various scenarios:\n\n1. **Case with Distinct Elements**: arr1 has elements not present in arr2.\n2. **Case with Shared Elements**: Both lists share some elements, and arr1 also contains unique elements.\n3. **Case where arr1 is a subset of arr2**: All elements in arr1 are present in arr2.\n\nHere are the specific test data sets:\n\n```plaintext\ncase1: {arr1 = [1, 2, 3, 4, 5], arr2 = [6, 7, 8, 9]}\ncase2: {arr1 = [1, 2, 3, 4, 5], arr2 = [3, 4, 5, 6]}\ncase3: {arr1 = [7, 8, 9], arr2 = [7, 8, 9, 10, 11]}\n```\n\n- **Case 1**: The output should be `[1, 2, 3, 4, 5]`, as none of the elements in arr1 are found in arr2.\n- **Case 2**: The output should be `[1, 2]`, as only `1` and `2` are not in arr2.\n- **Case 3**: The expected output will be an empty list `[]` since all elements in arr1 are contained within arr2.\n\nThese cases are designed to cover the scenario where all elements, some, and none are unique to `arr1`, providing a comprehensive assessment for the function's correctness.",
+    "solution_function_script": "```python\nimport numpy as np\n\ndef find_unique_elements(arr1, arr2):\n    import numpy as np\n    bool_arr = np.isin(arr1, arr2)\n    return [arr1[i] for i in range(len(arr1)) if not bool_arr[i]]\n\n# Input data\ntest_data = [\n    ([1, 2, 3, 4, 5], [6, 7, 8, 9]),\n    ([1, 2, 3, 4, 5], [3, 4, 5, 6]),\n    ([7, 8, 9], [7, 8, 9, 10, 11])\n]\n\nfor arr1, arr2 in test_data:\n    try:\n        result = find_unique_elements(arr1, arr2)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "[1, 2, 3, 4, 5]\n[1, 2]\n[]\n",
+    "imports": ["numpy"],
+    "ast_structure": [
+      {
+        "function_name": "find_unique_elements",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "np.isin", "lineno": 3, "context": "expression" },
+          { "api": "range", "lineno": 4, "context": "expression" },
+          { "api": "len", "lineno": 4, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "np.isin",
+    "line_number": 3,
+    "natural_language_questions": "Why is np.isin not available in 1.16?",
+    "ai_api_answer_change": {
+      "what_changed": "The `np.isin` function replaced the deprecated `np.in1d` function.",
+      "why_it_breaks": "The issue occurs because `np.isin` is the newer, recommended function, while `np.in1d` has been deprecated.",
+      "how_to_fix": "Replace `np.isin` with `np.in1d` in the code, as `np.isin` is the modern replacement."
+    },
+    "reason_type": "Deprecated",
+    "mcp_raw": {
+      "resolve_library_id": "{'result': {'content': [{'type': 'text', 'text': 'Available Libraries:\\n\\nEach result includes:\\n- Library ID: Context7-compatible identifier (format: /org/project)\\n- Name: Library or package name\\n- Description: Short summary\\n- Code Snippets: Number of available code examples\\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\\n- Benchmark Score: Quality indicator (100 is the highest score)\\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\\n\\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\\n\\n----------\\n\\n- Title: NumPy\\n- Context7-compatible library ID: /numpy/numpy\\n- Description: NumPy is the fundamental package for scientific computing with Python, providing a powerful N-dimensional array object and tools for linear algebra, Fourier transforms, and random number capabilities.\\n- Code Snippets: 3593\\n- Source Reputation: Unknown\\n- Benchmark Score: 84.1\\n- Versions: v2.3.1, v2.1.3'}]}, 'jsonrpc': '2.0', 'id': '4e2ff98b-ba45-4ec3-a3f1-c0f38385fc85'}",
+      "query_docs": "{'result': {'content': [{'type': 'text', 'text': '### Replace numpy.in1d with numpy.isin\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.0.0-notes.rst\\n\\nThe `np.in1d` function, which tests if each element of a 1D array is also present in a second array, has been deprecated. Its replacement is `np.isin`, which offers similar functionality and is generally more flexible.\\n\\n```python\\nimport numpy as np\\n\\narr1 = np.array([1, 2, 3, 4, 5])\\narr2 = np.array([2, 4, 6])\\n\\n# Old (deprecated) usage:\\n# result_old = np.in1d(arr1, arr2)\\n# print(f\"Result with in1d: {result_old}\")\\n\\n# New (recommended) usage with numpy.isin:\\nresult_new = np.isin(arr1, arr2)\\nprint(f\"Result with isin: {result_new}\")\\n\\n# np.isin also works with higher-dimensional arrays\\narr3 = np.array([[1, 2], [3, 4]])\\narr4 = np.array([2, 5])\\nresult_multi_dim = np.isin(arr3, arr4)\\nprint(f\"Result with isin on multi-dim array: {result_multi_dim}\")\\n```\\n\\n--------------------------------\\n\\n### Replace in1d with numpy.isin function\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/numpy_2_0_migration_guide.rst\\n\\nMigration from deprecated in1d() function. Use numpy.isin() instead to test whether each element of a 1-D array is also present in a second array.\\n\\n```python\\n# Old way (deprecated)\\nnp.in1d(ar1, ar2)\\n\\n# New way\\nimport numpy as np\\nnp.isin(ar1, ar2)\\n```\\n\\n--------------------------------\\n\\n### NumPy Faster Integer Array Operations with isin() and in1d()\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.24.0-notes.rst\\n\\nDemonstrates the performance improvement in np.in1d() and np.isin() functions when working with integer arrays. The functions now automatically select a faster algorithm (up to 10x improvement), with optional kind parameter to force specific methods: \\'sort\\' for old method or \\'table\\' for new method.\\n\\n```python\\nimport numpy as np\\n\\n# Faster integer array operations\\narr1 = np.array([1, 2, 3, 4, 5], dtype=np.int32)\\narr2 = np.array([2, 4, 6], dtype=np.int32)\\n\\n# Automatically uses faster algorithm\\nnp.isin(arr1, arr2)\\n\\n# Force specific method\\nnp.in1d(arr1, arr2, kind=\\'sort\\')  # Old method\\nnp.in1d(arr1, arr2, kind=\\'table\\')  # New faster method\\n```\\n\\n### API Removals > Removed numpy.in1d\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/2.4.0-notes.rst\\n\\n``numpy.in1d`` has been deprecated since NumPy 2.0 and is now completely removed in favor of ``numpy.isin``. The ``numpy.isin`` function provides the same functionality for checking whether elements of one array are present in another array, offering improved performance and consistency with NumPy\\'s API design.\\n\\n--------------------------------\\n\\n### Performance improvements and changes > Faster version of ``np.isin`` and ``np.in1d`` for integer arrays\\n\\nSource: https://github.com/numpy/numpy/blob/main/doc/source/release/1.24.0-notes.rst\\n\\n``np.in1d`` (used by ``np.isin``) can now switch to a faster algorithm (up to >10x faster) when it is passed two integer arrays. This is often automatically used, but you can use ``kind=\"sort\"`` or ``kind=\"table\"`` to force the old or new method, respectively.'}]}, 'jsonrpc': '2.0', 'id': '6aa1255e-16fe-4dcb-9d80-7cf48583e921'}"
+    },
+    "mcp_evidence_summary": "The MCP evidence indicates that `np.isin` was introduced as a replacement for the deprecated `np.in1d` function. The documentation confirms that `np.in1d` was deprecated in favor of `np.isin`, which offers similar functionality and improved flexibility.",
+    "ai_api_fix_function": "def find_unique_elements(arr1, arr2):\n    import numpy as np\n    bool_arr = np.in1d(arr1, arr2)\n    return [arr1[i] for i in range(len(arr1)) if not bool_arr[i]]",
+    "judge_reason": "The AI correctly identified the API (`np.isin`) and accurately described the change from `np.in1d` to `np.isin`. However, the AI's explanation incorrectly suggests replacing `np.isin` with `np.in1d`, which is the opposite of the correct update.",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def maximize_vertical_stack(arrays: list) -> int:\n    import numpy as np\n    stacked = np.vstack(arrays)\n    max_sum = np.max(np.sum(stacked, axis=0))\n    return max_sum",
@@ -238,9 +484,9 @@
     },
     "mcp_evidence_summary": "The MCP evidence confirms that `np.vstack` is a valid function in NumPy, demonstrated across multiple versions and use cases. However, no specific documentation addresses its unavailability in version 1.16.",
     "ai_api_fix_function": "def maximize_vertical_stack(arrays: list) -> int:\n    import numpy as np\n    stacked = np.vstack(arrays)\n    max_sum = np.max(np.sum(stacked, axis=0))\n    return max_sum",
-    "judge_reason": "The AI incorrectly identified the wrong API and provided unrelated changes.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI correctly located the problematic API (`np.vstack`) but provided an incorrect explanation of the API change. The AI claimed no changes were made, while the ground truth indicates a recommendation to use `np.row_stack` post-NumPy 2.0.",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def max_vertical_sum_stacks(arrays):\n    combined = np.vstack(arrays)\n    return np.max(np.sum(combined, axis=0))",
@@ -287,9 +533,9 @@
     },
     "mcp_evidence_summary": "The MCP evidence does not indicate any issues with `np.vstack` in version 1.16 of NumPy. The documentation confirms its functionality for vertical stacking of arrays.",
     "ai_api_fix_function": "def max_vertical_sum_stacks(arrays):\n    combined = np.vstack(arrays)\n    return np.max(np.sum(combined, axis=0))",
-    "judge_reason": "The AI's answer does not mention the correct wrong library function specified (`np.row_stack`).",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI correctly identified the problematic API (`np.vstack`) but failed to recognize the change recommendation (`np.row_stack` introduced in numpy 2.0).",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def find_common_multiples(l1, l2, limit):\n    common_multiples = set()\n    for i in range(1, limit + 1):\n        for j in range(1, limit + 1):\n            multiple1 = l1 * i\n            multiple2 = l2 * j\n            if multiple1 == multiple2:\n                common_multiples.add(multiple1)\n    return sorted(common_multiples)",
@@ -339,9 +585,9 @@
     "mcp_raw": { "resolve_library_id": null, "query_docs": null },
     "mcp_evidence_summary": "No MCP evidence was retrieved due to missing natural_language_questions and ai_api_wrong.",
     "ai_api_fix_function": "def find_common_multiples(l1, l2, limit):\n    common_multiples = set()\n    for i in range(1, limit + 1):\n        for j in range(1, limit + 1):\n            multiple1 = l1 * i\n            multiple2 = l2 * j\n            if multiple1 == multiple2:\n                common_multiples.add(multiple1)\n    return sorted(common_multiples)",
-    "judge_reason": "The AI did not identify any incorrect API in the provided code.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI did not locate any wrong API, whereas the ground-truth wrong API was 'range(start, stop[, step])->range object'.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def sum_of_even_squares(n: int) -> int:\n    return sum(x*x for x in range(0, n, 2))",
@@ -384,9 +630,9 @@
     "mcp_raw": { "resolve_library_id": null, "query_docs": null },
     "mcp_evidence_summary": "No MCP evidence was retrieved due to missing or invalid input fields.",
     "ai_api_fix_function": "def sum_of_even_squares(n: int) -> int:\n    return sum(x*x for x in range(0, n, 2))",
-    "judge_reason": "The AI did not identify any wrong API in the provided code, which aligns with the fact that the code does not contain any incorrect API calls.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI did not provide any wrong API (ai_api_wrong is None), so it cannot be evaluated.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def find_arithmetic_sequences(nums, min_sequence_length):\n    sequences = []\n    nums_set = set(nums)\n    for num in nums:\n        for step in range(1, (max(nums) - num) // (min_sequence_length - 1) + 1):\n            sequence = [num + i * step for i in range(min_sequence_length)]\n            if all(x in nums_set for x in sequence):\n                sequences.append(sequence)\n    return sequences",
@@ -436,9 +682,9 @@
     },
     "mcp_evidence_summary": "No MCP evidence available due to input validation error.",
     "ai_api_fix_function": "def find_arithmetic_sequences(nums, min_sequence_length):\n    sequences = []\n    nums_set = set(nums)\n    for num in nums:\n        for step in range(1, (max(nums) - num) // (min_sequence_length - 1) + 1):\n            sequence = [num + i * step for i in range(min_sequence_length)]\n            if all(x in nums_set for x in sequence):\n                sequences.append(sequence)\n    return sequences",
-    "judge_reason": "The AI did not return any wrong APIs (ai_api_wrong is None), so it cannot be compared with the correct API (API_WRONG).",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI did not locate any wrong API, as indicated by 'ai_api_wrong' being None.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def count_distinct_interned_strings(strings):\n    from sys import intern\n    interned_set = set()\n    for s in strings:\n        interned_set.add(intern(s))\n    return len(interned_set)",
@@ -486,9 +732,9 @@
     },
     "mcp_evidence_summary": "The MCP evidence discusses string interning behavior updates and documentation clarifications in Python, but does not directly address the availability or deprecation of the `intern` function in Python 2.7.",
     "ai_api_fix_function": "def count_distinct_interned_strings(strings):\n    from sys import intern\n    interned_set = set()\n    for s in strings:\n        interned_set.add(intern(s))\n    return len(interned_set)",
-    "judge_reason": "The AI identifies 'intern' as the wrong API but does not specify 'sys.intern' as the corrected version. The AI's reason lacks clarity on the version change.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI correctly located the problematic API ('intern' is a substring of 'sys.intern(string)->string'). However, the AI's explanation of the API change is incorrect or incomplete, as it does not match the ground-truth update.",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def check_and_call_methods(objects, names):\n    results = {}\n    for obj in objects:\n        for name in names:\n            if hasattr(obj, name):\n                method = getattr(obj, name)\n                if callable(method):\n                    results[(obj, name)] = method()\n    return results",
@@ -533,9 +779,105 @@
     "mcp_raw": { "resolve_library_id": null, "query_docs": null },
     "mcp_evidence_summary": "No MCP evidence was retrieved due to missing input parameters.",
     "ai_api_fix_function": "def check_and_call_methods(objects, names):\n    results = {}\n    for obj in objects:\n        for name in names:\n            if hasattr(obj, name):\n                method = getattr(obj, name)\n                if callable(method):\n                    results[(obj, name)] = method()\n    return results",
-    "judge_reason": "The AI did not return any wrong APIs or changes, so it cannot be evaluated for correctness.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI did not locate any problematic API.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "def count_callable_objects(objects):\n    return sum(1 for obj in objects if hasattr(obj, '__call__'))",
+    "solution_signature": "count_callable_objects(objects: list) -> int",
+    "problem": "Please use python code to help me with a function that takes a list of objects as input and returns the count of callable objects in that list. Each object in the list can be of any type. The function should output an integer representing the number of objects that are callable. Make sure to utilize the 'hasattr' function from the python library.",
+    "package": "python",
+    "import": "python",
+    "signature": "hasattr(object, name)->bool",
+    "doc_string": "It checks if an object is callable, meaning it can be invoked as a function, or if it has a __call__ method.",
+    "update": "Before python 2.7, callable was the standard way to apply the callable function; however, after python 2.7, it is recommended to use hasattr instead.",
+    "update_type": "Add",
+    "compare_signature": "callable(object)->bool",
+    "origin_version": "3.9",
+    "compare_version": "2.7",
+    "api_id": "fM9kXwba7z",
+    "code_id": "KPdyXFn6eN",
+    "case": "Based on the problem description and the benchmark code, the input data should be a list of various objects, which can include callables (like functions, classes, or instances with a `__call__` method) and non-callables (like integers, strings, or other types). \n\nHere are three sets of high-quality and comprehensive input test data:\n\n1. **Case with a mix of callables and non-callables**: This will test the function's ability to correctly identify and count callable objects in a list that contains a variety of types.\n\n2. **Case with only non-callables**: This will test the function when there are no callable objects in the list, ensuring that it returns zero.\n\n3. **Case where all items are callable**: This will confirm that the function can handle a list filled exclusively with callable objects.\n\nHere are the input data groups based on the analysis:\n\n```python\ncase1: [lambda x: x + 1, \"string\", 42, dict(), sum, [1, 2, 3], object()]\ncase2: [42, \"hello\", 3.14, None, {}, []]\ncase3: [print, len, count_callable_objects, object, type, lambda x: x * 2]\n```",
+    "solution_function_script": "```python\ndef count_callable_objects(objects):\n    return sum(1 for obj in objects if hasattr(obj, '__call__'))\n\n# Input data\ntest_data = [\n    [lambda x: x + 1, \"string\", 42, dict(), sum, [1, 2, 3], object()],\n    [42, \"hello\", 3.14, None, {}, []],\n    [print, len, count_callable_objects, object, type, lambda x: x * 2]\n]\n\nfor objects in test_data:\n    try:\n        result = count_callable_objects(objects)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "2\n0\n6\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "count_callable_objects",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "sum", "lineno": 2, "context": "expression" },
+          { "api": "hasattr", "lineno": 2, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": null,
+    "line_number": null,
+    "natural_language_questions": null,
+    "ai_api_answer_change": {
+      "what_changed": "No evidence available.",
+      "why_it_breaks": "No evidence available.",
+      "how_to_fix": "No evidence available."
+    },
+    "reason_type": "Unknown",
+    "mcp_raw": { "resolve_library_id": null, "query_docs": null },
+    "mcp_evidence_summary": "No MCP evidence was retrieved due to missing or invalid input parameters.",
+    "ai_api_fix_function": "def count_callable_objects(objects):\n    return sum(1 for obj in objects if hasattr(obj, '__call__'))",
+    "judge_reason": "The AI failed to locate the problematic API (hasattr), so the update judgment is not applicable.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
+  },
+  {
+    "solution_function": "def lock_and_process_data(data, process_function, max_wait_time):\n    from threading import Lock\n    lock = Lock()\n    if lock.acquire(timeout=max_wait_time):\n        try:\n            result = process_function(data)\n        finally:\n            lock.release()\n        return result\n    else:\n        raise TimeoutError(\"Could not acquire lock within the specified time.\")",
+    "solution_signature": "def lock_and_process_data(data: list, process_function: callable, max_wait_time: float) -> any:",
+    "problem": "Please use python code to help me with a function that takes a list of data, a processing function, and a maximum wait time as inputs. The function should attempt to acquire a lock to ensure that only one thread is processing the data at a time. If the lock is acquired within the specified maximum wait time, it should apply the processing function to the data and return the result. If the lock is not acquired within the time limit, it should raise a TimeoutError. The function should use the threading library.",
+    "package": "python",
+    "import": "python",
+    "signature": "acquire(blocking=True, timeout=-1)->bool",
+    "doc_string": "It attempts to acquire a lock, blocking if necessary until the lock is acquired",
+    "update": "Before python 2.7, acquire_lock was the standard way to apply the acquire_lock function; however, after python 2.7, it is recommended to use acquire instead.",
+    "update_type": "Add",
+    "compare_signature": "acquire_lock()->None",
+    "origin_version": "3.9",
+    "compare_version": "2.7",
+    "api_id": "4KoScNu5KR",
+    "code_id": "utFna6kpRg",
+    "case": "Based on the problem description and the provided benchmark code, we can determine the following input requirements:\n\n1. **Input Data**:\n   - `data`: This should be a list, which can contain various types of elements (e.g., integers, strings).\n   - `process_function`: This should be a callable function that takes a list as input and returns some processed result.\n   - `max_wait_time`: This should be a numeric value (e.g., integer or float) representing the maximum number of seconds to wait for the lock.\n\n### Set of Test Cases\n\nLet's create three comprehensive input test data sets:\n\n1. A case with a simple list of integers, a processing function that computes the sum, and a short wait time to ensure that it can easily acquire the lock.\n2. A case with a list of strings where the processing function concatenates the strings, and a longer wait time to simulate a scenario where lock acquisition might take longer.\n3. A more complex case with an empty list and a timeout function that raises a specific exception if lock acquisition doesn't work, testing the timeout error handling.\n\n### Input Data Groups\n\nHere are the formatted test cases:\n\n```python\ncase1: {\n    \"data\": [1, 2, 3, 4, 5],\n    \"process_function\": lambda x: sum(x),\n    \"max_wait_time\": 0.1\n}\n\ncase2: {\n    \"data\": [\"hello\", \" \", \"world\"],\n    \"process_function\": lambda x: ''.join(x),\n    \"max_wait_time\": 2.0\n}\n\ncase3: {\n    \"data\": [],\n    \"process_function\": lambda x: \"No data provided.\" if not x else \"Data provided.\",\n    \"max_wait_time\": 0.5\n}\n``` \n\nThese test cases ensure that we cover different scenarios concerning the functionality of acquiring a lock and processing data while managing time constraints effectively.",
+    "solution_function_script": "```python\nfrom threading import Lock\n\ndef lock_and_process_data(data, process_function, max_wait_time):\n    from threading import Lock\n    lock = Lock()\n    if lock.acquire(timeout=max_wait_time):\n        try:\n            result = process_function(data)\n        finally:\n            lock.release()\n        return result\n    else:\n        raise TimeoutError(\"Could not acquire lock within the specified time.\")\n\n# Input data\ntest_data = [\n    ([1, 2, 3, 4, 5], lambda x: sum(x), 0.1),\n    ([\"hello\", \" \", \"world\"], lambda x: ''.join(x), 2.0),\n    ([], lambda x: \"No data provided.\" if not x else \"Data provided.\", 0.5)\n]\n\nfor data, process_function, max_wait_time in test_data:\n    try:\n        result = lock_and_process_data(data, process_function, max_wait_time)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "15\nhello world\nNo data provided.\n",
+    "imports": ["threading.Lock"],
+    "ast_structure": [
+      {
+        "function_name": "lock_and_process_data",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "Lock", "lineno": 3, "context": "expression" },
+          { "api": "lock.acquire", "lineno": 4, "context": "if-condition" },
+          { "api": "process_function", "lineno": 6, "context": "expression" },
+          { "api": "lock.release", "lineno": 8, "context": "expression" },
+          { "api": "TimeoutError", "lineno": 11, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "lock.acquire",
+    "line_number": 4,
+    "natural_language_questions": "Why is lock.acquire not available in python 2.7?",
+    "ai_api_answer_change": {
+      "what_changed": "The `timeout` parameter for `lock.acquire` was added in Python 3.2+.",
+      "why_it_breaks": "In Python 2.7, `lock.acquire` does not support the `timeout` parameter, leading to potential issues when code written for newer versions (expecting `timeout`) is run in Python 2.7.",
+      "how_to_fix": "For Python 2.7 compatibility, avoid using the `timeout` parameter with `lock.acquire`. Instead, use alternative synchronization methods or upgrade to a newer Python version."
+    },
+    "reason_type": "BehaviorChange",
+    "mcp_raw": {
+      "resolve_library_id": "{'result': {'content': [{'type': 'text', 'text': 'Available Libraries:\\n\\nEach result includes:\\n- Library ID: Context7-compatible identifier (format: /org/project)\\n- Name: Library or package name\\n- Description: Short summary\\n- Code Snippets: Number of available code examples\\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\\n- Benchmark Score: Quality indicator (100 is the highest score)\\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\\n\\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\\n\\n----------\\n\\n- Title: Python\\n- Context7-compatible library ID: /python/cpython\\n- Description: The Python programming language\\n- Code Snippets: 7177\\n- Source Reputation: High\\n- Benchmark Score: 91.1\\n- Versions: v3.9.22, v3.11.14, v3.13.9\\n----------\\n- Title: Python\\n- Context7-compatible library ID: /websites/python_3_10\\n- Description: Python is a high-level, interpreted programming language that emphasizes readability and developer productivity, offering dynamic typing, a comprehensive standard library, and a broad ecosystem for web development, scripting, automation, and data science.\\n- Code Snippets: 6243\\n- Source Reputation: High\\n- Benchmark Score: 92.1\\n----------\\n- Title: Python\\n- Context7-compatible library ID: /websites/devdocs_io_python_3_14\\n- Description: Python is a high-level, interpreted programming language known for its simple syntax and versatile applications in web development, data science, automation, and scientific computing.\\n- Code Snippets: 21524\\n- Source Reputation: High\\n- Benchmark Score: 91.2\\n----------\\n- Title: Python 3.15\\n- Context7-compatible library ID: /websites/python_3_15\\n- Description: Python is a high-level, general-purpose programming language known for its readability, versatility, and extensive libraries.\\n- Code Snippets: 6515\\n- Source Reputation: High\\n- Benchmark Score: 85\\n----------\\n- Title: Python 3.2\\n- Context7-compatible library ID: /websites/python_3_2\\n- Description: Python 3.2 is a specific version of the Python programming language, offering features for general-purpose programming and a comprehensive standard library.\\n- Code Snippets: 14793\\n- Source Reputation: High\\n- Benchmark Score: 94.7'}]}, 'jsonrpc': '2.0', 'id': '1b6308f8-3b87-4240-a24f-1ffe5b4998a9'}",
+      "query_docs": "{'result': {'content': [{'type': 'text', 'text': '### Lock.acquire() - Acquire a Lock\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/library/threading.rst\\n\\nAcquire a lock with optional blocking and timeout parameters. Returns True if the lock is acquired successfully, False otherwise. Supports both blocking and non-blocking acquisition modes.\\n\\n```APIDOC\\n## Lock.acquire()\\n\\n### Description\\nAcquire a lock, blocking or non-blocking. When invoked with blocking=True (default), the method blocks until the lock is unlocked, then sets it to locked and returns True. When invoked with blocking=False, the method returns immediately without blocking.\\n\\n### Method\\nInstance method\\n\\n### Parameters\\n#### Method Parameters\\n- **blocking** (bool) - Optional - Default: True. When True, block until the lock is unlocked. When False, return immediately if the lock cannot be acquired.\\n- **timeout** (float/int) - Optional - Default: -1. Number of seconds to block. A value of -1 specifies an unbounded wait. Cannot be specified when blocking=False. Accepts any real number as of Python 3.15+.\\n\\n### Behavior\\n- **blocking=True**: Block until lock is unlocked, set to locked, return True\\n- **blocking=False**: Return False immediately if lock is locked, return True and lock it if unlocked\\n- **timeout parameter**: Block for at most the specified seconds. Return False if timeout expires before acquiring lock.\\n\\n### Return Value\\n- **True** (bool) - If the lock is acquired successfully\\n- **False** (bool) - If the lock cannot be acquired (e.g., timeout expired)\\n\\n### Version Notes\\n- Python 3.2+: timeout parameter added\\n- Python 3.2+: Lock acquisition can be interrupted by signals on POSIX\\n- Python 3.14+: Lock acquisition can be interrupted by signals on Windows\\n- Python 3.15+: Accepts any real number as timeout, not only integer or float\\n```\\n\\n--------------------------------\\n\\n### Lock Acquisition and Context Manager Usage - Python\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/library/_thread.rst\\n\\nDemonstrates acquiring a lock using the acquire() method and using lock objects as context managers with the \\'with\\' statement. The context manager approach automatically handles lock acquisition and release. Returns True if lock acquired successfully, False otherwise.\\n\\n```python\\nimport _thread\\n\\na_lock = _thread.allocate_lock()\\n\\nwith a_lock:\\n    print(\"a_lock is locked while this executes\")\\n```\\n\\n--------------------------------\\n\\n### Lock.locked() - Check Lock Status\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/library/threading.rst\\n\\nCheck whether a lock is currently acquired. Returns True if the lock is in the locked state, False if it is unlocked.\\n\\n```APIDOC\\n## Lock.locked()\\n\\n### Description\\nReturn the current state of the lock. Returns True if the lock is acquired (locked), False if the lock is not acquired (unlocked).\\n\\n### Method\\nInstance method\\n\\n### Return Value\\n- **True** (bool) - If the lock is acquired/locked\\n- **False** (bool) - If the lock is not acquired/unlocked\\n\\n### Notes\\n- This is a non-blocking query of the lock state\\n- Does not attempt to acquire or modify the lock\\n```\\n\\n--------------------------------\\n\\n### allocate_lock()\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/library/_thread.rst\\n\\nReturn a new primitive lock object. The lock is initially in an unlocked state.\\n\\n```APIDOC\\n## allocate_lock()\\n\\n### Description\\nCreates and returns a new primitive lock object. This lock can be used for basic synchronization between threads, ensuring exclusive access to shared resources. The lock starts in an unlocked state.\\n\\n### Function Signature\\n`_thread.allocate_lock()`\\n\\n### Arguments\\n- (None) - This function takes no arguments.\\n\\n### Example Usage\\n```python\\nimport _thread\\n\\nmy_lock = _thread.allocate_lock()\\nprint(f\"Lock object created: {my_lock}\")\\n\\n# Acquire and release the lock\\nmy_lock.acquire()\\nprint(\"Lock acquired.\")\\nmy_lock.release()\\nprint(\"Lock released.\")\\n```\\n\\n### Return Value\\n#### Success Response\\n- **lock_object** (LockType) - A new, unlocked primitive lock object.\\n\\n#### Return Example\\n```\\n<_thread.lock object at 0x7f8e3f9a7d20>\\n```\\n```\\n\\n--------------------------------\\n\\n### Synchronize Threads with Python `with` and `threading.Lock`\\n\\nSource: https://github.com/python/cpython/blob/main/Doc/whatsnew/2.5.rst\\n\\nThis snippet illustrates using the `with` statement with a `threading.Lock` object in Python. The lock is automatically acquired before entering the block and released upon exiting, ensuring thread-safe access to critical sections of code.\\n\\n```python\\nlock = threading.Lock()\\nwith lock:\\n    # Critical section of code\\n    ...\\n```'}]}, 'jsonrpc': '2.0', 'id': 'f5513f83-5a95-4aff-8063-eb959f8d5665'}"
+    },
+    "mcp_evidence_summary": "The MCP evidence indicates that `lock.acquire` is available in Python 2.7 but lacks the `timeout` parameter introduced in Python 3.2+. The behavior of `lock.acquire` differs between versions, especially regarding timeout functionality.",
+    "ai_api_fix_function": "def lock_and_process_data(data, process_function, max_wait_time):\n    from threading import Lock\n    lock = Lock()\n    if lock.acquire():\n        try:\n            result = process_function(data)\n        finally:\n            lock.release()\n        return result\n    else:\n        raise TimeoutError(\"Could not acquire lock within the specified time.\")",
+    "judge_reason": "The AI correctly located the problematic API ('lock.acquire' contains 'acquire') and described a relevant change (parameter addition for 'timeout'). However, the ground-truth change is about transitioning from 'acquire_lock' to 'acquire', not the 'timeout' parameter.",
+    "judge_locate_answer": 1,
+    "judge_update_answer": 0
   },
   {
     "solution_function": "def concurrent_sum(numbers: list[list[int]]) -> int:\n    from threading import Thread, Lock\n    def worker(sublist: list[int], lock: Lock, result: list):\n        sub_sum = sum(sublist)\n        lock.acquire()\n        result[0] += sub_sum\n        lock.release()\n    lock = Lock()\n    result = [0]\n    threads = []\n    for sublist in numbers:\n        thread = Thread(target=worker, args=(sublist, lock, result))\n        threads.append(thread)\n        thread.start()\n    for thread in threads:\n        thread.join()\n    return result[0]",
@@ -583,8 +925,8 @@
     },
     "mcp_evidence_summary": "No MCP evidence was retrieved due to the absence of a valid library ID.",
     "ai_api_fix_function": "def concurrent_sum(numbers: list[list[int]]) -> int:\n    from threading import Thread, Lock\n    def worker(sublist: list[int], lock: Lock, result: list):\n        sub_sum = sum(sublist)\n        lock.acquire()\n        result[0] += sub_sum\n        lock.release()\n    lock = Lock()\n    result = [0]\n    threads = []\n    for sublist in numbers:\n        thread = Thread(target=worker, args=(sublist, lock, result))\n        threads.append(thread)\n        thread.start()\n    for thread in threads:\n        thread.join()\n    return result[0]",
-    "judge_reason": "The AI did not identify any incorrect API in the provided code.",
-    "judge_locate_answer": "0",
-    "judge_update_answer": "0"
+    "judge_reason": "The AI failed to locate the problematic API (ai_api_wrong is None), so no further evaluation is possible.",
+    "judge_locate_answer": 0,
+    "judge_update_answer": 0
   }
 ]
