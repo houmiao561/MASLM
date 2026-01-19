@@ -25,6 +25,15 @@ def find_largest_equal_substring(arr1, arr2):
 
 ### baseline 的修改结果
 
+========== TOKEN USAGE SUMMARY ==========
+FINAL_TOKEN: 56232
+=========================================
+
+Total time: 307.0594120025635 seconds
+{'total_samples': 50, 'task1_avg': 78.0, 'task2_avg': 60.0}
+
+{'total_samples': 50, 'task1_avg': 78.0, 'task2_avg': 68.0}
+
 ```python
 def find_largest_equal_substring(arr1, arr2):
     import numpy
@@ -109,3 +118,14 @@ def find_largest_equal_substring(arr1, arr2):
 
 token 从 3000 增加到 9000
 时间增加到 100 秒左右
+
+## 01.18 测试前 50 个，消耗如下
+
+========== TOKEN USAGE SUMMARY ==========
+FINAL_TOKEN: 441915
+=========================================
+Total time: 5415.267335891724 seconds
+
+{'total_samples': 50, 'task1_avg': 78.0, 'task2_avg': 68.0}
+
+{'total_samples': 50, 'task1_avg': 82.0, 'task2_avg': 62.0}

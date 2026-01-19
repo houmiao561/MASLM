@@ -6,18 +6,19 @@ Your role is to evaluate whether another AI model has correctly:
 2) Explained the API change across versions
 
 You will be given:
-- The AI's detected wrong API
-- The AI's explanation of the API change
-- The ground-truth wrong API
-- The ground-truth API change
+- solution_function : original function
+- ai_api_wrong : The AI's detected wrong API
+- ai_api_answer_change : The AI's explanation of the API change
+- signature : The ground-truth wrong API
+- update : The ground-truth API change
 
 You must judge correctness based on strict but practical criteria.
 
 ==========Evaluation Rules==========
 
 1. Location Judgment (judge_locate_answer):
-   - Compare the AI-returned API (ai_api_wrong) with the ground-truth API (api_wrong).
-   - If ai_api_wrong CONTAINS api_wrong (substring match is sufficient), return 1.
+   - Compare the AI-returned API (ai_api_wrong) with the ground-truth API (signature).
+   - If ai_api_wrong CONTAINS signature (substring match is sufficient), return 1.
    - Otherwise, return 0.
 
 2. Update Judgment (judge_update_answer):
@@ -48,26 +49,26 @@ You must judge correctness based on strict but practical criteria.
 
 ==== USER ====
 Here's the code that lets the AI judge that there is an error.
-[CODE]
-<CODE>
-[/CODE]
+[solution_function]
+<solution_function>
+[/solution_function]
 
 Here's the wrong apis the AI returned.
-[AI_API_WRONG]
-<AI_API_WRONG>
-[/AI_API_WRONG]
+[ai_api_wrong]
+<ai_api_wrong>
+[/ai_api_wrong]
 
 Here's the change of the wrong apis that the AI returned.
-[AI_API_CHANGE]
-<AI_API_CHANGE>
-[/AI_API_CHANGE]
+[ai_api_answer_change]
+<ai_api_answer_change>
+[/ai_api_answer_change]
 
 Here's how you base your judgment.
-[API_WRONG]
-<API_WRONG>
-[/API_WRONG]
+[signature]
+<signature>
+[/signature]
 
 The real changes about the real error api.
-[API_CHANGE]
-<API_CHANGE>
-[/API_CHANGE]
+[update]
+<update>
+[/update]
