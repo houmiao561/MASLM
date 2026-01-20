@@ -129,3 +129,188 @@ Total time: 5415.267335891724 seconds
 {'total_samples': 50, 'task1_avg': 78.0, 'task2_avg': 68.0}
 
 {'total_samples': 50, 'task1_avg': 82.0, 'task2_avg': 62.0}
+
+下面直接给你**可操作、面向 Context7 MCP 的答案**，不绕概念。
+
+---
+
+## 一、你这个问题的本质
+
+你现在问的不是：
+
+> “某个 API 怎么用？”
+
+而是：
+
+> **“为什么某个 API 在 _某个版本_ 中不可用了 / 被移除 / 被迁移？”**
+
+这在 Context7 里属于一个**明确的查询类型**：
+
+> **API 变更原因查询（API deprecation / removal rationale）**
+
+---
+
+## 二、Context7 能否回答这种问题？
+
+**能，但前提是你要把 query 组织成“文档可回答”的形式。**
+
+Context7 的 `get-library-docs` **不会推理**，它只会：
+
+- 检索官方文档
+- 返回“文档中已经写明的事实”
+
+所以 query 的目标应当是：
+
+> **逼出 release notes / migration guide / deprecation note**
+
+---
+
+## 三、核心原则：query 不是“问题”，而是“文档锚点”
+
+❌ 错误示例（人类自然语言）：
+
+```text
+为什么 numpy.compare_chararrays 在 2.0 不可用了？
+```
+
+Context7 不擅长这种。
+
+---
+
+✅ 正确思路：
+
+> **查询“版本 + API 名称 + 变更类型”**
+
+---
+
+## 四、推荐的 query 组织模板（非常重要）
+
+### 标准模板（你可以直接复用）
+
+```text
+<library> <version> <symbol> <change-keyword>
+```
+
+其中：
+
+- `library`：numpy
+- `version`：2.0
+- `symbol`：numpy.compare_chararrays
+- `change-keyword`（任选其一或组合）：
+
+  - removed
+  - deprecated
+  - migration
+  - moved
+  - breaking change
+  - release notes
+
+---
+
+## 五、针对你这个问题的【最佳 query】
+
+### ✅ 强烈推荐（命中率最高）
+
+```json
+{
+  "libraryId": "/numpy/numpy",
+  "query": "NumPy 2.0 numpy.compare_chararrays removed"
+}
+```
+
+或者更偏向迁移文档：
+
+```json
+{
+  "libraryId": "/numpy/numpy",
+  "query": "NumPy 2.0 compare_chararrays migration"
+}
+```
+
+---
+
+## 六、完整 MCP 调用示例（get-library-docs）
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "numpy-api-change-1",
+  "method": "tools/call",
+  "params": {
+    "name": "get-library-docs",
+    "arguments": {
+      "libraryId": "/numpy/numpy",
+      "query": "NumPy 2.0 numpy.compare_chararrays removed",
+      "tokens": 3000
+    }
+  }
+}
+```
+
+---
+
+## 七、为什么这样写 query 才“对”
+
+### 1️⃣ Context7 实际会命中的文档类型
+
+这种 query 会优先命中：
+
+- NumPy 2.0 Release Notes
+- NumPy 2.0 Migration Guide
+- NEP（NumPy Enhancement Proposal）
+- API change / deprecation 列表
+
+**这些文档里通常会明确写：**
+
+- API 是否被移除
+- 被移动到哪里
+- 为什么这么做
+- 官方推荐替代方案
+
+---
+
+### 2️⃣ 对 numpy.compare_chararrays 的实际情况（结论先给你）
+
+在 NumPy 2.0 中：
+
+- `numpy.compare_chararrays` **不再暴露在顶层 `numpy` 命名空间**
+- 该函数被**限制/收敛到 `numpy.char` 子模块**
+- 原因是 NumPy 2.0 的核心目标之一：
+
+  > **清理历史遗留 API，减少顶层命名空间污染**
+
+典型官方解释会包含：
+
+- “removed from main namespace”
+- “use `numpy.char.compare_chararrays` instead”
+
+---
+
+## 八、如果你想“让 Agent 自动问这种问题”
+
+### 建议你在 Agent 里固化一个模式
+
+```text
+When an API is missing or errors in a newer version:
+- query release notes
+- query migration guide
+- query "<API> removed / deprecated"
+```
+
+对应 Context7 query 自动生成规则：
+
+```python
+query = f"{library} {version} {symbol} removed migration"
+```
+
+---
+
+## 九、一句话总结（你可以直接记住）
+
+> **在 Context7 中，
+> 查询“为什么 API 不可用”，
+> 不是问 Why，
+> 而是检索“版本 + API + 变更关键词”。**
+
+如果你愿意，下一步我可以直接帮你设计一个
+**“API 断裂 → 自动构造 Context7 query → 自动解释原因”** 的 Agent 子流程。
