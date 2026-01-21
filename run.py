@@ -134,12 +134,21 @@ def maslm_hard_python():
         }
 
         orch = OrchestratorHardPy(agents, sample)
-
-        # MAS具体执行三个Agent,前两个不执行没法执行第三个
         location_result = orch.location_library()
-        print(location_result)
+        
+        for single_api_index, single_api_name in enumerate(location_result["ai_api_wrong"]):
+            # 打印出来这是第几遍循环
+            print(single_api_index)
+            print(single_api_name)
+            print()
+            answer_change_result = orch.answer_change(single_api_index)
+            print(f"answer_change_result: \n{answer_change_result}")
+            orch.agents["answer_change"].clear_memory()
+            print()
+            print()
+
+        print(f"FINALRESULTTTT:::::\n{orch.raw_data}")
         sys.exit()
-        answer_change_result = orch.answer_change()
         fix_function_result = orch.fix_function()
 
 
