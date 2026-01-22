@@ -176,17 +176,19 @@ if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
-    # 开始计时
     start_time = time.time()
+
+    # Easy Python
     # maslm()
+
+    # 判断结果
     # judge_bench()
-    # 结束计时
-    # end_time = time.time()
-    # print(f"Total time: {end_time - start_time} seconds")
     # result = compute_avg("output_dataset/easy_python/judge_result_change_prompt.jsonl")
     # print(result)
 
+    # Hard Python
     maslm_hard_python()
+
     end_time = time.time()
     print(f"Total time: {end_time - start_time} seconds")
 

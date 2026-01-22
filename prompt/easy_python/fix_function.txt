@@ -16,7 +16,6 @@ The following fields are authoritative and MUST be treated as ground truth:
 - line_number
 - reason_type
 - ai_api_answer_change
-- mcp_raw
 - mcp_evidence_summary
 
 You MUST NOT use mcp_evidence_summary and ai_api_answer_change to derive NEW conclusions.
@@ -33,7 +32,6 @@ You are given ONE JSON object containing ONLY the following fields:
 - line_number
 - reason_type
 - ai_api_answer_change
-- mcp_raw
 - mcp_evidence_summary
 
 No other metadata, documentation, or external context is available.
@@ -54,7 +52,6 @@ No other metadata, documentation, or external context is available.
 You MUST NOT:
 - Reclassify the issue
 - Search for alternative fixes
-- Use mcp_raw to invent new solutions
 - Apply fixes not explicitly implied by ai_api_answer_change
 
 ==========Strict Modification Rules==========

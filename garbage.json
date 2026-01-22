@@ -45,19 +45,49 @@
         ]
       }
     ],
-    "ai_api_fix_function": "import numpy as np\n\ndef integrate_unique_rows(data1, data2):\n    merged_data = np.row_stack((data1, data2))\n    unique_rows = merged_data[np.in1d(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1])), assume_unique=True).reshape(merged_data.shape[0])]\n    integration_result = np.trapz(unique_rows, axis=0)\n    return integration_result\n",
-    "ai_api_wrong": ["np.in1d", "np.unique", "np.trapz"],
-    "line_number": [5, 5, 6],
+    "ai_api_fix_function": "import numpy as np\n\ndef integrate_unique_rows(data1, data2):\n    merged_data = np.vstack((data1, data2))\n    unique_rows = merged_data[np.isin(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1])), assume_unique=True).reshape(merged_data.shape[0])]\n    integration_result = np.trapezoid(unique_rows, axis=0)\n    return integration_result\n",
+    "ai_api_wrong": ["np.row_stack", "np.in1d", "np.unique", "np.trapz"],
+    "line_number": [4, 5, 5, 6],
     "natural_language_questions": [
-      "Why is np.in1d not available in 2.0?",
-      "Why is np.unique not available in 2.0?",
-      "Why is np.trapz not available in 2.0?"
+      "Why is np.row_stack not available in numpy 2.0?",
+      "Why is np.in1d not available in numpy 2.0?",
+      "Why is np.unique not available in numpy 2.0?",
+      "Why is np.trapz not available in numpy 2.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "The alias `np.row_stack` was deprecated in favor of `np.vstack`, which performs the same vertical stacking operation.",
+        "why_it_breaks": "The code uses `np.row_stack`, which is no longer available as an alias in NumPy 2.0, leading to compatibility issues.",
+        "how_to_fix": "Replace all instances of `np.row_stack` with `np.vstack` in the code."
+      },
+      {
+        "what_changed": "The `np.in1d` function was removed in NumPy 2.0.",
+        "why_it_breaks": "The code uses `np.in1d`, which is no longer available in NumPy 2.0.",
+        "how_to_fix": "Replace `np.in1d` with `np.isin`, which offers the same functionality."
+      },
+      {
+        "what_changed": "No evidence of changes to `np.unique` in NumPy 2.0.",
+        "why_it_breaks": "No evidence supports that `np.unique` breaks in NumPy 2.0.",
+        "how_to_fix": "No fix is required as `np.unique` remains functional."
+      },
+      {
+        "what_changed": "`np.trapz` was deprecated in NumPy 2.0 and replaced with `np.trapezoid` or `scipy.integrate` functions.",
+        "why_it_breaks": "Using `np.trapz` in NumPy 2.0 will raise deprecation warnings or errors since it has been removed in favor of newer alternatives.",
+        "how_to_fix": "Replace `np.trapz` with `np.trapezoid` for equivalent functionality within NumPy, or use `scipy.integrate` functions for more advanced integration needs."
+      }
+    ],
+    "reason_type": ["Deprecated", "Removed", "Unknown", "Deprecated"],
+    "mcp_evidence_summary": [
+      "The alias `np.row_stack` has been deprecated in NumPy 2.0. Users are advised to use `np.vstack` instead, which provides the same functionality for vertically stacking arrays (row-wise).",
+      "The `np.in1d` function has been deprecated since NumPy 2.0 and is now completely removed in favor of `np.isin`. The `np.isin` function provides the same functionality for checking whether elements of one array are present in another array.",
+      "The MCP evidence does not indicate that `np.unique` is unavailable or deprecated in NumPy 2.0. The documentation retrieved demonstrates the continued use and functionality of `np.unique` across various versions, including handling NaN values with the `equal_nan` parameter.",
+      "The MCP evidence indicates that `np.trapz` has been deprecated in NumPy 2.0 and replaced with `np.trapezoid` or functions from `scipy.integrate`."
     ]
   },
   {
-    "solution_function": "import numpy as np\n\ndef integrate_unique_rows(data1, data2):\n    merged_data = np.row_stack((data1, data2))\n    unique_rows = merged_data[np.in1d(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1])), assume_unique=True).reshape(merged_data.shape[0])]\n    integration_result = np.trapz(unique_rows, axis=0)\n    return integration_result\n",
-    "solution_signature": "integrate_unique_rows(data1: numpy.ndarray, data2: numpy.ndarray) -> numpy.ndarray",
-    "problem": "Please use python code to help me with a function that merges two 2D numpy arrays by stacking them vertically, finds unique rows across the combined array, and then computes the definite integral along the columns of these unique rows. The two input parameters, data1 and data2, are numpy arrays with two dimensions. The output should be a one-dimensional numpy array representing the integral of each column across the unique rows. The numpy library is used in this implementation.",
+    "solution_function": "import numpy as np\n\ndef compute_weighted_integral(arrays, weights, domain):\n    stacked = np.row_stack(arrays)\n    weighted_sums = np.trapz(stacked * weights[:, np.newaxis], x=domain, axis=1)\n    return weighted_sums[np.in1d(weighted_sums, [np.max(weighted_sums)], invert=True)]",
+    "solution_signature": "compute_weighted_integral(arrays: list[np.ndarray], weights: np.ndarray, domain: np.ndarray) -> np.ndarray",
+    "problem": "Please use python code to help me with a function that takes three inputs: a list of 1D numpy arrays 'arrays', a 1D numpy array 'weights', and a 1D numpy array 'domain'. The function should stack the arrays vertically, multiply each row by the corresponding weight, and compute the numerical integral along the specified domain for each weighted array using functions from the numpy library. Finally, it should return a numpy array of the weighted integrals, excluding the maximum value. The output should be a 1D numpy array.",
     "package": "numpy",
     "combine_id": "EcVFp4ETNQ",
     "api_num": 3,
@@ -78,65 +108,125 @@
       "np.in1d has been deprecated to encourage use of np.isin, which is a clearer and more intuitive function for element checks."
     ],
     "version_type": "low",
-    "code_id": "byohhBqhhO",
+    "code_id": "n6kKwT8G68",
     "origin_version": "1.26",
     "compare_version": "2.0",
-    "case": "Based on the problem and the given code, here are the sets of input test data that closely follow the requirements.\n\n### 1. Determine the input data\nThe input consists of two 2D numpy arrays: `data1` and `data2`. They can contain any shape, but must have two dimensions, and the arrays can hold integer or floating-point values. The goal is to test various scenarios including:\n\n- Cases with no overlapping rows.\n- Cases with some overlapping rows.\n- Cases where one or both arrays contain unique rows with varying number of columns.\n\n### 2. Final input data group generation\nHere are three comprehensive test cases:\n\n```python\ncase1: {\n    \"data1\": np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),\n    \"data2\": np.array([[10, 11, 12], [13, 14, 15]])\n}\n\ncase2: {\n    \"data1\": np.array([[1, 2], [3, 4], [5, 6]]),\n    \"data2\": np.array([[3, 4], [5, 6], [7, 8]])\n}\n\ncase3: {\n    \"data1\": np.array([[1.5, 2.5], [3.5, 4.5]]),\n    \"data2\": np.array([[1.5, 2.5], [5.7, 6.8], [7.8, 8.9]])\n}\n``` \n\n### Explanation of the cases\n- **case1**: \n  - Two separate arrays with no overlapping rows. It tests the function's capability to handle distinct inputs.\n\n- **case2**: \n  - Both arrays share common rows. Since overlapping rows should be filtered out, this tests the uniqueness functionality.\n\n- **case3**: \n  - This case includes floating-point numbers and a row repetition, which ensures that the function can handle non-integer values and confirms that unique rows work as expected. \n\nEach test case covers a different scenario, ensuring robust testing of the `integrate_unique_rows` function.",
-    "solution_function_script": "```python\nimport numpy as np \n\ndef integrate_unique_rows(data1, data2):\n    merged_data = np.row_stack((data1, data2))\n    unique_rows = merged_data[np.in1d(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1])), assume_unique=True).reshape(merged_data.shape[0])]\n    integration_result = np.trapz(unique_rows, axis=0)\n    return integration_result\n\n# Input data\ntest_data = [\n    (np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]), np.array([[10, 11, 12], [13, 14, 15]])),\n    (np.array([[1, 2], [3, 4], [5, 6]]), np.array([[3, 4], [5, 6], [7, 8]])),\n    (np.array([[1.5, 2.5], [3.5, 4.5]]), np.array([[1.5, 2.5], [5.7, 6.8], [7.8, 8.9]]))\n]\n\nfor data1, data2 in test_data:\n    try:\n        result = integrate_unique_rows(data1, data2)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
-    "message": "[28. 32. 36.]\n[20. 25.]\n[15.35 19.5 ]\n",
+    "case": "case1:[[1, 2, 3], [4, 5, 6], [7, 8, 9]], [0.0, 0.0, 0.0], [0, 1],\ncase2:[[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.0, 1.0, 1.0], [0, 1]",
+    "solution_function_script": "```python\nimport numpy as np\n\ndef compute_weighted_integral(arrays, weights, domain):\n    stacked = np.row_stack(arrays)\n    weighted_sums = np.trapz(stacked * weights[:, np.newaxis], x=domain, axis=1)\n    return weighted_sums[np.in1d(weighted_sums, [np.max(weighted_sums)], invert=True)]\n\n# Input data\ntest_data = [\n    (np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]), np.array([0.0, 0.0, 0.0]), np.array([0, 1])),\n    (np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]), np.array([1.0, 1.0, 1.0]), np.array([0, 1]))\n]\n\nfor arrays, weights, domain in test_data:\n    try:\n        result = compute_weighted_integral(arrays, weights, domain)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "[]\n[ 4. 10.]\n",
     "imports": ["numpy"],
     "ast_structure": [
       {
-        "function_name": "integrate_unique_rows",
+        "function_name": "compute_weighted_integral",
         "lineno": 3,
         "api_calls": [
           { "api": "np.row_stack", "lineno": 4, "context": "expression" },
-          { "api": "reshape", "lineno": 5, "context": "expression" },
-          { "api": "np.in1d", "lineno": 5, "context": "expression" },
-          { "api": "merged_data.view", "lineno": 5, "context": "expression" },
-          { "api": "np.unique", "lineno": 5, "context": "expression" },
-          { "api": "merged_data.view", "lineno": 5, "context": "expression" },
-          { "api": "np.trapz", "lineno": 6, "context": "expression" }
+          { "api": "np.trapz", "lineno": 5, "context": "expression" },
+          { "api": "np.in1d", "lineno": 6, "context": "expression" },
+          { "api": "np.max", "lineno": 6, "context": "expression" }
         ]
       }
     ],
-    "ai_api_fix_function": "import numpy as np\n\ndef integrate_unique_rows(data1, data2):\n    merged_data = np.vstack((data1, data2))\n    unique_rows = merged_data[np.isin(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), equal_nan=False), assume_unique=True).reshape(merged_data.shape[0])]\n    integration_result = np.trapezoid(unique_rows, axis=0)\n    return integration_result\n",
-    "ai_api_wrong": ["np.row_stack", "np.in1d", "np.unique", "np.trapz"],
-    "line_number": [4, 5, 5, 6],
+    "ai_api_fix_function": "import numpy as np\n\ndef compute_weighted_integral(arrays, weights, domain):\n    stacked = np.vstack(arrays)\n    weighted_sums = np.trapezoid(stacked * weights[:, np.newaxis], x=domain, axis=1)\n    return weighted_sums[np.isin(weighted_sums, [np.amax(weighted_sums)], invert=True)]",
+    "ai_api_wrong": ["np.row_stack", "np.trapz", "np.in1d", "np.max"],
+    "line_number": [4, 5, 6, 6],
     "natural_language_questions": [
       "Why is np.row_stack not available in 2.0?",
+      "Why is np.trapz not available in 2.0?",
       "Why is np.in1d not available in 2.0?",
-      "Why is np.unique not available in 2.0?",
-      "Why is np.trapz not available in 2.0?"
+      "Why is np.max not available in 2.0?"
     ],
     "ai_api_answer_change": [
       {
-        "what_changed": "The alias `np.row_stack` was deprecated and replaced with `np.vstack`.",
-        "why_it_breaks": "Using `np.row_stack` in NumPy 2.0 causes issues because it is no longer available as an alias.",
-        "how_to_fix": "Replace `np.row_stack` with `np.vstack` for vertically stacking arrays."
-      },
-      {
-        "what_changed": "`np.in1d` was deprecated and removed in NumPy 2.0, replaced by `np.isin`.",
-        "why_it_breaks": "The code uses `np.in1d`, which is no longer available in NumPy 2.0, causing a runtime error.",
-        "how_to_fix": "Replace `np.in1d` with `np.isin` in the code, as it offers the same functionality and is the recommended alternative."
-      },
-      {
-        "what_changed": "In NumPy 2.0, `np.unique` was modified to treat all `NaN` values as equal by default, and a new parameter `equal_nan` was added.",
-        "why_it_breaks": "The issue arises because the default behavior of `np.unique` changed in 2.0, which may affect how unique values are identified, especially involving `NaN` values.",
-        "how_to_fix": "To maintain compatibility, explicitly set the `equal_nan` parameter to `False` if the pre-2.0 behavior is desired."
+        "what_changed": "The `np.row_stack` alias was deprecated and replaced with `np.vstack`.",
+        "why_it_breaks": "Using `np.row_stack` in version 2.0 will result in deprecated API usage warnings or errors.",
+        "how_to_fix": "Replace `np.row_stack` with `np.vstack` in the code."
       },
       {
         "what_changed": "The `np.trapz` function was deprecated and replaced with `np.trapezoid`.",
-        "why_it_breaks": "Using `np.trapz` in NumPy 2.0 causes issues because the function is no longer available in its previous form.",
-        "how_to_fix": "Replace `np.trapz` with `np.trapezoid` for NumPy-based integration or use `scipy.integrate.trapz` for more advanced numerical integration."
+        "why_it_breaks": "Using `np.trapz` in NumPy 2.0 causes compatibility issues because the function is deprecated and no longer available.",
+        "how_to_fix": "Replace `np.trapz` with `np.trapezoid` or use `scipy.integrate.trapz` for more advanced integration."
+      },
+      {
+        "what_changed": "The `np.in1d` function was deprecated in favor of `np.isin` in NumPy 2.0.",
+        "why_it_breaks": "The code uses `np.in1d`, which is no longer available in NumPy 2.0, leading to compatibility issues.",
+        "how_to_fix": "Replace `np.in1d` with `np.isin` in the code. The functionality remains similar, but `np.isin` is the recommended approach in newer versions."
+      },
+      {
+        "what_changed": "The `PyArray_MIN` and `PyArray_MAX` macros, used for finding minimum and maximum values in arrays within the NumPy C API, have been relocated to `npy_math.h`.",
+        "why_it_breaks": "The relocation of these macros may cause compatibility issues if the old include directives (`ndarraytypes.h`) are still used.",
+        "how_to_fix": "Update the include directives to use `npy_math.h` instead of `ndarraytypes.h` and ensure reduction operations use the correct syntax."
       }
     ],
-    "reason_type": ["Deprecated", "Removed", "BehaviorChange", "Deprecated"],
+    "reason_type": ["Deprecated", "Deprecated", "Deprecated", "BehaviorChange"],
     "mcp_evidence_summary": [
-      "The alias `np.row_stack` has been deprecated in favor of `np.vstack`. Documentation confirms this change and recommends using `np.vstack` for vertically stacking arrays.",
-      "The function `np.in1d` was deprecated in NumPy 2.0 and completely removed in favor of `np.isin`, which provides the same functionality with improved performance and consistency.",
-      "The MCP evidence indicates that `np.unique` underwent modifications in NumPy 2.0, including changes in behavior and parameter additions. Specifically, it was adjusted to treat all `NaN` values as equal by default, with a new parameter `equal_nan` introduced to control this behavior.",
-      "The `np.trapz` function has been deprecated in NumPy 2.0. Users are advised to use `np.trapezoid` for equivalent functionality or leverage `scipy.integrate` for more advanced integration needs."
+      "The alias `np.row_stack` has been deprecated in version 2.0. Users are advised to use `np.vstack` instead, which provides the same functionality.",
+      "The `np.trapz` function has been deprecated in NumPy 2.0. Users are advised to use `np.trapezoid` for equivalent functionality or leverage `scipy.integrate` functions for more advanced integration needs.",
+      "The `np.in1d` function has been deprecated in NumPy 2.0 and replaced with `np.isin`, which provides similar functionality and is more flexible.",
+      "The MCP evidence indicates changes in how `np.max` behaves or is implemented in NumPy 2.0, including relocation of macros and adjustments in reduction operations."
+    ]
+  },
+  {
+    "solution_function": "def calculate_integral_and_parse_data(data, x_values=None, dx=1.0, axis=-1, formats=None, names=None, titles=None, aligned=False, byteorder=None):\n    integral_value = numpy.trapz(data, x=x_values, dx=dx, axis=axis)\n    parsed_data = numpy.format_parser(formats, names, titles, aligned, byteorder)\n    return integral_value, parsed_data",
+    "solution_signature": "calculate_integral_and_parse_data(data: numpy.ndarray, x_values: numpy.ndarray = None, dx: float = 1.0, axis: int = -1, formats: list = None, names: list = None, titles: list = None, aligned: bool = False, byteorder: str = None) -> tuple",
+    "problem": "Please use python code to help me with a function that calculates the numerical integral of an array of data using the trapezoidal rule and also parses the format of data using the numpy library. The function should take the following inputs: a numpy.ndarray 'data' representing the y-values of the data to be integrated, an optional numpy.ndarray 'x_values' for x-values of the data or a float 'dx' for spacing between the y-values, an int 'axis' to specify the axis along which to integrate, a list 'formats' to specify the format of the data, a list 'names' for the names of the fields, a list 'titles' for the titles of the fields, a bool 'aligned' to specify if the data should be aligned, and a str 'byteorder' to specify the byte order. The function should return a tuple where the first element is a float representing the integral value, and the second element is the parsed data format.",
+    "package": "numpy",
+    "combine_id": "EnbuzRInAE",
+    "api_num": 2,
+    "import": "import numpy",
+    "signature_list": [
+      "numpy.trapz(y, x=None, dx=1.0, axis=-1)->float",
+      "np.format_parser(formats, names, titles, aligned=False, byteorder=None)"
+    ],
+    "doc_list": [
+      "Integrate along the given axis using the composite trapezoidal rule.If x is provided, the integration happens in sequence along its elements - they are not sorted.",
+      "np.format_parser was used to parse format descriptions for creating custom record data types."
+    ],
+    "update_list": [
+      "numpy.trapz has been removed since numpy 2.0 version, use numpy.trapezoid instead.",
+      "np.format_parser has been moved to np.rec for better organization within the record array utilities."
+    ],
+    "version_type": "low",
+    "code_id": "S0SgAAjXCe",
+    "origin_version": "1.26",
+    "compare_version": "2.0",
+    "case": "case1:numpy.array([1, 2, 3, 4]), None, 1.0, -1, ['f'], ['data_points'], ['Data Points'], False, None,\ncase2:numpy.array([[1, 2, 3], [4, 5, 6]]), numpy.array([0, 1, 2]), 1.0, 0, ['f', 'f'], ['field1', 'field2'], ['First Field', 'Second Field'], True, '>',\ncase3:numpy.array([10, 20, 30, 40, 50]), None, 2.0, -1, ['i'], ['data_points'], ['Data Points'], False, '<'",
+    "solution_function_script": "```python\nimport numpy \n\ndef calculate_integral_and_parse_data(data, x_values=None, dx=1.0, axis=-1, formats=None, names=None, titles=None, aligned=False, byteorder=None):\n    integral_value = numpy.trapz(data, x=x_values, dx=dx, axis=axis)\n    parsed_data = numpy.format_parser(formats, names, titles, aligned, byteorder)\n    return integral_value, parsed_data\n\n# Input data\ntest_data = [\n    (numpy.array([1, 2, 3, 4]), None, 1.0, -1, ['f'], ['data_points'], ['Data Points'], False, None),\n    (numpy.array([[1, 2, 3], [4, 5, 6]]), numpy.array([0, 1, 2]), 1.0, 0, ['f', 'f'], ['field1', 'field2'], ['First Field', 'Second Field'], True, '>'),\n    (numpy.array([10, 20, 30, 40, 50]), None, 2.0, -1, ['i'], ['data_points'], ['Data Points'], False, '<')\n]\n\nfor data in test_data:\n    try:\n        result = calculate_integral_and_parse_data(*data)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "(7.5, <numpy.format_parser object at 0x7f3d62217630>)\n(array([5., 7., 9.]), <numpy.format_parser object at 0x7f3d622a09e8>)\n(240.0, <numpy.format_parser object at 0x7f3d62217630>)\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "calculate_integral_and_parse_data",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "numpy.trapz", "lineno": 2, "context": "expression" },
+          { "api": "numpy.format_parser", "lineno": 3, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_fix_function": "def calculate_integral_and_parse_data(data, x_values=None, dx=1.0, axis=-1, formats=None, names=None, titles=None, aligned=False, byteorder=None):\n    integral_value = numpy.trapezoid(data, x=x_values, dx=dx, axis=axis)\n    parsed_data = numpy.rec.format_parser(formats, names, titles, aligned, byteorder)\n    return integral_value, parsed_data",
+    "ai_api_wrong": ["numpy.trapz", "numpy.format_parser"],
+    "line_number": [2, 3],
+    "natural_language_questions": [
+      "Why is numpy.trapz not available in 2.0?",
+      "Why is numpy.format_parser not available in 2.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "The `numpy.trapz` function was deprecated and replaced with `numpy.trapezoid` or `scipy.integrate` functions.",
+        "why_it_breaks": "Using `numpy.trapz` in NumPy 2.0 causes issues because it has been deprecated and removed.",
+        "how_to_fix": "Replace `numpy.trapz` with `numpy.trapezoid` for equivalent functionality within NumPy, or use `scipy.integrate` functions for more advanced integration needs."
+      },
+      {
+        "what_changed": "The `numpy.format_parser` class was moved from the main namespace to `numpy.rec.format_parser`.",
+        "why_it_breaks": "The code uses `numpy.format_parser`, which is no longer available in the main namespace, causing an import or attribute error.",
+        "how_to_fix": "Replace `numpy.format_parser` with `numpy.rec.format_parser` to maintain compatibility with NumPy 2.0."
+      }
+    ],
+    "reason_type": ["Deprecated", "Removed"],
+    "mcp_evidence_summary": [
+      "The `numpy.trapz` function has been deprecated in NumPy 2.0. Documentation recommends using `numpy.trapezoid` or `scipy.integrate` functions instead.",
+      "The `numpy.format_parser` class has been removed from the main NumPy namespace in version 2.0 and relocated to `numpy.rec.format_parser`."
     ]
   }
 ]

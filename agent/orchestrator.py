@@ -87,7 +87,6 @@ class Orchestrator:
             "natural_language_questions":self.raw_data['natural_language_questions'],
             "reason_type":self.raw_data['reason_type'],
             "ai_api_answer_change":self.raw_data['ai_api_answer_change'],
-            "mcp_raw":self.raw_data['mcp_raw'],
             "mcp_evidence_summary":self.raw_data['mcp_evidence_summary']
         }
 
@@ -121,14 +120,12 @@ class Orchestrator:
         result = self._extract_json(content)
         self.raw_data["ai_api_answer_change"] = result["ai_api_answer_change"] 
         self.raw_data["reason_type"] = result["reason_type"]
-        self.raw_data["mcp_raw"] = result["mcp_raw"]
         self.raw_data["mcp_evidence_summary"] = result["mcp_evidence_summary"]
         return self.raw_data
         
     def fix_function(self):
         print("fix_function")
         task = self._fix_function_get_variables()
-        # task = json.dumps(self.raw_data, ensure_ascii=False)
         resp = self.agents["fix_function"].step(str(task)) # str(task)
 
         tokens = self._extract_tokens(resp)
@@ -219,17 +216,8 @@ class OrchestratorHardPy:
         return {
             "compare_version":self.raw_data['compare_version'],
             "package":self.raw_data['package'],
-            # "solution_function":self.raw_data['solution_function'], 这里用的是 ai_api_fix_function 代替
             "ast_structure":self.raw_data['ast_structure'],
             "ai_api_fix_function":self.raw_data['ai_api_fix_function']
-            
-            # "ai_api_wrong":self.raw_data['ai_api_wrong'],
-            # "line_number":self.raw_data['line_number'],
-            # "natural_language_questions":self.raw_data['natural_language_questions'],
-            # "reason_type":self.raw_data['reason_type'],
-            # "ai_api_answer_change":self.raw_data['ai_api_answer_change'],
-            # "mcp_raw":self.raw_data['mcp_raw'],
-            # "mcp_evidence_summary":self.raw_data['mcp_evidence_summary']
         }
 
     def location_library(self):
@@ -267,7 +255,6 @@ class OrchestratorHardPy:
 
         self.raw_data.setdefault("ai_api_answer_change", []).append(result["ai_api_answer_change"])
         self.raw_data.setdefault("reason_type", []).append(result["reason_type"])
-        # self.raw_data.setdefault("mcp_raw", []).append(result["mcp_raw"])
         self.raw_data.setdefault("mcp_evidence_summary", []).append(result["mcp_evidence_summary"])
         return self.raw_data
         
@@ -280,7 +267,6 @@ class OrchestratorHardPy:
         task["natural_language_questions"] = self.raw_data["natural_language_questions"][single_api_index]
         task["reason_type"] = self.raw_data["reason_type"][single_api_index]
         task["ai_api_answer_change"] = self.raw_data["ai_api_answer_change"][single_api_index]
-        # task["mcp_raw"] = self.raw_data["mcp_raw"][single_api_index] # 这里不往里面传了
         task["mcp_evidence_summary"] = self.raw_data["mcp_evidence_summary"][single_api_index]
         
         resp = self.agents["fix_function"].step(str(task)) # str(task)

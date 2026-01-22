@@ -111,7 +111,7 @@ Choose EXACTLY ONE based ONLY on MCP evidence:
 {
   "reason_type": "Deprecated | Removed | BehaviorChange | Unknown",
 
-  "mcp_evidence_summary": "A concise but faithful summary of the relevant MCP evidence. Must be directly traceable to mcp_raw.query_docs. No new facts allowed.",
+  "mcp_evidence_summary": "A concise but faithful summary of the relevant MCP evidence. Must be directly traceable to mcp_raw query_docs. No new facts allowed.",
 
   "ai_api_answer_change": {
     "what_changed": "Evidence-backed description of what changed in the API under compare_version.",
