@@ -166,3 +166,30 @@ def integrate_unique_rows(data1, data2):
     ]
     integration_result = np.trapz(unique_rows, axis=0)
     return integration_result
+
+
+import numpy as np
+
+def integrate_unique_rows(data1, data2):
+    merged_data = np.row_stack((data1, data2))
+    unique_rows = merged_data[np.in1d(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1])), assume_unique=True).reshape(merged_data.shape[0])]
+    integration_result = np.trapz(unique_rows, axis=0)
+    return integration_result
+
+
+import numpy as np
+
+def integrate_unique_rows(data1, data2):
+    merged_data = np.vstack((data1, data2))
+    unique_rows = merged_data[np.isin(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), equal_nan=False), assume_unique=True).reshape(merged_data.shape[0])]
+    integration_result = np.trapezoid(unique_rows, axis=0)
+    return integration_result
+
+
+import numpy as np
+
+def integrate_unique_rows(data1, data2):
+    merged_data = np.vstack((data1, data2))
+    unique_rows = merged_data[np.isin(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), np.unique(merged_data.view([('', merged_data.dtype)]*merged_data.shape[1]), equal_nan=False), assume_unique=True).reshape(merged_data.shape[0])]
+    integration_result = np.trapezoid(unique_rows, axis=0)
+    return integration_result

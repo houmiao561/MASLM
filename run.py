@@ -134,23 +134,31 @@ def maslm_hard_python():
         }
 
         orch = OrchestratorHardPy(agents, sample)
+
+        # Location
         location_result = orch.location_library()
         
+        # # Answer
         for single_api_index, single_api_name in enumerate(location_result["ai_api_wrong"]):
-            # 打印出来这是第几遍循环
-            print(single_api_index)
-            print(single_api_name)
-            print()
+            print(single_api_index, single_api_name)
             answer_change_result = orch.answer_change(single_api_index)
-            print(f"answer_change_result: \n{answer_change_result}")
+            print(orch.raw_data["ai_api_answer_change"])
+            print(orch.raw_data["reason_type"])
+            print(orch.raw_data["mcp_evidence_summary"])
             orch.agents["answer_change"].clear_memory()
             print()
             print()
-
+        
+        # Fix
+        for single_api_index, single_api_name in enumerate(orch.raw_data["ai_api_wrong"]):
+            print(single_api_index, single_api_name)
+            fix_function_result = orch.fix_function(single_api_index)
+            print(orch.raw_data["ai_api_fix_function"])
+            orch.agents["fix_function"].clear_memory()
+            print()
+            print()
+        
         print(f"FINALRESULTTTT:::::\n{orch.raw_data}")
-        sys.exit()
-        fix_function_result = orch.fix_function()
-
 
         # 结果写入并print
         append_to_jsonl("output_dataset/hard_python/create_result.jsonl", fix_function_result)
@@ -169,7 +177,7 @@ if __name__ == "__main__":
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
     # 开始计时
-    # start_time = time.time()
+    start_time = time.time()
     # maslm()
     # judge_bench()
     # 结束计时
@@ -179,4 +187,8 @@ if __name__ == "__main__":
     # print(result)
 
     maslm_hard_python()
+    end_time = time.time()
+    print(f"Total time: {end_time - start_time} seconds")
+
+
 
