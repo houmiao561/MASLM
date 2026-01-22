@@ -2,8 +2,9 @@ import os
 import sys
 import time
 from ast_pre.ast_pre import extract_ast_structure
+from ast_pre.ast_pre_java import extract_java_ast_structure
 from utils import *
-from agent.orchestrator import Orchestrator,OrchestratorHardPy
+from agent.orchestrator import Orchestrator,OrchestratorHardPy,OrchestratorJava
 from agent.create_single_agent import create_agent
 from agent.judger import OrchestratorJudger
 
@@ -172,11 +173,49 @@ def maslm_hard_python():
     print(f"FINAL_TOKEN: {FINAL_TOKEN}")
     print("========================================\n")
 
+def maslm_java():
+    LOCATION_AGENT_PROMPT = txt_read_file("prompt/java/location.txt")
+    ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/java/answer.txt")
+    FINAL_TOKEN = 0
+    data = jsonl_read_file("input_dataset/test_case.jsonl")
+    
+    for index, CODE in enumerate(data):
+        print(f"Processing COOOOOODE {index}...")
+        # AST 预处理
+        ast_result = extract_java_ast_structure(CODE)
+        sample = {**CODE, **ast_result} # 拼接
+
+        # MAS启动
+        agents = {
+            "location_library": create_agent(LOCATION_AGENT_PROMPT), 
+            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-97bd7e64-9cb4-477e-a13e-51c267f58e6e"),
+        }
+
+        orch = OrchestratorJava(agents, sample)
+
+        location_result = orch.location_library()
+        print(location_result)
+    #     answer_change_result = orch.answer_change()
+    #     fix_function_result = orch.fix_function()
+
+
+        # 结果写入并print
+        append_to_jsonl("output_dataset/java/create_result.jsonl", location_result)
+        print("\n========== TOKEN USAGE SUMMARY ==========")
+        for k, v in orch.token_stats.items():
+            print(f"{k}: {v}")
+        print("========================================\n")
+        FINAL_TOKEN += orch.token_stats["total"]
+
+    print("\n========== TOKEN USAGE SUMMARY ==========")
+    print(f"FINAL_TOKEN: {FINAL_TOKEN}")
+    print("========================================\n")
+
 if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
-    start_time = time.time()
+    # start_time = time.time()
 
     # Easy Python
     # maslm()
@@ -187,10 +226,12 @@ if __name__ == "__main__":
     # print(result)
 
     # Hard Python
-    maslm_hard_python()
+    # maslm_hard_python()
 
-    end_time = time.time()
-    print(f"Total time: {end_time - start_time} seconds")
+    # end_time = time.time()
+    # print(f"Total time: {end_time - start_time} seconds")
 
+    # Java
+    maslm_java()
 
 

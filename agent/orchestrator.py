@@ -279,3 +279,81 @@ class OrchestratorHardPy:
         result = self._extract_json(content)
         self.raw_data["ai_api_fix_function"] = result["ai_api_fix_function"] # 多轮循环直接覆盖掉
         return self.raw_data
+    
+
+class OrchestratorJava:
+    def __init__(self, agents: dict, raw_data: dict):
+        self.agents = agents
+        self.raw_data = raw_data
+        self.token_stats = {
+            "location_library": 0,
+            "answer_change": 0,
+            "total": 0,
+        }
+    
+    def _extract_tokens(self, response):
+        """
+        Best-effort extraction of token usage from CAMEL response.
+        Compatible with multiple CAMEL / backend versions.
+        """
+        usage = None
+
+        if hasattr(response, "usage") and response.usage:
+            usage = response.usage
+        elif hasattr(response, "info") and response.info and "usage" in response.info:
+            usage = response.info["usage"]
+        elif hasattr(response, "model_response") and response.model_response:
+            usage = response.model_response.get("usage")
+
+        if not usage:
+            return 0
+
+        return (
+            usage.get("total_tokens", 0)
+            or usage.get("total", 0)
+            or (
+                usage.get("prompt_tokens", 0)
+                + usage.get("completion_tokens", 0)
+            )
+        )
+
+    def _extract_json(self, text: str):
+        try:
+            return json.loads(text)
+        except Exception:
+            match = re.search(r"\{.*\}", text, re.S)
+            if not match:
+                raise ValueError("No JSON found:\n" + text)
+            return json.loads(match.group())
+
+    def _get_content(self, response):
+        # 兼容不同 CAMEL 小版本
+        if hasattr(response, "msg"):
+            return response.msg.content
+        if hasattr(response, "content"):
+            return response.content
+        return str(response)
+    
+    def _location_get_variables(self):
+        print("location_get_variables")
+        return {
+            "java_code":self.raw_data['java_code'],
+            "version":"JDK11"
+        }
+    
+    def location_library(self):
+        print("location_library_java")
+        task = self._location_get_variables()
+        
+        resp = self.agents["location_library"].step(str(task)) # str(task)
+        tokens = self._extract_tokens(resp)
+        self.token_stats["location_library"] += tokens
+        self.token_stats["total"] += tokens
+
+        content = self._get_content(resp) 
+        result = self._extract_json(content)
+
+        self.raw_data["ai_api_wrong"] = result["ai_api_wrong"]
+        self.raw_data["ai_api_change"] = result["ai_api_change"]
+
+        return self.raw_data
