@@ -338,7 +338,18 @@ class OrchestratorJava:
         print("location_get_variables")
         return {
             "java_code":self.raw_data['java_code'],
-            "version":"JDK11"
+            "version":"JDK11",
+            "ast_structure":self.raw_data["ast_structure"],
+        }
+    
+    def _answer_get_variables(self):
+        print("answer_get_variables")
+        return {
+            "java_code":self.raw_data['java_code'],
+            "version":"JDK11",
+            "ast_structure":self.raw_data["ast_structure"],
+            "ai_api_wrong":self.raw_data["ai_api_wrong"],
+            "ai_api_location":self.raw_data["ai_api_location"],
         }
     
     def location_library(self):
@@ -355,4 +366,21 @@ class OrchestratorJava:
 
         self.raw_data["ai_api_wrong"] = result["ai_api_wrong"]
         self.raw_data["ai_api_location"] = result["ai_api_location"]
+        return self.raw_data
+    
+    def answer_change(self):
+        print("answer_change_java")
+        task = self._answer_get_variables()
+        
+        resp = self.agents["answer_change"].step(str(task)) # str(task)
+        tokens = self._extract_tokens(resp)
+        self.token_stats["answer_change"] += tokens
+        self.token_stats["total"] += tokens
+
+        content = self._get_content(resp) 
+        result = self._extract_json(content)
+
+        self.raw_data["ai_api_answer_change"] = result["ai_api_answer_change"] 
+        self.raw_data["reason_type"] = result["reason_type"]
+        self.raw_data["mcp_evidence_summary"] = result["mcp_evidence_summary"]
         return self.raw_data

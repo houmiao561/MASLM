@@ -13,6 +13,21 @@ def find_largest_equal_substring(arr1, arr2):
                     max_substring = arr1[i:i + length]
                     return max_substring
                 
+def find_largest_equal_substring(arr1, arr2):
+    import numpy
+    max_len = 0
+    max_substring = ''
+    for i in range(len(arr1)):
+        for j in range(len(arr2)):
+            length = 0
+            while (i + length < len(arr1) and j + length < len(arr2) and 
+            numpy.char.compare_chararrays(arr1[i + length], arr2[j + length], '==', True)):
+                length += 1
+                if length > max_len:
+                    max_len = length
+                    max_substring = arr1[i:i + length]
+                    return max_substring
+                
 def find_common_dtype_and_compute(arr1, arr2, arr3):
     type1 = arr1.dtype
     type2 = arr2.dtype

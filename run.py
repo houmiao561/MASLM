@@ -194,12 +194,10 @@ def maslm_java():
         orch = OrchestratorJava(agents, sample)
 
         location_result = orch.location_library()
-
-    #     answer_change_result = orch.answer_change()
-    #     fix_function_result = orch.fix_function()
+        answer_change_result = orch.answer_change()
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/java/create_result.jsonl", location_result)
+        append_to_jsonl("output_dataset/java/create_result.jsonl", answer_change_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")

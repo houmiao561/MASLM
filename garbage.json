@@ -1,17 +1,5 @@
 [
   {
-    "ai_api_wrong": "com.sun.jarsigner.ContentSignerParameters",
-    "ai_api_location": { "function": "getSignatureAlgorithm", "line": 6 }
-  },
-  {
-    "ai_api_wrong": "com.sun.jarsigner.ContentSignerParameters",
-    "ai_api_location": { "function": "getSignature", "line": 11 }
-  },
-  {
-    "ai_api_wrong": "com.sun.jarsigner.ContentSignerParameters",
-    "ai_api_location": { "function": "printSignerDetails", "line": 16 }
-  },
-  {
     "java_code": "import com.sun.jarsigner.ContentSignerParameters;\n\npublic class ContentSignerExample {\n\n    public String getSignatureAlgorithm(ContentSignerParameters parameters) {\n        // Assuming the ContentSignerParameters object has a method to retrieve signature algorithm\n        return parameters.getSignatureAlgorithm();\n    }\n\n    public byte[] getSignature(ContentSignerParameters parameters) {\n        // Assuming the ContentSignerParameters object has a method to retrieve the signature\n        return parameters.getSignature();\n    }\n\n    public void printSignerDetails(ContentSignerParameters parameters) {\n        // Print details using the ContentSignerParameters methods\n        System.out.println(\"Signature Algorithm: \" + getSignatureAlgorithm(parameters));\n        System.out.println(\"Signature: \" + new String(getSignature(parameters)));\n    }\n}",
     "class_name": "ContentSignerExample",
     "function_description": "The ContentSignerExample class provides methods to interact with the ContentSignerParameters API, such as retrieving and printing the signature algorithm and the signature itself.",
@@ -69,7 +57,113 @@
         ]
       }
     ],
+    "ai_api_wrong": "com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm",
+    "ai_api_location": { "function": "getSignatureAlgorithm", "line": 7 },
+    "ai_api_answer_change": {
+      "what_changed": "No documentation found.",
+      "why_it_breaks": "No documentation found.",
+      "how_to_fix": ""
+    },
+    "reason_type": "Unknown",
+    "mcp_evidence_summary": "The documentation does not provide any information about the API 'com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm'."
+  },
+  {
+    "java_code": "import com.sun.jarsigner.ContentSignerParameters;\n\npublic class CustomContentSigner {\n\n    private ContentSignerParameters params;\n\n    public CustomContentSigner(ContentSignerParameters params) {\n        this.params = params;\n    }\n\n    public byte[] signContent() throws Exception {\n        // Simulate signing content using the parameters\n        // This is a placeholder for the actual signing logic\n        byte[] content = params.getContent();\n        // A simple mock signature process (not secure, just for demonstration)\n        byte[] signature = new byte[content.length];\n        for (int i = 0; i < content.length; i++) {\n            signature[i] = (byte) (content[i] ^ 0xFF); // XOR with 0xFF as a mock operation\n        }\n        return signature;\n    }\n\n    public static void main(String[] args) throws Exception {\n        // This part of the code is for testing purposes\n        // Assuming we have some mock implementation of ContentSignerParameters\n        ContentSignerParameters mockParams = new MockContentSignerParameters();\n        CustomContentSigner signer = new CustomContentSigner(mockParams);\n        byte[] signature = signer.signContent();\n        System.out.println(\"Signature: \" + java.util.Arrays.toString(signature));\n    }\n}\n\n// Mock implementation for testing purposes\nclass MockContentSignerParameters implements ContentSignerParameters {\n\n    public byte[] getContent() {\n        // Return some dummy content\n        return \"Hello, World!\".getBytes();\n    }\n\n    // Other methods of ContentSignerParameters would be implemented here\n}",
+    "class_name": "CustomContentSigner",
+    "function_description": "The CustomContentSigner class uses the ContentSignerParameters interface to simulate the process of signing content. It includes a constructor that accepts ContentSignerParameters and a method signContent that performs a mock signing operation on the provided content. The class also includes a main method for testing purposes, using a mock implementation of ContentSignerParameters.",
+    "signature": "com.sun.jarsigner.ContentSignerParameters",
+    "update": "This class has been deprecated.",
+    "update_type": "Deprecated",
+    "api_id": "m4WvZXSdVU",
+    "code_id": "KRpXZAYda4",
+    "imports": {
+      "ContentSignerParameters": "com.sun.jarsigner.ContentSignerParameters"
+    },
+    "ast_structure": [
+      {
+        "function_name": "signContent",
+        "lineno": 11,
+        "api_calls": [
+          { "api": "params.getContent", "lineno": 14, "context": "expression" }
+        ]
+      },
+      {
+        "function_name": "main",
+        "lineno": 23,
+        "api_calls": [
+          {
+            "api": "signer.signContent",
+            "lineno": 28,
+            "context": "expression"
+          },
+          {
+            "api": "java.lang.System.out.println",
+            "lineno": 29,
+            "context": "expression"
+          },
+          {
+            "api": "java.util.Arrays.toString",
+            "lineno": 29,
+            "context": "expression"
+          }
+        ]
+      },
+      {
+        "function_name": "getContent",
+        "lineno": 36,
+        "api_calls": [
+          { "api": "getBytes", "lineno": 38, "context": "expression" }
+        ]
+      }
+    ],
     "ai_api_wrong": "com.sun.jarsigner.ContentSignerParameters",
-    "ai_api_location": { "function": "getSignatureAlgorithm", "line": 6 }
+    "ai_api_location": { "function": "main", "line": 23 },
+    "ai_api_answer_change": {
+      "what_changed": "No evidence found regarding the status or behavior of 'com.sun.jarsigner.ContentSignerParameters'.",
+      "why_it_breaks": "No documentation indicates why this API may be problematic.",
+      "how_to_fix": ""
+    },
+    "reason_type": "Unknown",
+    "mcp_evidence_summary": "The documentation retrieved does not mention 'com.sun.jarsigner.ContentSignerParameters'. Instead, it provides information about signing PDFs using PKCS11 hardware tokens and configuring PKCS#11 security providers."
+  },
+  {
+    "java_code": "import com.sun.jarsigner.ContentSignerParameters;\n\npublic class OldApiExample {\n\n    public void useContentSignerParameters(ContentSignerParameters parameters) {\n        // This method would interact with the parameters\n        // Since ContentSignerParameters is part of an old API, we demonstrate usage\n        // without performing any actual operations, as it requires specific context\n\n        // Example of accessing some methods (hypothetical)\n        String signatureAlgorithm = parameters.getSignatureAlgorithm();\n        System.out.println(\"Signature Algorithm: \" + signatureAlgorithm);\n\n        // Assuming there are other methods to interact with the parameters\n        // Example: byte[] data = parameters.getContent();\n        // System.out.println(\"Content Length: \" + data.length);\n    }\n}",
+    "class_name": "OldApiExample",
+    "function_description": "This class, OldApiExample, contains a method useContentSignerParameters which demonstrates the use of the ContentSignerParameters interface from the old API com.sun.jarsigner. The method hypothetically accesses methods such as getSignatureAlgorithm() and getContent() to show how one might interact with the content signing parameters. Note: The specific methods used here are hypothetical and for illustrative purposes given the context.",
+    "signature": "com.sun.jarsigner.ContentSignerParameters",
+    "update": "This class has been deprecated.",
+    "update_type": "Deprecated",
+    "api_id": "m4WvZXSdVU",
+    "code_id": "1KrlK1fucS",
+    "imports": {
+      "ContentSignerParameters": "com.sun.jarsigner.ContentSignerParameters"
+    },
+    "ast_structure": [
+      {
+        "function_name": "useContentSignerParameters",
+        "lineno": 5,
+        "api_calls": [
+          {
+            "api": "com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm",
+            "lineno": 11,
+            "context": "expression"
+          },
+          {
+            "api": "java.lang.System.out.println",
+            "lineno": 12,
+            "context": "expression"
+          }
+        ]
+      }
+    ],
+    "ai_api_wrong": "com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm",
+    "ai_api_location": { "function": "useContentSignerParameters", "line": 11 },
+    "ai_api_answer_change": {
+      "what_changed": "No information available.",
+      "why_it_breaks": "No information available.",
+      "how_to_fix": ""
+    },
+    "reason_type": "Unknown",
+    "mcp_evidence_summary": "The documentation does not provide any information about the status or behavior of the API 'com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm'."
   }
 ]
