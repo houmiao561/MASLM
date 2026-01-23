@@ -1,5 +1,5 @@
 import javalang
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 
 def extract_java_ast_structure(CODE: Dict[str, Any]) -> Dict[str, Any]:
@@ -16,20 +16,20 @@ def extract_java_ast_structure(CODE: Dict[str, Any]) -> Dict[str, Any]:
 class JavaASTPreprocessor:
     def __init__(self):
         self.result: Dict[str, Any] = {
-            "imports": [],
+            "imports": {},          # simpleName -> fullName
             "ast_structure": []
         }
         self._current_method = None
-        self._visited = set()  # 跟踪已访问的节点，避免死循环
+        self._current_locals = {}  # varName -> fullType
+        self._visited = set()
 
     # ---------- visitor 入口 ----------
     def visit(self, node):
-        # 如果已经访问过该节点，则跳过
         node_id = id(node)
         if node_id in self._visited:
             return
         self._visited.add(node_id)
-        
+
         method_name = f"visit_{type(node).__name__}"
         visitor = getattr(self, method_name, self.generic_visit)
         visitor(node)
@@ -45,8 +45,10 @@ class JavaASTPreprocessor:
 
     # ---------- import ----------
     def visit_Import(self, node: javalang.tree.Import):
-        if node.path not in self.result["imports"]:
-            self.result["imports"].append(node.path)
+        # e.g. com.sun.jarsigner.ContentSignerParameters
+        full = node.path
+        simple = full.split(".")[-1]
+        self.result["imports"][simple] = full
 
     # ---------- class ----------
     def visit_ClassDeclaration(self, node):
@@ -62,33 +64,73 @@ class JavaASTPreprocessor:
         self.result["ast_structure"].append(func_info)
         self._current_method = func_info
 
+        # 构建参数类型表
+        self._current_locals = {}
+        for param in node.parameters:
+            if param.type:
+                type_name = self._resolve_type(param.type)
+                self._current_locals[param.name] = type_name
+
         self.generic_visit(node)
 
         self._current_method = None
+        self._current_locals = {}
 
     # ---------- API 调用 ----------
     def visit_MethodInvocation(self, node: javalang.tree.MethodInvocation):
         if self._current_method is None:
             return
 
-        api_name = self._resolve_call_name(node)
+        api_fqn = self._resolve_api_fqn(node)
+
         self._current_method["api_calls"].append({
-            "api": api_name,
+            "api": api_fqn,
             "lineno": node.position.line if node.position else None,
             "context": self._infer_context(node)
         })
 
         self.generic_visit(node)
 
-    # ---------- System.out.println 特判 ----------
-    def visit_MemberReference(self, node):
-        self.generic_visit(node)
-
     # ---------- 工具函数 ----------
-    def _resolve_call_name(self, node: javalang.tree.MethodInvocation) -> str:
+    def _resolve_type(self, type_node):
+        """
+        将类型节点解析为全限定类名（如果能）
+        """
+        name = type_node.name
+        return self.result["imports"].get(name, name)
+    
+    def _resolve_api_fqn(self, node: javalang.tree.MethodInvocation) -> str:
+        """
+        parameters.getSignatureAlgorithm
+        -> com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm
+
+        System.out.println
+        -> java.lang.System.out.println
+        """
         if node.qualifier:
-            return f"{node.qualifier}.{node.member}"
+            qualifier = node.qualifier
+
+            # 情况 1：参数 / 局部变量
+            if qualifier in self._current_locals:
+                return f"{self._current_locals[qualifier]}.{node.member}"
+
+            # 情况 2：System.out.println / 类似链式访问
+            if "." in qualifier:
+                head = qualifier.split(".")[0]
+
+                # System.out.println
+                if head == "System":
+                    return f"java.lang.{qualifier}.{node.member}"
+
+            # 情况 3：直接类名静态调用
+            if qualifier in self.result["imports"]:
+                return f"{self.result['imports'][qualifier]}.{node.member}"
+
+            # fallback
+            return f"{qualifier}.{node.member}"
+
         return node.member
+
 
     def _infer_context(self, node):
         parent = getattr(node, "parent", None)

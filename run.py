@@ -194,10 +194,9 @@ def maslm_java():
         orch = OrchestratorJava(agents, sample)
 
         location_result = orch.location_library()
-        print(location_result)
+
     #     answer_change_result = orch.answer_change()
     #     fix_function_result = orch.fix_function()
-
 
         # 结果写入并print
         append_to_jsonl("output_dataset/java/create_result.jsonl", location_result)

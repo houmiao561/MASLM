@@ -354,6 +354,5 @@ class OrchestratorJava:
         result = self._extract_json(content)
 
         self.raw_data["ai_api_wrong"] = result["ai_api_wrong"]
-        self.raw_data["ai_api_change"] = result["ai_api_change"]
-
+        self.raw_data["ai_api_location"] = result["ai_api_location"]
         return self.raw_data
