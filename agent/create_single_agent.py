@@ -15,7 +15,7 @@ def create_agent(
         model_type="deepseek-ai/DeepSeek-V3",
         model_config_dict={
             "temperature": 0.7,
-            "max_tokens": 4096,
+            "max_tokens": 8192,
         },
     )
     mcp_client = MCPClient(
