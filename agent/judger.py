@@ -83,11 +83,38 @@ class OrchestratorJudger:
             "ai_api_wrong":self.raw_data['ai_api_wrong'],
             "ai_api_answer_change":self.raw_data['ai_api_answer_change']
         }
+    
+    def _judger_get_java_variables(self):
+        print("_judger_get_java_variables")
+        return {
+            "java_code":self.raw_data['java_code'],
+            "signature":self.raw_data['signature'],
+            "update":self.raw_data['update'],
+            "ai_api_wrong":self.raw_data['ai_api_wrong'],
+            "ai_api_answer_change":self.raw_data['ai_api_answer_change']
+        }
 
     def judgeFunction(self):
         print("judgeFunction")
         # 这里的 task 就是 prompt 中的==========User Input==========部分的输入，而且task是字符串类型，因为LLM只能读这个
         task = self._judger_get_variables()
+        resp = self.agents["judger"].step(str(task)) # str(task)
+
+        tokens = self._extract_tokens(resp)
+        self.token_stats["judger"] += tokens
+        self.token_stats["total"] += tokens
+
+        content = self._get_content(resp) # content 是 str 类型
+        result = self._extract_json(content)
+        self.raw_data["judge_reason"] = result["judge_reason"]
+        self.raw_data["judge_locate_answer"] = result["judge_locate_answer"]
+        self.raw_data["judge_update_answer"] = result["judge_update_answer"]
+        return self.raw_data
+    
+    def judge_java_function(self):
+        print("judge_java_function")
+        # 这里的 task 就是 prompt 中的==========User Input==========部分的输入，而且task是字符串类型，因为LLM只能读这个
+        task = self._judger_get_java_variables()
         resp = self.agents["judger"].step(str(task)) # str(task)
 
         tokens = self._extract_tokens(resp)

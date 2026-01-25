@@ -208,11 +208,39 @@ def maslm_java():
     print(f"FINAL_TOKEN: {FINAL_TOKEN}")
     print("========================================\n")
 
+def judge_java_bench():
+    JUDGE_AGENT_PROMPT = txt_read_file("prompt/java/judger.txt")
+    FINAL_TOKEN = 0
+    data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/java/create_result.jsonl")
+    for index, CODE in enumerate(data):
+        print(f"JUDGE COOOOOODE {index}...")
+        # MAS启动
+        agents = {
+            "judger": create_agent(JUDGE_AGENT_PROMPT), 
+        }
+        orch = OrchestratorJudger(agents, CODE)
+        # MAS具体执行三个Agent
+        
+        judge_result = orch.judge_java_function()
+
+        # 结果写入并print
+        append_to_jsonl("output_dataset/java/judge_result.jsonl", judge_result)
+        print("\n========== TOKEN USAGE SUMMARY ==========")
+        for k, v in orch.token_stats.items():
+            print(f"{k}: {v}")
+        print("========================================\n")
+        FINAL_TOKEN += orch.token_stats["total"]
+
+    print("\n========== TOKEN USAGE SUMMARY ==========")
+    print(f"FINAL_TOKEN: {FINAL_TOKEN}")
+    print("========================================\n")
+
+
 if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
-    # start_time = time.time()
+    start_time = time.time()
 
     # Easy Python
     # maslm()
@@ -225,10 +253,14 @@ if __name__ == "__main__":
     # Hard Python
     # maslm_hard_python()
 
-    # end_time = time.time()
-    # print(f"Total time: {end_time - start_time} seconds")
-
     # Java
-    maslm_java()
+    # maslm_java()
 
+    # 判断结果
+    judge_java_bench()
+    result = compute_avg("output_dataset/java/judge_result.jsonl")
+    print(result)
+
+    end_time = time.time()
+    print(f"Total time: {end_time - start_time} seconds")
 

@@ -165,5 +165,53 @@
     },
     "reason_type": "Unknown",
     "mcp_evidence_summary": "The documentation does not provide any information about the status or behavior of the API 'com.sun.jarsigner.ContentSignerParameters.getSignatureAlgorithm'."
+  },
+  {
+    "java_code": "import com.sun.javadoc.Parameter;\n\npublic class ParameterExample {\n    public static void main(String[] args) {\n        // Example usage of Parameter class\n        // Since Parameter is an abstract class, we cannot instantiate it directly.\n        // This example assumes a context where Parameters are provided, such as within a Doclet.\n        // This is a hypothetical example, as the actual usage requires a more complex setup involving Doclets.\n\n        // Hypothetical method to demonstrate usage\n        printParameterInfo(null);\n    }\n\n    public static void printParameterInfo(Parameter[] parameters) {\n        if (parameters == null || parameters.length == 0) {\n            System.out.println(\"No parameters available.\");\n            return;\n        }\n\n        for (Parameter parameter : parameters) {\n            System.out.println(\"Parameter Name: \" + parameter.name());\n            System.out.println(\"Parameter Type: \" + parameter.typeName());\n        }\n    }\n}",
+    "class_name": "ParameterExample",
+    "function_description": "This class demonstrates the usage of the com.sun.javadoc.Parameter class, which is part of the old JavaDoc API. It includes a method to print information about parameters, such as their names and types. The method accepts an array of Parameters and iterates through them to display their details. Note that this example assumes a context where the Parameters are provided, such as within a JavaDoc Doclet environment.",
+    "signature": "com.sun.javadoc.Parameter",
+    "update": "The declarations in this package have been superseded by those in the package jdk.javadoc.doclet. For more information, see the Migration Guide in the documentation for that package.",
+    "update_type": "Deprecated",
+    "api_id": "ExNZCJeOAg",
+    "code_id": "D75nYZaea0",
+    "imports": { "Parameter": "com.sun.javadoc.Parameter" },
+    "ast_structure": [
+      {
+        "function_name": "main",
+        "lineno": 4,
+        "api_calls": [
+          { "api": "printParameterInfo", "lineno": 11, "context": "expression" }
+        ]
+      },
+      {
+        "function_name": "printParameterInfo",
+        "lineno": 14,
+        "api_calls": [
+          {
+            "api": "java.lang.System.out.println",
+            "lineno": 16,
+            "context": "expression"
+          },
+          {
+            "api": "java.lang.System.out.println",
+            "lineno": 21,
+            "context": "expression"
+          },
+          { "api": "parameter.name", "lineno": 21, "context": "expression" },
+          {
+            "api": "java.lang.System.out.println",
+            "lineno": 22,
+            "context": "expression"
+          },
+          { "api": "parameter.typeName", "lineno": 22, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_wrong": "com.sun.javadoc.Parameter",
+    "ai_api_location": { "function": "printParameterInfo", "line": 21 },
+    "ai_api_answer_change": "The declarations in this package have been superseded by those in the package jdk.javadoc.doclet. For more information, see the Migration Guide in the documentation for that package.",
+    "reason_type": "Deprecated",
+    "mcp_evidence_summary": null
   }
 ]
