@@ -173,6 +173,35 @@ def maslm_hard_python():
     print(f"FINAL_TOKEN: {FINAL_TOKEN}")
     print("========================================\n")
 
+def judge_hard_python_bench():
+    JUDGE_AGENT_PROMPT = txt_read_file("prompt/hard_python/judger.txt")
+    FINAL_TOKEN = 0
+    data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/hard_python/create_result.jsonl")
+    for index, CODE in enumerate(data):
+        print(f"JUDGE COOOOOODE {index}...")
+        # MAS启动
+        agents = {
+            "judger": create_agent(JUDGE_AGENT_PROMPT), 
+        }
+        orch = OrchestratorJudger(agents, CODE)
+        # MAS具体执行三个Agent
+        
+        judge_result = orch.judge_hardpy_function()
+        print(judge_result)
+
+        # 结果写入并print
+        append_to_jsonl("output_dataset/hard_python/judge_result.jsonl", judge_result)
+        print("\n========== TOKEN USAGE SUMMARY ==========")
+        for k, v in orch.token_stats.items():
+            print(f"{k}: {v}")
+        print("========================================\n")
+        FINAL_TOKEN += orch.token_stats["total"]
+
+    print("\n========== TOKEN USAGE SUMMARY ==========")
+    print(f"FINAL_TOKEN: {FINAL_TOKEN}")
+    print("========================================\n")
+
+
 def maslm_java():
     LOCATION_AGENT_PROMPT = txt_read_file("prompt/java/location.txt")
     ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/java/answer.txt")
@@ -237,7 +266,8 @@ def judge_java_bench():
 
 
 if __name__ == "__main__":
-    os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
+    # os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
+    os.environ["OPENAI_API_KEY"] = "sk-hcrnaxosyeekarbqyawmjaidilagfbvjgljmvphsfrtevygk"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
     start_time = time.time()
@@ -253,13 +283,19 @@ if __name__ == "__main__":
     # Hard Python
     # maslm_hard_python()
 
+    # 判断结果
+    judge_hard_python_bench()
+    result = compute_avg("output_dataset/hard_python/judge_result.jsonl")
+    print(result)
+    
+
     # Java
     # maslm_java()
 
     # 判断结果
-    judge_java_bench()
-    result = compute_avg("output_dataset/java/judge_result.jsonl")
-    print(result)
+    # judge_java_bench()
+    # result = compute_avg("output_dataset/java/judge_result.jsonl")
+    # print(result)
 
     end_time = time.time()
     print(f"Total time: {end_time - start_time} seconds")

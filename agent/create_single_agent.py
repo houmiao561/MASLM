@@ -80,7 +80,8 @@ def create_agent(
 
 
 if __name__ == "__main__":
-    os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
+    # os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
+    os.environ["OPENAI_API_KEY"] = "sk-hcrnaxosyeekarbqyawmjaidilagfbvjgljmvphsfrtevygk"
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
     
     SYSTEM_PROMPT = """

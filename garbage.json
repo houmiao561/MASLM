@@ -213,5 +213,68 @@
     "ai_api_answer_change": "The declarations in this package have been superseded by those in the package jdk.javadoc.doclet. For more information, see the Migration Guide in the documentation for that package.",
     "reason_type": "Deprecated",
     "mcp_evidence_summary": null
+  },
+  {
+    "solution_function": "def calculate_integral_and_parse_data(data, x_values=None, dx=1.0, axis=-1, formats=None, names=None, titles=None, aligned=False, byteorder=None):\n    integral_value = numpy.trapz(data, x=x_values, dx=dx, axis=axis)\n    parsed_data = numpy.format_parser(formats, names, titles, aligned, byteorder)\n    return integral_value, parsed_data",
+    "solution_signature": "calculate_integral_and_parse_data(data: numpy.ndarray, x_values: numpy.ndarray = None, dx: float = 1.0, axis: int = -1, formats: list = None, names: list = None, titles: list = None, aligned: bool = False, byteorder: str = None) -> tuple",
+    "problem": "Please use python code to help me with a function that calculates the numerical integral of an array of data using the trapezoidal rule and also parses the format of data using the numpy library. The function should take the following inputs: a numpy.ndarray 'data' representing the y-values of the data to be integrated, an optional numpy.ndarray 'x_values' for x-values of the data or a float 'dx' for spacing between the y-values, an int 'axis' to specify the axis along which to integrate, a list 'formats' to specify the format of the data, a list 'names' for the names of the fields, a list 'titles' for the titles of the fields, a bool 'aligned' to specify if the data should be aligned, and a str 'byteorder' to specify the byte order. The function should return a tuple where the first element is a float representing the integral value, and the second element is the parsed data format.",
+    "package": "numpy",
+    "combine_id": "EnbuzRInAE",
+    "api_num": 2,
+    "import": "import numpy",
+    "signature_list": [
+      "numpy.trapz(y, x=None, dx=1.0, axis=-1)->float",
+      "np.format_parser(formats, names, titles, aligned=False, byteorder=None)"
+    ],
+    "doc_list": [
+      "Integrate along the given axis using the composite trapezoidal rule.If x is provided, the integration happens in sequence along its elements - they are not sorted.",
+      "np.format_parser was used to parse format descriptions for creating custom record data types."
+    ],
+    "update_list": [
+      "numpy.trapz has been removed since numpy 2.0 version, use numpy.trapezoid instead.",
+      "np.format_parser has been moved to np.rec for better organization within the record array utilities."
+    ],
+    "version_type": "low",
+    "code_id": "S0SgAAjXCe",
+    "origin_version": "1.26",
+    "compare_version": "2.0",
+    "case": "case1:numpy.array([1, 2, 3, 4]), None, 1.0, -1, ['f'], ['data_points'], ['Data Points'], False, None,\ncase2:numpy.array([[1, 2, 3], [4, 5, 6]]), numpy.array([0, 1, 2]), 1.0, 0, ['f', 'f'], ['field1', 'field2'], ['First Field', 'Second Field'], True, '>',\ncase3:numpy.array([10, 20, 30, 40, 50]), None, 2.0, -1, ['i'], ['data_points'], ['Data Points'], False, '<'",
+    "solution_function_script": "```python\nimport numpy \n\ndef calculate_integral_and_parse_data(data, x_values=None, dx=1.0, axis=-1, formats=None, names=None, titles=None, aligned=False, byteorder=None):\n    integral_value = numpy.trapz(data, x=x_values, dx=dx, axis=axis)\n    parsed_data = numpy.format_parser(formats, names, titles, aligned, byteorder)\n    return integral_value, parsed_data\n\n# Input data\ntest_data = [\n    (numpy.array([1, 2, 3, 4]), None, 1.0, -1, ['f'], ['data_points'], ['Data Points'], False, None),\n    (numpy.array([[1, 2, 3], [4, 5, 6]]), numpy.array([0, 1, 2]), 1.0, 0, ['f', 'f'], ['field1', 'field2'], ['First Field', 'Second Field'], True, '>'),\n    (numpy.array([10, 20, 30, 40, 50]), None, 2.0, -1, ['i'], ['data_points'], ['Data Points'], False, '<')\n]\n\nfor data in test_data:\n    try:\n        result = calculate_integral_and_parse_data(*data)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "(7.5, <numpy.format_parser object at 0x7f3d62217630>)\n(array([5., 7., 9.]), <numpy.format_parser object at 0x7f3d622a09e8>)\n(240.0, <numpy.format_parser object at 0x7f3d62217630>)\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "calculate_integral_and_parse_data",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "numpy.trapz", "lineno": 2, "context": "expression" },
+          { "api": "numpy.format_parser", "lineno": 3, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_fix_function": "def calculate_integral_and_parse_data(data, x_values=None, dx=1.0, axis=-1, formats=None, names=None, titles=None, aligned=False, byteorder=None):\n    integral_value = numpy.trapezoid(data, x=x_values, dx=dx, axis=axis)\n    parsed_data = numpy.rec.format_parser(formats, names, titles, aligned, byteorder)\n    return integral_value, parsed_data",
+    "ai_api_wrong": ["numpy.trapz", "numpy.format_parser"],
+    "line_number": [2, 3],
+    "natural_language_questions": [
+      "Why is numpy.trapz not available in 2.0?",
+      "Why is numpy.format_parser not available in 2.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "The `numpy.trapz` function was deprecated and replaced with `numpy.trapezoid` or `scipy.integrate` functions.",
+        "why_it_breaks": "Using `numpy.trapz` in NumPy 2.0 causes issues because it has been deprecated and removed.",
+        "how_to_fix": "Replace `numpy.trapz` with `numpy.trapezoid` for equivalent functionality within NumPy, or use `scipy.integrate` functions for more advanced integration needs."
+      },
+      {
+        "what_changed": "The `numpy.format_parser` class was moved from the main namespace to `numpy.rec.format_parser`.",
+        "why_it_breaks": "The code uses `numpy.format_parser`, which is no longer available in the main namespace, causing an import or attribute error.",
+        "how_to_fix": "Replace `numpy.format_parser` with `numpy.rec.format_parser` to maintain compatibility with NumPy 2.0."
+      }
+    ],
+    "reason_type": ["Deprecated", "Removed"],
+    "mcp_evidence_summary": [
+      "The `numpy.trapz` function has been deprecated in NumPy 2.0. Documentation recommends using `numpy.trapezoid` or `scipy.integrate` functions instead.",
+      "The `numpy.format_parser` class has been removed from the main NumPy namespace in version 2.0 and relocated to `numpy.rec.format_parser`."
+    ]
   }
 ]

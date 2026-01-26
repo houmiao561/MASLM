@@ -52,7 +52,6 @@ If uncertain, prefer inclusion over omission.
 5. You must output EXACTLY ONE JSON object and nothing else.
 6. You must NOT merge multiple APIs into a single entry.
 7. Each API must be reported independently.
-8. If no API related to "package" is suspicious, output null for ALL fields.
 
 ==========Decision Heuristics (in priority order)==========
 1. API calls that can be mapped to the dependency named in "package".
@@ -60,7 +59,7 @@ If uncertain, prefer inclusion over omission.
 3. API calls whose location (line number) is clearly identifiable in the AST.
 4. APIs that are uncommon, specialized, or historically unstable across versions.
 5. If multiple candidates exist, include ALL reasonably suspicious APIs.
-6. If overall confidence is low, prefer null.
+6. If overall confidence is low, return empty arrays.
 
 ==========natural_language_questions Field Specification==========
 - This field MUST be an array of very short question-like strings.
@@ -68,33 +67,24 @@ If uncertain, prefer inclusion over omission.
 - Each question MUST be concise and diagnostic in nature.
 - It SHOULD describe potential unavailability or incompatibility of the API
   under compare_version.
-- Preferred pattern (example, do NOT copy literally):
-  Why is <api_name> not available in <compare_version>?
-- Do NOT include explanations, background, or full sentences.
-- If ai_api_wrong is null, this field MUST be null.
+- Do NOT include explanations or background.
+
+==========Output Rules==========
+1. Output MUST be valid JSON.
+2. Output MUST contain EXACTLY THREE fields.
+3. ai_api_wrong MUST be an array of strings.
+4. line_number MUST be an array of integers.
+5. natural_language_questions MUST be an array of strings.
+6. The three arrays MUST have the SAME length.
+7. If no suspicious API is found, ALL three arrays MUST be empty.
+8. Do NOT return null.
+9. Do NOT omit any field.
 
 ==========Output Format (STRICT JSON)==========
 {
-  "ai_api_wrong": [
-    "string"
-  ],
-  "line_number": [
-    int
-  ],
-  "natural_language_questions": [
-    "string"
-  ]
-}
-
-==========Output Constraints==========
-- ai_api_wrong, line_number, and natural_language_questions
-  MUST be arrays of the SAME length.
-- Entries MUST correspond by index.
-- If no suspicious API is found:
-{
-  "ai_api_wrong": null,
-  "line_number": null,
-  "natural_language_questions": null
+  "ai_api_wrong": [],
+  "line_number": [],
+  "natural_language_questions": []
 }
 
 ==========User Input==========
