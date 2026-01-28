@@ -13,8 +13,7 @@ def maslm():
     ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/answer.txt")
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
     FINAL_TOKEN = 0
-    data = jsonl_read_file("input_dataset/test_case.jsonl")
-    data = data[:50]
+    data = jsonl_read_file("input_dataset/easy_code.jsonl")
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -38,7 +37,7 @@ def maslm():
 
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/easy_python/create_result.jsonl", fix_function_result)
+        append_to_jsonl("output_dataset/easy_python/create_result_ALL.jsonl", fix_function_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
@@ -206,8 +205,12 @@ def maslm_java():
     LOCATION_AGENT_PROMPT = txt_read_file("prompt/java/location.txt")
     ANSWER_CHANGE_AGENT_PROMPT = txt_read_file("prompt/java/answer.txt")
     FINAL_TOKEN = 0
-    data = jsonl_read_file("input_dataset/test_case.jsonl")
-    
+    data = jsonl_read_file("input_dataset/java_code.jsonl")
+    data = data[150:]
+    # data = data[50:52]
+    # 这里是两个，jsonl中的51和52
+    # print(data)
+    # sys.exit()
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -226,7 +229,7 @@ def maslm_java():
         answer_change_result = orch.answer_change()
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/java/create_result.jsonl", answer_change_result)
+        append_to_jsonl("output_dataset/java/create_result_ALL_si_flow.jsonl", answer_change_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
@@ -240,7 +243,8 @@ def maslm_java():
 def judge_java_bench():
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/java/judger.txt")
     FINAL_TOKEN = 0
-    data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/java/create_result.jsonl")
+    data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/java/create_result_ALL_si_flow.jsonl")
+    data = data[150:]
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
@@ -253,7 +257,7 @@ def judge_java_bench():
         judge_result = orch.judge_java_function()
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/java/judge_result.jsonl", judge_result)
+        append_to_jsonl("output_dataset/java/judge_result_ALL_si_flow.jsonl", judge_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
@@ -266,8 +270,12 @@ def judge_java_bench():
 
 
 if __name__ == "__main__":
-    # os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl"
-    os.environ["OPENAI_API_KEY"] = "sk-hcrnaxosyeekarbqyawmjaidilagfbvjgljmvphsfrtevygk"
+    # os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl" # 自己的硅基流动
+    os.environ["OPENAI_API_KEY"] = "sk-hcrnaxosyeekarbqyawmjaidilagfbvjgljmvphsfrtevygk" # lxb的硅基流动
+    # os.environ["OPENAI_API_KEY"] = "sk-c44d67fe2596419d8ece2b648c2064c4" # DS官网
+
+    # os.environ["OPENAI_API_BASE_URL"] = "https://api.deepseek.com/"
+
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
     start_time = time.time()
@@ -284,19 +292,18 @@ if __name__ == "__main__":
     # maslm_hard_python()
 
     # 判断结果
-    judge_hard_python_bench()
-    result = compute_avg("output_dataset/hard_python/judge_result.jsonl")
-    print(result)
+    # judge_hard_python_bench()
+    # result = compute_avg("output_dataset/hard_python/judge_result.jsonl")
+    # print(result)
     
 
     # Java
-    # maslm_java()
+    maslm_java()
 
     # 判断结果
-    # judge_java_bench()
-    # result = compute_avg("output_dataset/java/judge_result.jsonl")
-    # print(result)
+    judge_java_bench()
+    result = compute_avg("output_dataset/java/judge_result_ALL_si_flow.jsonl")
+    print(result)
 
     end_time = time.time()
     print(f"Total time: {end_time - start_time} seconds")
-
