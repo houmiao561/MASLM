@@ -14,6 +14,7 @@ def maslm():
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
     FINAL_TOKEN = 0
     data = jsonl_read_file("input_dataset/easy_code.jsonl")
+    data = data[246:250]
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -23,7 +24,8 @@ def maslm():
         # MAS启动
         agents = {
             "location_library": create_agent(LOCATION_AGENT_PROMPT), 
-            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-97bd7e64-9cb4-477e-a13e-51c267f58e6e"),
+            # "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-97bd7e64-9cb4-477e-a13e-51c267f58e6e"), # hm的
+            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-2d508d17-c205-48b6-a173-db2906d9d565"), # 114的Google
             "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
         }
 
@@ -51,11 +53,11 @@ def maslm():
 def judge_bench():
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/easy_python/judger.txt")
     FINAL_TOKEN = 0
-    data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/easy_python/create_result.jsonl")
-    print(len(data))
+    data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/easy_python/create_result_ALL.jsonl")
+    # print(len(data))
     # sys.exit()
     # 选择前50个
-    data = data[:50]
+    data = data[200:]
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
@@ -69,7 +71,7 @@ def judge_bench():
         print(judge_result)
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/easy_python/judge_result_change_prompt.jsonl", judge_result)
+        append_to_jsonl("output_dataset/easy_python/judge_result_ALL.jsonl", judge_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
@@ -282,11 +284,12 @@ if __name__ == "__main__":
 
     # Easy Python
     # maslm()
+    # ctx7sk-2d508d17-c205-48b6-a173-db2906d9d565
 
     # 判断结果
-    # judge_bench()
-    # result = compute_avg("output_dataset/easy_python/judge_result_change_prompt.jsonl")
-    # print(result)
+    judge_bench()
+    result = compute_avg("output_dataset/easy_python/judge_result_ALL.jsonl")
+    print(result)
 
     # Hard Python
     # maslm_hard_python()
@@ -298,12 +301,12 @@ if __name__ == "__main__":
     
 
     # Java
-    maslm_java()
+    # maslm_java()
 
     # 判断结果
-    judge_java_bench()
-    result = compute_avg("output_dataset/java/judge_result_ALL_si_flow.jsonl")
-    print(result)
+    # judge_java_bench()
+    # result = compute_avg("output_dataset/java/judge_result_ALL_si_flow.jsonl")
+    # print(result)
 
     end_time = time.time()
     print(f"Total time: {end_time - start_time} seconds")
