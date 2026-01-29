@@ -14,7 +14,7 @@ def maslm():
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/easy_python/fix_function.txt")
     FINAL_TOKEN = 0
     data = jsonl_read_file("input_dataset/easy_code.jsonl")
-    data = data[246:250]
+    data = data[367:]
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -57,7 +57,7 @@ def judge_bench():
     # print(len(data))
     # sys.exit()
     # 选择前50个
-    data = data[200:]
+    data = data[300:]
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
@@ -273,7 +273,7 @@ def judge_java_bench():
 
 if __name__ == "__main__":
     # os.environ["OPENAI_API_KEY"] = "sk-rttlzkrvwxmfnolcmadlkeczxxnkmwolfprvyfnfwpfursjl" # 自己的硅基流动
-    os.environ["OPENAI_API_KEY"] = "sk-hcrnaxosyeekarbqyawmjaidilagfbvjgljmvphsfrtevygk" # lxb的硅基流动
+    os.environ["OPENAI_API_KEY"] = "sk-lhwlcbtphqsthcxfgfalmmphkjjvvttvdmhjkbhzryosigbc" # lxb的硅基流动
     # os.environ["OPENAI_API_KEY"] = "sk-c44d67fe2596419d8ece2b648c2064c4" # DS官网
 
     # os.environ["OPENAI_API_BASE_URL"] = "https://api.deepseek.com/"
@@ -287,8 +287,8 @@ if __name__ == "__main__":
     # ctx7sk-2d508d17-c205-48b6-a173-db2906d9d565
 
     # 判断结果
-    judge_bench()
-    result = compute_avg("output_dataset/easy_python/judge_result_ALL.jsonl")
+    # judge_bench()
+    result = compute_avg("output_dataset/easy_python/judge_result_baseline.jsonl")
     print(result)
 
     # Hard Python
