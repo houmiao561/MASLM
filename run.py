@@ -285,7 +285,7 @@ if __name__ == "__main__":
 
     os.environ["OPENAI_API_BASE_URL"] = "https://api.siliconflow.cn/v1"
 
-    start_time = time.time()
+    # start_time = time.time()
 
     # Easy Python
     # maslm()
@@ -293,16 +293,16 @@ if __name__ == "__main__":
 
     # 判断结果
     # judge_bench()
-    # result = compute_avg("output_dataset/easy_python/judge_result_ALL.jsonl")
-    # print(result)
+    result_easy = compute_avg("output_dataset/easy_python/judge_result_ALL.jsonl")
+    print(f"""Easy Python: {result_easy}\n""")
 
     # Hard Python
     # maslm_hard_python()
 
     # 判断结果
-    judge_hard_python_bench()
-    result = compute_avg("output_dataset/hard_python/judge_result.jsonl")
-    print(result)
+    # judge_hard_python_bench()
+    result_hard = compute_avg("output_dataset/hard_python/judge_result.jsonl")
+    print(f"""Hard Python: {result_hard}\n""")
     
 
     # Java
@@ -310,8 +310,8 @@ if __name__ == "__main__":
 
     # 判断结果
     # judge_java_bench()
-    # result = compute_avg("output_dataset/java/judge_result_ALL_si_flow.jsonl")
-    # print(result)
+    result_java = compute_avg("output_dataset/java/judge_result_ALL_si_flow.jsonl")
+    print(f"""Java: {result_java}\n""")
 
-    end_time = time.time()
-    print(f"Total time: {end_time - start_time} seconds")
+    # end_time = time.time()
+    # print(f"Total time: {end_time - start_time} seconds")
