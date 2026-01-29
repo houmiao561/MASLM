@@ -441,5 +441,267 @@
     "reason_type": "Unknown",
     "mcp_evidence_summary": "The MCP evidence does not provide any information about the API 'os.getresgid' or its availability in version 3.1.",
     "ai_api_fix_function": "def group_id_analysis(required_gid):\n    from collections import Counter\n    import os\n    group_ids = os.getresgid()\n    gid_count = Counter(group_ids)\n    return all(gid_count[gid] == 1 for gid in group_ids) and required_gid in group_ids"
+  },
+  {
+    "solution_function": "import pandas\n\ndef process_and_infer_data(data):\n    df = pandas.DataFrame(data)\n    df.ffill(inplace=True)\n    inferred_types = [pandas.api.types.infer_dtype(df[col]) for col in df.columns]\n    return inferred_types\n",
+    "solution_signature": "process_and_infer_data(data: list) -> list",
+    "problem": "Please use python code to help me with a function that processes a two-dimensional list of data by filling forward any missing values, and then infers the data types of each column. The input is a list of lists, where each inner list represents a row of data. The output should be a list of strings, each representing the inferred data type of a column in the input data. Make sure to use the pandas library for this task.",
+    "package": "pandas",
+    "combine_id": "STwvuhk3mN",
+    "api_num": 2,
+    "import": "import pandas as pd",
+    "signature_list": [
+      "pandas.api.types.infer_dtype()->str",
+      "pd.DataFrame.ffill()"
+    ],
+    "doc_list": [
+      "It is used to check if the index held integer values.",
+      "It is used to forward-fill missing values in a DataFrame."
+    ],
+    "update_list": [
+      "Before pandas 2.0, pd.Index.holds_integer was the standard way to apply the holds_integer function; however, after pandas 2.0, it is recommended to use pandas.api.types.infer_dtype instead",
+      "Before pandas 2.0, pd.DataFrame.pad() was the standard way to apply the pad function; however, after pandas 2.0, it is recommended to use pd.DataFrame.ffill() instead."
+    ],
+    "version_type": "high",
+    "code_id": "AFZG4z1MPi",
+    "origin_version": "2.0",
+    "compare_version": "1.0.0",
+    "case": "Based on the described problem and the provided benchmark code, I will generate three sets of comprehensive input test data including various scenarios. \n\n### Step 1: Determine the input data\n1. The function takes a two-dimensional list (list of lists) as input.\n2. Each inner list represents a row of data, and can have missing values (represented typically by `None` or `NaN`).\n3. The output will be a list of inferred data types for each column in the processed data.\n\n### Step 2: Final input data group generation\n\nHere are three test cases:\n\n```plaintext\ncase1:[[1, 2.5, None], [None, 3.1, 'text'], [4, None, 'more text'], [None, None, None]]\ncase2:[[None, None, None], [None, 55, 123], [3, None, None], [4, 5, None]]\ncase3:[[1, 'hello', None], ['world', None, 3.14], [None, 'text', 42], [7, None, None]]\n```\n\n### Explanation of the test cases:\n\n- **case1**: This dataset has varying types in each column with missing values. The first column has integers, the second has floats, and the third contains strings. It tests the forward filling of missing values.\n- **case2**: This dataset starts with all `None` values and includes integers. This case tests the function's ability to infer a consistent type when data transitions from missing to numerical values.\n- **case3**: This dataset mixes strings and numbers, providing a test for the inferring of multiple data types in the presence of missing values. The inclusion of `None` in different positions tests robustness to varying data distributions.\n\nThese test cases should cover various possible scenarios that the function would need to handle.",
+    "solution_function_script": "```python\nimport pandas as pd \n\ndef process_and_infer_data(data):\n    df = pd.DataFrame(data)\n    df.ffill(inplace=True)\n    inferred_types = [pd.api.types.infer_dtype(df[col]) for col in df.columns]\n    return inferred_types\n\n# Input data\ntest_data = [\n    [[1, 2.5, None], [None, 3.1, 'text'], [4, None, 'more text'], [None, None, None]],\n    [[None, None, None], [None, 55, 123], [3, None, None], [4, 5, None]],\n    [[1, 'hello', None], ['world', None, 3.14], [None, 'text', 42], [7, None, None]]\n]\n\nfor data in test_data:\n    try:\n        result = process_and_infer_data(data)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "['floating', 'floating', 'string']\n['floating', 'floating', 'floating']\n['mixed-integer', 'string', 'floating']\n",
+    "imports": ["pandas"],
+    "ast_structure": [
+      {
+        "function_name": "process_and_infer_data",
+        "lineno": 3,
+        "api_calls": [
+          { "api": "pandas.DataFrame", "lineno": 4, "context": "expression" },
+          { "api": "df.ffill", "lineno": 5, "context": "expression" },
+          {
+            "api": "pandas.api.types.infer_dtype",
+            "lineno": 6,
+            "context": "expression"
+          }
+        ]
+      }
+    ],
+    "ai_api_fix_function": "import pandas\n\ndef process_and_infer_data(data):\n    df = pandas.DataFrame(data)\n    df.ffill(inplace=True)\n    inferred_types = [pandas.api.types.infer_dtype(df[col]) for col in df.columns]\n    return inferred_types\n",
+    "ai_api_wrong": ["pandas.api.types.infer_dtype"],
+    "line_number": [6],
+    "natural_language_questions": [
+      "Is pandas.api.types.infer_dtype available in pandas 1.0.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "No changes detected for `pandas.api.types.infer_dtype` in pandas 1.0.0.",
+        "why_it_breaks": "The issue does not stem from the API's availability or functionality in pandas 1.0.0.",
+        "how_to_fix": "Verify the input data or usage context, as the API is confirmed to be functional in the specified version."
+      }
+    ],
+    "reason_type": ["Unknown"],
+    "mcp_evidence_summary": [
+      "The MCP evidence confirms that `pandas.api.types.infer_dtype` was available and functional in pandas 1.0.0, demonstrating its use for inferring data types."
+    ]
+  },
+  {
+    "solution_function": "import pandas as pd\ndef infer_and_fill_na(data):\n    df = pd.DataFrame(data)\n    dtype_inference = pd.api.types.infer_dtype(df.iloc[:, 0])\n    df.ffill(inplace=True)\n    return dtype_inference, df",
+    "solution_signature": "infer_and_fill_na(data: list[list])->tuple[str, pd.DataFrame]",
+    "problem": "Please use python code to help me with a function that takes a two-dimensional list of data as input, infers the data type of the first column, and fills any missing values in the DataFrame using the forward fill method. The input is a list of lists where each sublist represents a row of data. The function should return a tuple containing the inferred data type of the first column as a string and the resulting DataFrame after filling missing values. The function should utilize the pandas library.",
+    "package": "pandas",
+    "combine_id": "STwvuhk3mN",
+    "api_num": 2,
+    "import": "import pandas as pd",
+    "signature_list": [
+      "pandas.api.types.infer_dtype()->str",
+      "pd.DataFrame.ffill()"
+    ],
+    "doc_list": [
+      "It is used to check if the index held integer values.",
+      "It is used to forward-fill missing values in a DataFrame."
+    ],
+    "update_list": [
+      "Before pandas 2.0, pd.Index.holds_integer was the standard way to apply the holds_integer function; however, after pandas 2.0, it is recommended to use pandas.api.types.infer_dtype instead",
+      "Before pandas 2.0, pd.DataFrame.pad() was the standard way to apply the pad function; however, after pandas 2.0, it is recommended to use pd.DataFrame.ffill() instead."
+    ],
+    "version_type": "high",
+    "code_id": "jpvjqBgKEY",
+    "origin_version": "2.0",
+    "compare_version": "1.0.0",
+    "case": "Based on the provided problem and benchmark code, we need to create test cases that cover various scenarios for the function `infer_and_fill_na`. Each test case will consist of a two-dimensional list containing different data types and structures.\n\n### 1. Determine the input data\n\n- The input is a list of lists (2D list) where each sublist can contain various data types (integers, floats, strings, etc.).\n- The first column's data type needs to be inferred, and the function must handle missing values using forward fill.\n- Missing values can be represented by `None` or `np.nan`.\n\n### 2. Final input data group generation\n\n#### Test case 1: Mixed data types with numeric first column\n```python\ncase1:[[1, 'apple', None], [None, 'banana', 2.5], [3, None, 1.2], [4, 'orange', None], [None, None, None]]\n```\n\n#### Test case 2: All string data with missing first column entries\n```python\ncase2:[['A', 'data1', 'data2'], [None, 'data3', 'data4'], ['B', None, 'data5'], [None, None, None]]\n```\n\n#### Test case 3: Float and None values with numeric first column\n```python\ncase3:[[1.1, 'foo', None], [None, 'bar', None], [3.3, 'baz', 4.4], [None, None, 'qux']]\n```\n\n### Combined Output\n```python\ncase1:[[1, 'apple', None], [None, 'banana', 2.5], [3, None, 1.2], [4, 'orange', None], [None, None, None]]\ncase2:[['A', 'data1', 'data2'], [None, 'data3', 'data4'], ['B', None, 'data5'], [None, None, None]]\ncase3:[[1.1, 'foo', None], [None, 'bar', None], [3.3, 'baz', 4.4], [None, None, 'qux']]\n```",
+    "solution_function_script": "```python\nimport pandas as pd\n\ndef infer_and_fill_na(data):\n    df = pd.DataFrame(data)\n    dtype_inference = pd.api.types.infer_dtype(df.iloc[:, 0])\n    df.ffill(inplace=True)\n    return dtype_inference, df\n\n# Input data\ntest_data = [\n    [[1, 'apple', None], [None, 'banana', 2.5], [3, None, 1.2], [4, 'orange', None], [None, None, None]], # case1\n    [['A', 'data1', 'data2'], [None, 'data3', 'data4'], ['B', None, 'data5'], [None, None, None]], # case2\n    [[1.1, 'foo', None], [None, 'bar', None], [3.3, 'baz', 4.4], [None, None, 'qux']] # case3\n]\n\nfor data in test_data:\n    try:\n        result = infer_and_fill_na(data)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "('floating',      0       1    2\n0  1.0   apple  NaN\n1  1.0  banana  2.5\n2  3.0  banana  1.2\n3  4.0  orange  1.2\n4  4.0  orange  1.2)\n('string',    0      1      2\n0  A  data1  data2\n1  A  data3  data4\n2  B  data3  data5\n3  B  data3  data5)\n('floating',      0    1     2\n0  1.1  foo  None\n1  1.1  bar  None\n2  3.3  baz   4.4\n3  3.3  baz   qux)\n",
+    "imports": ["pandas"],
+    "ast_structure": [
+      {
+        "function_name": "infer_and_fill_na",
+        "lineno": 2,
+        "api_calls": [
+          { "api": "pd.DataFrame", "lineno": 3, "context": "expression" },
+          {
+            "api": "pd.api.types.infer_dtype",
+            "lineno": 4,
+            "context": "expression"
+          },
+          { "api": "df.ffill", "lineno": 5, "context": "expression" }
+        ]
+      }
+    ],
+    "ai_api_fix_function": "import pandas as pd\ndef infer_and_fill_na(data):\n    df = pd.DataFrame(data)\n    dtype_inference = pd.api.types.infer_dtype(df.iloc[:, 0])\n    df.ffill(inplace=True)\n    return dtype_inference, df",
+    "ai_api_wrong": ["pd.api.types.infer_dtype"],
+    "line_number": [4],
+    "natural_language_questions": [
+      "Is pd.api.types.infer_dtype available in pandas 1.0.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "In pandas 1.0.0, `pd.api.types.infer_dtype` was updated to correctly infer 'integer-na' types when handling mixed integer and NaN values.",
+        "why_it_breaks": "The issue arises because the function's behavior changed in version 1.0.0, potentially leading to unexpected type inference results compared to earlier versions.",
+        "how_to_fix": "Ensure the function's behavior aligns with pandas 1.0.0 expectations, particularly when handling mixed integer and NaN values."
+      }
+    ],
+    "reason_type": ["BehaviorChange"],
+    "mcp_evidence_summary": [
+      "The MCP evidence indicates that `pd.api.types.infer_dtype` underwent behavior changes in pandas 1.0.0, particularly in correctly inferring 'integer-na' types."
+    ]
+  },
+  {
+    "solution_function": "import pandas as pd\n\ndef fill_and_infer(data):\n    df = pd.DataFrame(data)\n    df_filled = df.ffill()\n    inferred_types = [pd.api.types.infer_dtype(df_filled[col]) for col in df_filled.columns]\n    return df_filled, inferred_types",
+    "solution_signature": "fill_and_infer(data: list[list[float]]) -> tuple[pd.DataFrame, list[str]]",
+    "problem": "Please use python code to help me with a function that takes a 2D list of floats and performs two operations: first, it fills any missing values in the rows by carrying forward the last valid observation; second, it infers the data type of each column after filling the missing values. The function should return a tuple containing the resulting DataFrame and a list of inferred data types for each column. The function should utilize the pandas library.",
+    "package": "pandas",
+    "combine_id": "STwvuhk3mN",
+    "api_num": 2,
+    "import": "import pandas as pd",
+    "signature_list": [
+      "pandas.api.types.infer_dtype()->str",
+      "pd.DataFrame.ffill()"
+    ],
+    "doc_list": [
+      "It is used to check if the index held integer values.",
+      "It is used to forward-fill missing values in a DataFrame."
+    ],
+    "update_list": [
+      "Before pandas 2.0, pd.Index.holds_integer was the standard way to apply the holds_integer function; however, after pandas 2.0, it is recommended to use pandas.api.types.infer_dtype instead",
+      "Before pandas 2.0, pd.DataFrame.pad() was the standard way to apply the pad function; however, after pandas 2.0, it is recommended to use pd.DataFrame.ffill() instead."
+    ],
+    "version_type": "high",
+    "code_id": "SXvLmXJF1k",
+    "origin_version": "2.0",
+    "compare_version": "1.0.0",
+    "case": "Based on the provided problem and benchmark code, I will determine the input data needed for the function, and then I'll generate three sets of comprehensive test input data for the function `fill_and_infer`.\n\n1. **Determine the input data**:\n   - The input data is a 2D list (a list of lists) of floats. This means each inner list represents a row in the DataFrame, and the missing values can be represented as `None` or `NaN` (using `numpy.nan` in a real scenario).\n   - The function returns two pieces of information: a DataFrame with filled values and a list of inferred data types for each column.\n\n2. **Final input data group generation**:\n   Below are three sets of test input data:\n\n```python\ncase1:[[1.2, 2.3, None], [None, 3.5, 4.1], [5.6, None, None], [None, None, None], [7.8, 8.9, 9.0]]\ncase2:[[None, None, None], [2.4, None, 6.7], [None, 3.3, None], [4.4, 5.5, None], [None, None, None]]\ncase3:[[1.1, 2.2, 3.3], [None, None, 4.4], [5.5, None, None], [7.7, 8.8, None], [None, 9.9, 10.0]]\n``` \n\nThese test cases include various scenarios:\n- Case 1 has several missing values scattered and a fully missing row.\n- Case 2 starts with complete missing values and has some rows filled.\n- Case 3 has a mix of completely filled rows and rows with different amounts of missing values. \n\nEach case can be used to assess how well the function handles filling in missing values and inferring the correct data types for the columns after performing the operations.",
+    "solution_function_script": "```python\nimport pandas as pd\n\ndef fill_and_infer(data):\n    df = pd.DataFrame(data)\n    df_filled = df.ffill()\n    inferred_types = [pd.api.types.infer_dtype(df_filled[col]) for col in df_filled.columns]\n    return df_filled, inferred_types\n\n# Input data\ntest_data = [\n    [[1.2, 2.3, None], [None, 3.5, 4.1], [5.6, None, None], [None, None, None], [7.8, 8.9, 9.0]],\n    [[None, None, None], [2.4, None, 6.7], [None, 3.3, None], [4.4, 5.5, None], [None, None, None]],\n    [[1.1, 2.2, 3.3], [None, None, 4.4], [5.5, None, None], [7.7, 8.8, None], [None, 9.9, 10.0]]\n]\n\nfor data in test_data:\n    try:\n        result_df, result_types = fill_and_infer(data)\n        print(\"Filled DataFrame:\\n\", result_df)\n        print(\"Inferred Data Types:\", result_types)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "Filled DataFrame:\n      0    1    2\n0  1.2  2.3  NaN\n1  1.2  3.5  4.1\n2  5.6  3.5  4.1\n3  5.6  3.5  4.1\n4  7.8  8.9  9.0\nInferred Data Types: ['floating', 'floating', 'floating']\nFilled DataFrame:\n      0    1    2\n0  NaN  NaN  NaN\n1  2.4  NaN  6.7\n2  2.4  3.3  6.7\n3  4.4  5.5  6.7\n4  4.4  5.5  6.7\nInferred Data Types: ['floating', 'floating', 'floating']\nFilled DataFrame:\n      0    1     2\n0  1.1  2.2   3.3\n1  1.1  2.2   4.4\n2  5.5  2.2   4.4\n3  7.7  8.8   4.4\n4  7.7  9.9  10.0\nInferred Data Types: ['floating', 'floating', 'floating']\n",
+    "imports": ["pandas"],
+    "ast_structure": [
+      {
+        "function_name": "fill_and_infer",
+        "lineno": 3,
+        "api_calls": [
+          { "api": "pd.DataFrame", "lineno": 4, "context": "expression" },
+          { "api": "df.ffill", "lineno": 5, "context": "expression" },
+          {
+            "api": "pd.api.types.infer_dtype",
+            "lineno": 6,
+            "context": "expression"
+          }
+        ]
+      }
+    ],
+    "ai_api_fix_function": "import pandas as pd\n\ndef fill_and_infer(data):\n    df = pd.DataFrame(data)\n    df_filled = df.ffill()\n    inferred_types = [pd.api.types.infer_dtype(df_filled[col]) for col in df_filled.columns]\n    return df_filled, inferred_types",
+    "ai_api_wrong": ["pd.api.types.infer_dtype"],
+    "line_number": [6],
+    "natural_language_questions": [
+      "Is 'pd.api.types.infer_dtype' available in pandas 1.0.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "No changes detected; 'pd.api.types.infer_dtype' is functional in pandas 1.0.0.",
+        "why_it_breaks": "No evidence of breaking changes or issues with 'pd.api.types.infer_dtype' in pandas 1.0.0.",
+        "how_to_fix": "No fix needed; the API is correctly used."
+      }
+    ],
+    "reason_type": ["Unknown"],
+    "mcp_evidence_summary": [
+      "The MCP evidence confirms the existence and functionality of 'pd.api.types.infer_dtype' in pandas 1.0.0, demonstrating its use for type inference."
+    ]
+  },
+  {
+    "solution_function": "def fill_and_check_dtypes(data):\n    df = pd.DataFrame(data)\n    filled_df = df.ffill()\n    integer_dtypes = {col: pandas.api.types.is_integer_dtype(filled_df[col]) for col in filled_df.columns}\n    bool_dtypes = {col: pandas.api.types.is_bool_dtype(filled_df[col]) for col in filled_df.columns}\n    return filled_df, integer_dtypes, bool_dtypes",
+    "solution_signature": "fill_and_check_dtypes(data: dict) -> tuple",
+    "problem": "Please use python code to help me with a function that takes a dictionary where keys are column names and values are lists representing column data. The function should return a tuple containing three elements: a pandas DataFrame with forward-filled missing values, a dictionary indicating if each column in the DataFrame is of integer dtype, and another dictionary indicating if each column is of boolean dtype. The pandas library is being called.",
+    "package": "pandas",
+    "combine_id": "Ql3waGWbto",
+    "api_num": 3,
+    "import": "import pandas as pd",
+    "signature_list": [
+      "pd.DataFrame.ffill()",
+      "pandas.api.types.is_integer_dtype(arr_or_dtype)->bool",
+      "pandas.api.types.is_bool_dtype(arr_or_dtype)->bool"
+    ],
+    "doc_list": [
+      "It is used to forward-fill missing values in a DataFrame.",
+      "It is used to check if the index was of an integer data type.",
+      "It is used to check if the index was of a boolean data type."
+    ],
+    "update_list": [
+      "Before pandas 2.0, pd.DataFrame.pad() was the standard way to apply the pad function; however, after pandas 2.0, it is recommended to use pd.DataFrame.ffill() instead.",
+      "Before pandas 2.0, pd.Index.is_integer was the standard way to apply the is_integer function; however, after pandas 2.0, it is recommended to use pandas.api.types.is_integer_dtype instead.",
+      "Before pandas 2.0, pandas.Index.is_boolean was the standard way to apply the is_boolean function; however, after pandas 2.0, it is recommended to use pandas.api.types.is_bool_dtype instead."
+    ],
+    "version_type": "high",
+    "code_id": "lCo6asxL08",
+    "origin_version": "2.0",
+    "compare_version": "1.0.0",
+    "case": "Based on the problem description and the provided benchmark code, we will create three sets of high-quality and comprehensive input test data. \n\n### Analysis of Input Data\n\n1. The input is a dictionary where:\n   - Keys are strings representing column names.\n   - Values are lists which can contain integers, booleans, or None (representing missing values).\n\n2. The output is a tuple containing:\n   - A pandas DataFrame with forward-filled missing values.\n   - A dictionary indicating whether each column in the DataFrame is of integer dtype.\n   - A dictionary indicating whether each column in the DataFrame is of boolean dtype.\n\n### Test Case Generation\n\n#### Case 1: Mixed Data Types with Missing Values\nThis case will include both integers and booleans along with None values to see how the function forward-fills them and checks for dtypes.\n\n```python\ncase1: {\n    \"A\": [1, None, 3, 4, None], \n    \"B\": [True, None, False, None, True], \n    \"C\": [None, 2, 3, None, 5]\n}\n```\n\n#### Case 2: All Boolean Data with Complete and Missing Values\nThis case will focus only on boolean types, with explicit True and False values as well as None to ensure proper dtype checking.\n\n```python\ncase2: {\n    \"Status\": [True, None, False, None, True], \n    \"Active\": [None, None, True, False, None], \n    \"Verified\": [True, True, None, False, None]\n}\n```\n\n#### Case 3: All Integer with Some Missing Values\nThis case will consist entirely of integer values but includes None to test the forward fill functionality and integer dtype detection.\n\n```python\ncase3: {\n    \"Scores\": [None, 10, None, 20, 30], \n    \"Points\": [5, None, 15, None, None], \n    \"Levels\": [1, 2, None, None, 5]\n}\n```\n\n### Summary of Input Data Groups\nHere are the input data groups for your reference:\n\n```python\ncase1: {\n    \"A\": [1, None, 3, 4, None], \n    \"B\": [True, None, False, None, True], \n    \"C\": [None, 2, 3, None, 5]\n}\n\ncase2: {\n    \"Status\": [True, None, False, None, True], \n    \"Active\": [None, None, True, False, None], \n    \"Verified\": [True, True, None, False, None]\n}\n\ncase3: {\n    \"Scores\": [None, 10, None, 20, 30], \n    \"Points\": [5, None, 15, None, None], \n    \"Levels\": [1, 2, None, None, 5]\n}\n```",
+    "solution_function_script": "```python\nimport pandas as pd \n\ndef fill_and_check_dtypes(data):\n    df = pd.DataFrame(data)\n    filled_df = df.ffill()\n    integer_dtypes = {col: pd.api.types.is_integer_dtype(filled_df[col]) for col in filled_df.columns}\n    bool_dtypes = {col: pd.api.types.is_bool_dtype(filled_df[col]) for col in filled_df.columns}\n    return filled_df, integer_dtypes, bool_dtypes\n\n# Input data\ntest_data = [\n    {\n        \"A\": [1, None, 3, 4, None], \n        \"B\": [True, None, False, None, True], \n        \"C\": [None, 2, 3, None, 5]\n    },\n    {\n        \"Status\": [True, None, False, None, True], \n        \"Active\": [None, None, True, False, None], \n        \"Verified\": [True, True, None, False, None]\n    },\n    {\n        \"Scores\": [None, 10, None, 20, 30], \n        \"Points\": [5, None, 15, None, None], \n        \"Levels\": [1, 2, None, None, 5]\n    }\n]\n\nfor data in test_data:\n    try:\n        result = fill_and_check_dtypes(data)\n        print(result)\n    except Exception as e:\n        print(\"error:\", e)\n```",
+    "message": "(     A      B    C\n0  1.0   True  NaN\n1  1.0   True  2.0\n2  3.0  False  3.0\n3  4.0  False  3.0\n4  4.0   True  5.0, {'A': False, 'B': False, 'C': False}, {'A': False, 'B': True, 'C': False})\n(   Status Active  Verified\n0    True   None      True\n1    True   None      True\n2   False   True      True\n3   False  False     False\n4    True  False     False, {'Status': False, 'Active': False, 'Verified': False}, {'Status': True, 'Active': False, 'Verified': True})\n(   Scores  Points  Levels\n0     NaN     5.0     1.0\n1    10.0     5.0     2.0\n2    10.0    15.0     2.0\n3    20.0    15.0     2.0\n4    30.0    15.0     5.0, {'Scores': False, 'Points': False, 'Levels': False}, {'Scores': False, 'Points': False, 'Levels': False})\n",
+    "imports": [],
+    "ast_structure": [
+      {
+        "function_name": "fill_and_check_dtypes",
+        "lineno": 1,
+        "api_calls": [
+          { "api": "pd.DataFrame", "lineno": 2, "context": "expression" },
+          { "api": "df.ffill", "lineno": 3, "context": "expression" },
+          {
+            "api": "pandas.api.types.is_integer_dtype",
+            "lineno": 4,
+            "context": "expression"
+          },
+          {
+            "api": "pandas.api.types.is_bool_dtype",
+            "lineno": 5,
+            "context": "expression"
+          }
+        ]
+      }
+    ],
+    "ai_api_fix_function": "def fill_and_check_dtypes(data):\n    df = pd.DataFrame(data)\n    filled_df = df.ffill()\n    integer_dtypes = {col: pandas.api.types.is_integer_dtype(filled_df[col]) for col in filled_df.columns}\n    bool_dtypes = {col: pandas.api.types.is_bool_dtype(filled_df[col]) for col in filled_df.columns}\n    return filled_df, integer_dtypes, bool_dtypes",
+    "ai_api_wrong": [
+      "pandas.api.types.is_integer_dtype",
+      "pandas.api.types.is_bool_dtype"
+    ],
+    "line_number": [4, 5],
+    "natural_language_questions": [
+      "Was pandas.api.types.is_integer_dtype available in pandas 1.0.0?",
+      "Was pandas.api.types.is_bool_dtype available in pandas 1.0.0?"
+    ],
+    "ai_api_answer_change": [
+      {
+        "what_changed": "The function `pandas.api.types.is_integer_dtype` was available in pandas 1.0.0, but its handling of nullable integer dtypes (`Int64`, etc.) was improved in later versions.",
+        "why_it_breaks": "In pandas 1.0.0, `is_integer_dtype` might not correctly identify nullable integer dtypes as integers, leading to potential misinterpretations.",
+        "how_to_fix": "Ensure the input data types are explicitly checked or upgraded to a later pandas version where nullable integer dtypes are fully supported."
+      },
+      {
+        "what_changed": "The `pandas.api.types.is_bool_dtype` function was updated to recognize boolean ExtensionArrays and `BooleanDtype` in versions 0.24.0 and 1.0.0.",
+        "why_it_breaks": "The function may not correctly identify boolean types or handle certain boolean data structures in versions prior to these updates.",
+        "how_to_fix": "Ensure the function is used with versions of pandas that support the updated behavior (0.24.0 or later for ExtensionArrays, 1.0.0 or later for `BooleanDtype`)."
+      }
+    ],
+    "reason_type": ["BehaviorChange", "BehaviorChange"],
+    "mcp_evidence_summary": [
+      "The MCP evidence confirms that `pandas.api.types.is_integer_dtype` was available in pandas 1.0.0, but its behavior with nullable integer dtypes was refined in later versions.",
+      "The MCP evidence indicates that `pandas.api.types.is_bool_dtype` was updated to recognize boolean ExtensionArrays in version 0.24.0 and was further refined with `BooleanDtype` support in version 1.0.0."
+    ]
   }
 ]
