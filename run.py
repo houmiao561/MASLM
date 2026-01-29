@@ -122,7 +122,7 @@ def maslm_hard_python():
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/hard_python/fix_function.txt")
     FINAL_TOKEN = 0
     data = jsonl_read_file("input_dataset/hard_code.jsonl")
-    data = data[50:80]
+    data = data[102:]
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -133,7 +133,8 @@ def maslm_hard_python():
         agents = {
             "location_library": create_agent(LOCATION_AGENT_PROMPT), 
             # "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-97bd7e64-9cb4-477e-a13e-51c267f58e6e"),
-            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-2d508d17-c205-48b6-a173-db2906d9d565"),
+            # "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-2d508d17-c205-48b6-a173-db2906d9d565"),
+            "answer_change": create_agent(ANSWER_CHANGE_AGENT_PROMPT,server_url= "https://mcp.context7.com/mcp",api_key="ctx7sk-152519e7-c899-49b9-8d91-a1a125090b9c"),
             "fix_function": create_agent(FIX_FUNCTION_AGENT_PROMPT)
         }
 
@@ -180,7 +181,7 @@ def judge_hard_python_bench():
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/hard_python/judger.txt")
     FINAL_TOKEN = 0
     data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/hard_python/create_result.jsonl")
-    data = data[50:]
+    data = data[80:]
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
