@@ -57,7 +57,7 @@ def judge_bench():
     # print(len(data))
     # sys.exit()
     # 选择前50个
-    data = data[300:]
+    # data = data[300:]
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
@@ -71,7 +71,7 @@ def judge_bench():
         print(judge_result)
 
         # 结果写入并print
-        append_to_jsonl("output_dataset/easy_python/judge_result_ALL.jsonl", judge_result)
+        append_to_jsonl("output_dataset/easy_python/judge_result_ALL_origin_prompt.jsonl", judge_result)
         print("\n========== TOKEN USAGE SUMMARY ==========")
         for k, v in orch.token_stats.items():
             print(f"{k}: {v}")
@@ -288,7 +288,7 @@ if __name__ == "__main__":
 
     # 判断结果
     # judge_bench()
-    result = compute_avg("output_dataset/easy_python/judge_result_baseline.jsonl")
+    result = compute_avg("output_dataset/easy_python/judge_result_ALL_origin_prompt.jsonl")
     print(result)
 
     # Hard Python
