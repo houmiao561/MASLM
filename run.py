@@ -122,7 +122,7 @@ def maslm_hard_python():
     FIX_FUNCTION_AGENT_PROMPT = txt_read_file("prompt/hard_python/fix_function.txt")
     FINAL_TOKEN = 0
     data = jsonl_read_file("input_dataset/hard_code.jsonl")
-    data = data[150:]
+    data = data[181:]
     for index, CODE in enumerate(data):
         print(f"Processing COOOOOODE {index}...")
         # AST 预处理
@@ -181,7 +181,7 @@ def judge_hard_python_bench():
     JUDGE_AGENT_PROMPT = txt_read_file("prompt/hard_python/judger.txt")
     FINAL_TOKEN = 0
     data = jsonl_read_file("/Users/houmiao/Desktop/MASLM/output_dataset/hard_python/create_result.jsonl")
-    data = data[137:]
+    data = data[178:]
     for index, CODE in enumerate(data):
         print(f"JUDGE COOOOOODE {index}...")
         # MAS启动
@@ -297,12 +297,12 @@ if __name__ == "__main__":
     # print(result)
 
     # Hard Python
-    maslm_hard_python()
+    # maslm_hard_python()
 
     # 判断结果
-    # judge_hard_python_bench()
-    # result = compute_avg("output_dataset/hard_python/judge_result.jsonl")
-    # print(result)
+    judge_hard_python_bench()
+    result = compute_avg("output_dataset/hard_python/judge_result.jsonl")
+    print(result)
     
 
     # Java
